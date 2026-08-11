@@ -95,7 +95,7 @@
         .login-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(124,77,255,0.3); }
         .login-btn:active { transform: scale(0.96); }
         .login-error { color: var(--danger); font-size: 13px; text-align: center; margin-top: 12px; display: none; }
-        /* HINT HIDDEN - فقط خودت میدونی */
+        /* HINT HIDDEN */
         .login-hint { display: none !important; }
         
         /* ===== Header ===== */
@@ -400,6 +400,19 @@
         .mt-1 { margin-top: 8px; }
         .mb-1 { margin-bottom: 8px; }
         
+        /* ===== Sync Button ===== */
+        .sync-btn { 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            padding: 4px 10px; 
+            border-radius: 6px; 
+            font-size: 10px; 
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .sync-btn:hover { opacity: 0.8; }
+        
         /* ===== Responsive ===== */
         @media (min-width: 769px) {
             .bottom-nav { display: none; }
@@ -499,7 +512,6 @@
             <div class="login-error" id="loginError">
                 <i class="fas fa-exclamation-circle"></i> <span id="errorMessage">نام کاربری یا رمز عبور اشتباه است!</span>
             </div>
-            <!-- HINT HIDDEN - فقط خودت میدونی -->
             <div class="login-hint" id="loginHintContainer" style="display:none;">
                 <span id="loginHint">💡 مدیر: admin / Admin@1404 | معلم: T001 / Teacher@123</span>
             </div>
@@ -544,6 +556,12 @@
                 </div>
             </div>
             <div class="header-right">
+                <button class="header-btn" onclick="syncData()" title="پشتیبان‌گیری">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </button>
+                <button class="header-btn" onclick="loadFromCloud()" title="بارگذاری پشتیبان">
+                    <i class="fas fa-cloud-download-alt"></i>
+                </button>
                 <button class="header-btn" onclick="toggleTheme()" title="تغییر تم" id="themeBtn">
                     <i class="fas fa-moon" id="themeIcon"></i>
                 </button>
@@ -1665,7 +1683,6 @@ function saveData() {
         const dataToSave = JSON.stringify(DATA);
         localStorage.setItem('schoolDataV17', dataToSave);
         
-        // Verify save
         const test = localStorage.getItem('schoolDataV17');
         if (test) {
             console.log('✅ داده‌ها با موفقیت ذخیره شدند - تعداد کلاس‌ها:', DATA.classes.length);
@@ -1763,6 +1780,62 @@ function testSave() {
     } else {
         showToast('❌ خطا در ذخیره!', 'error');
     }
+}
+
+// ============================================================
+// ================ SYNC BETWEEN DEVICES ======================
+// ============================================================
+
+function syncData() {
+    try {
+        saveData();
+        
+        const data = JSON.stringify(DATA, null, 2);
+        const blob = new Blob([data], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `school_backup_${new Date().toLocaleDateString('fa-IR').replace(/\//g, '-')}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        showToast('✅ فایل پشتیبان دانلود شد - در دستگاه دیگر بارگذاری کنید', 'success');
+        addActivity('پشتیبان‌گیری', 'فایل پشتیبان تهیه شد');
+    } catch(e) {
+        showToast('❌ خطا: ' + e.message, 'error');
+    }
+}
+
+function loadFromCloud() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            try {
+                const data = JSON.parse(event.target.result);
+                const user = DATA.currentUser;
+                Object.assign(DATA, data);
+                DATA.currentUser = user;
+                saveData();
+                renderAll();
+                updateDashboard();
+                updateSetupWizard();
+                showToast('✅ داده‌ها با موفقیت بارگذاری شدند!', 'success');
+                addActivity('بارگذاری از فایل', 'داده‌ها از فایل پشتیبان بازیابی شدند');
+            } catch(err) {
+                showToast('❌ فایل نامعتبر است!', 'error');
+            }
+        };
+        reader.readAsText(file);
+    };
+    input.click();
 }
 
 // ============================================================
@@ -2890,73 +2963,164 @@ function goToStep(step) {
 }
 
 // ============================================================
-// ================ EXCEL EXPORT ===============================
+// ================ EXCEL EXPORT (COMPLETE & ORDERED) =========
 // ============================================================
 
 function exportToExcel(type) {
     if (typeof XLSX === 'undefined') { showToast('❌ کتابخانه اکسل بارگذاری نشد', 'error'); return; }
     showToast('⏳ در حال آماده‌سازی فایل...', 'info');
+    
     setTimeout(() => {
         try {
-            const isAdmin = DATA.currentUser.role === 'admin';
-            let data = [], sheetName = '';
-            if (type === 'students' || type === 'all') {
-                const students = isAdmin ? DATA.students : getTeacherStudents(DATA.currentUser.username);
-                data = students.map(s => ({ 'شناسه': s.id, 'نام': s.name, 'کلاس': getClassById(s.classId)?.name || '', 'میانگین': s.average || 0, 'وضعیت': s.status || '' }));
-                sheetName = 'دانش‌آموزان';
-            }
-            if (type === 'teachers' && isAdmin) {
-                data = DATA.teachers.map(t => ({ 'شناسه': t.id, 'نام': t.name, 'تخصص': t.specialty, 'تماس': t.phone || '', 'کلاس‌ها': (t.classes || []).map(cid => getClassById(cid)?.name || cid).join('، '), 'درس‌ها': (t.subjects || []).map(sid => getSubjectById(sid)?.name || sid).join('، ') }));
-                sheetName = 'معلمان';
-            }
-            if (type === 'classes' && isAdmin) { data = DATA.classes.map(c => ({ 'شناسه': c.id, 'نام': c.name, 'پایه': c.grade, 'ظرفیت': c.capacity, 'دانش‌آموز': getClassStudents(c.id).length })); sheetName = 'کلاس‌ها'; }
-            if (type === 'subjects' && isAdmin) { data = DATA.subjects.map(s => ({ 'شناسه': s.id, 'نام': s.name, 'معلم': getTeacherById(s.teacherId)?.name || '', 'کلاس': getClassById(s.classId)?.name || '' })); sheetName = 'دروس'; }
-            if (type === 'grades') {
-                let grades = DATA.grades;
-                if (!isAdmin) { const students = getTeacherStudents(DATA.currentUser.username); const ids = students.map(s => s.id); grades = grades.filter(g => ids.includes(g.studentId)); }
-                data = grades.map(g => ({ 'دانش‌آموز': getStudentById(g.studentId)?.name || '', 'درس': getSubjectById(g.subjectId)?.name || '', 'نمره': g.value, 'تاریخ': g.date }));
-                sheetName = 'نمرات';
-            }
-            if (type === 'attendance') {
-                let attendance = DATA.attendance;
-                if (!isAdmin) { const students = getTeacherStudents(DATA.currentUser.username); const ids = students.map(s => s.id); attendance = attendance.filter(a => ids.includes(a.studentId)); }
-                data = attendance.map(a => ({ 'دانش‌آموز': getStudentById(a.studentId)?.name || '', 'تاریخ': a.date, 'وضعیت': a.status }));
-                sheetName = 'حضور';
-            }
-            if (type === 'all' && isAdmin) { exportAllToExcel(); return; }
-            if (data.length === 0) { showToast('❌ داده‌ای برای خروجی وجود ندارد', 'error'); return; }
             const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.json_to_sheet(data);
-            ws['!cols'] = Object.keys(data[0]).map(() => ({ wch: 18 }));
-            XLSX.utils.book_append_sheet(wb, ws, sheetName);
-            XLSX.writeFile(wb, `گزارش_${sheetName}_${new Date().toLocaleDateString('fa-IR')}.xlsx`);
-            showToast('✅ فایل دانلود شد', 'success');
-            addActivity('خروجی اکسل', 'خروجی ' + type + ' گرفته شد');
-        } catch (e) { showToast('❌ خطا: ' + e.message, 'error'); }
-    }, 300);
-}
-
-function exportAllToExcel() {
-    try {
-        const wb = XLSX.utils.book_new();
-        const sheets = [
-            { name: 'دانش‌آموزان', data: DATA.students.map(s => ({ 'شناسه': s.id, 'نام': s.name, 'کلاس': getClassById(s.classId)?.name || '', 'میانگین': s.average || 0 })) },
-            { name: 'معلمان', data: DATA.teachers.map(t => ({ 'شناسه': t.id, 'نام': t.name, 'تخصص': t.specialty })) },
-            { name: 'کلاس‌ها', data: DATA.classes.map(c => ({ 'شناسه': c.id, 'نام': c.name, 'پایه': c.grade })) },
-            { name: 'دروس', data: DATA.subjects.map(s => ({ 'شناسه': s.id, 'نام': s.name, 'معلم': getTeacherById(s.teacherId)?.name || '' })) },
-            { name: 'نمرات', data: DATA.grades.map(g => ({ 'دانش‌آموز': getStudentById(g.studentId)?.name || '', 'نمره': g.value })) }
-        ];
-        sheets.forEach(s => {
-            if (s.data.length > 0) {
-                const ws = XLSX.utils.json_to_sheet(s.data);
-                ws['!cols'] = Object.keys(s.data[0]).map(() => ({ wch: 18 }));
-                XLSX.utils.book_append_sheet(wb, ws, s.name);
+            const isAdmin = DATA.currentUser.role === 'admin';
+            
+            // ===== برگه دانش‌آموزان با کلاس و معلم (مرتب‌شده) =====
+            const studentData = (isAdmin ? DATA.students : getTeacherStudents(DATA.currentUser.username))
+                .map(s => {
+                    const cls = getClassById(s.classId);
+                    const teachers = cls ? getClassTeachers(cls.id).map(t => t.name).join('، ') : 'بدون معلم';
+                    const grades = getStudentGrades(s.id);
+                    const avg = calculateAverage(grades);
+                    return {
+                        'شناسه': s.id,
+                        'نام': s.name,
+                        'کلاس': cls ? cls.name : 'ثبت نشده',
+                        'پایه': cls ? cls.grade : '-',
+                        'معلم کلاس': teachers || 'تعیین نشده',
+                        'تعداد نمرات': grades.length,
+                        'میانگین': avg,
+                        'وضعیت': s.status || 'بدون نمره',
+                        'شماره والدین': s.parentPhone || '-'
+                    };
+                })
+                .sort((a, b) => a.کلاس.localeCompare(b.کلاس) || a.نام.localeCompare(b.نام));
+            
+            if (studentData.length > 0) {
+                const ws = XLSX.utils.json_to_sheet(studentData);
+                ws['!cols'] = Object.keys(studentData[0]).map(key => ({ wch: key === 'نام' ? 20 : key === 'معلم کلاس' ? 25 : 15 }));
+                XLSX.utils.book_append_sheet(wb, ws, 'دانش‌آموزان');
             }
-        });
-        XLSX.writeFile(wb, `گزارش_کامل_${new Date().toLocaleDateString('fa-IR')}.xlsx`);
-        showToast('✅ خروجی کامل دانلود شد', 'success');
-        addActivity('خروجی اکسل', 'خروجی کامل گرفته شد');
-    } catch (e) { showToast('❌ خطا: ' + e.message, 'error'); }
+
+            // ===== برگه کلاس‌ها با دانش‌آموزان و معلمان (مرتب‌شده) =====
+            if (isAdmin) {
+                const classData = DATA.classes
+                    .map(c => {
+                        const students = getClassStudents(c.id);
+                        const teachers = getClassTeachers(c.id);
+                        return {
+                            'شناسه': c.id,
+                            'نام کلاس': c.name,
+                            'پایه': c.grade,
+                            'تعداد دانش‌آموز': students.length,
+                            'ظرفیت': c.capacity,
+                            'معلمان': teachers.map(t => t.name).join('، ') || 'تعیین نشده',
+                            'لیست دانش‌آموزان': students.map(s => s.name).join('، ') || 'خالی'
+                        };
+                    })
+                    .sort((a, b) => a.پایه - b.پایه || a['نام کلاس'].localeCompare(b['نام کلاس']));
+                
+                if (classData.length > 0) {
+                    const ws = XLSX.utils.json_to_sheet(classData);
+                    ws['!cols'] = Object.keys(classData[0]).map(key => ({ wch: key === 'لیست دانش‌آموزان' ? 40 : 18 }));
+                    XLSX.utils.book_append_sheet(wb, ws, 'کلاس‌ها');
+                }
+            }
+
+            // ===== برگه معلمان با کلاس‌ها و دروس (مرتب‌شده) =====
+            if (isAdmin) {
+                const teacherData = DATA.teachers
+                    .map(t => ({
+                        'شناسه': t.id,
+                        'نام': t.name,
+                        'تخصص': t.specialty || '-',
+                        'کلاس‌ها': (t.classes || []).map(cid => getClassById(cid)?.name || cid).join('، ') || 'بدون کلاس',
+                        'دروس': (t.subjects || []).map(sid => getSubjectById(sid)?.name || sid).join('، ') || 'بدون درس',
+                        'تماس': t.phone || '-'
+                    }))
+                    .sort((a, b) => a.نام.localeCompare(b.نام));
+                
+                if (teacherData.length > 0) {
+                    const ws = XLSX.utils.json_to_sheet(teacherData);
+                    ws['!cols'] = Object.keys(teacherData[0]).map(key => ({ wch: 18 }));
+                    XLSX.utils.book_append_sheet(wb, ws, 'معلمان');
+                }
+            }
+
+            // ===== برگه نمرات با کلاس و معلم (مرتب‌شده) =====
+            let grades = DATA.grades;
+            if (!isAdmin) {
+                const students = getTeacherStudents(DATA.currentUser.username);
+                const ids = students.map(s => s.id);
+                grades = grades.filter(g => ids.includes(g.studentId));
+            }
+            if (grades.length > 0) {
+                const gradeData = grades
+                    .map(g => {
+                        const student = getStudentById(g.studentId);
+                        const subject = getSubjectById(g.subjectId);
+                        const teacher = getTeacherById(g.teacherId);
+                        const cls = student ? getClassById(student.classId) : null;
+                        return {
+                            'دانش‌آموز': student ? student.name : 'نامشخص',
+                            'کلاس': cls ? cls.name : 'نامشخص',
+                            'درس': subject ? subject.name : 'نامشخص',
+                            'نمره': g.value,
+                            'نوع': g.examType || '-',
+                            'تاریخ': g.date || '-',
+                            'معلم': teacher ? teacher.name : 'نامشخص'
+                        };
+                    })
+                    .sort((a, b) => a.کلاس.localeCompare(b.کلاس) || a.دانش‌آموز.localeCompare(b.دانش‌آموز));
+                
+                const ws = XLSX.utils.json_to_sheet(gradeData);
+                ws['!cols'] = Object.keys(gradeData[0]).map(key => ({ wch: 18 }));
+                XLSX.utils.book_append_sheet(wb, ws, 'نمرات');
+            }
+
+            // ===== برگه حضور با کلاس و معلم (مرتب‌شده) =====
+            let attendance = DATA.attendance;
+            if (!isAdmin) {
+                const students = getTeacherStudents(DATA.currentUser.username);
+                const ids = students.map(s => s.id);
+                attendance = attendance.filter(a => ids.includes(a.studentId));
+            }
+            if (attendance.length > 0) {
+                const attendanceData = attendance
+                    .map(a => {
+                        const student = getStudentById(a.studentId);
+                        const teacher = getTeacherById(a.teacherId);
+                        const cls = student ? getClassById(student.classId) : null;
+                        return {
+                            'دانش‌آموز': student ? student.name : 'نامشخص',
+                            'کلاس': cls ? cls.name : 'نامشخص',
+                            'تاریخ': a.date || '-',
+                            'وضعیت': a.status || '-',
+                            'توضیحات': a.note || '-',
+                            'معلم': teacher ? teacher.name : 'نامشخص'
+                        };
+                    })
+                    .sort((a, b) => a.کلاس.localeCompare(b.کلاس) || a.دانش‌آموز.localeCompare(b.دانش‌آموز));
+                
+                const ws = XLSX.utils.json_to_sheet(attendanceData);
+                ws['!cols'] = Object.keys(attendanceData[0]).map(key => ({ wch: 18 }));
+                XLSX.utils.book_append_sheet(wb, ws, 'حضور');
+            }
+
+            if (wb.SheetNames.length === 0) {
+                showToast('❌ داده‌ای برای خروجی وجود ندارد', 'error');
+                return;
+            }
+
+            XLSX.writeFile(wb, `گزارش_کامل_مرتب_${new Date().toLocaleDateString('fa-IR').replace(/\//g, '-')}.xlsx`);
+            showToast('✅ فایل کامل با تمام جزئیات و مرتب‌شده دانلود شد', 'success');
+            addActivity('خروجی اکسل کامل', 'گزارش کامل با جزئیات کلاس و معلم');
+
+        } catch(e) {
+            showToast('❌ خطا: ' + e.message, 'error');
+            console.error(e);
+        }
+    }, 300);
 }
 
 // ============================================================
@@ -2973,7 +3137,10 @@ function generateReport(type) {
         let avgSum = 0; students.forEach(s => { if (s.average) avgSum += s.average; });
         report += `میانگین نمرات: ${(avgSum / students.length || 0).toFixed(2)}\n\n`;
         report += 'لیست دانش‌آموزان:\n';
-        students.forEach(s => { report += `- ${s.name} | میانگین: ${(s.average || 0).toFixed(1)} | ${s.status}\n`; });
+        students.forEach(s => { 
+            const cls = getClassById(s.classId);
+            report += `- ${s.name} | کلاس: ${cls ? cls.name : 'نامشخص'} | میانگین: ${(s.average || 0).toFixed(1)} | ${s.status}\n`; 
+        });
         downloadFile(report, `گزارش_${new Date().toLocaleDateString('fa-IR')}.txt`, 'text/plain');
         showToast('📄 گزارش تولید شد', 'success');
     } else if (type === 'analytics') {
@@ -2987,6 +3154,16 @@ function generateReport(type) {
             analysis += `بیشترین: ${Math.max(...values)}\n`;
             analysis += `کمترین: ${Math.min(...values)}\n`;
             analysis += `میانگین: ${(values.reduce((a,b) => a+b, 0) / values.length).toFixed(2)}\n`;
+            // توزیع نمرات
+            const excellent = values.filter(v => v >= 18).length;
+            const good = values.filter(v => v >= 14 && v < 18).length;
+            const pass = values.filter(v => v >= 10 && v < 14).length;
+            const fail = values.filter(v => v < 10).length;
+            analysis += `\nتوزیع نمرات:\n`;
+            analysis += `- عالی (۱۸-۲۰): ${excellent} نفر\n`;
+            analysis += `- خوب (۱۴-۱۷.۹۹): ${good} نفر\n`;
+            analysis += `- قبول (۱۰-۱۳.۹۹): ${pass} نفر\n`;
+            analysis += `- مردود (۰-۹.۹۹): ${fail} نفر\n`;
         } else { analysis += 'هیچ نمره‌ای ثبت نشده است'; }
         downloadFile(analysis, `تحلیل_${new Date().toLocaleDateString('fa-IR')}.txt`, 'text/plain');
         showToast('📊 تحلیل تولید شد', 'info');
@@ -3219,9 +3396,11 @@ if (savedSession) {
 console.log('🏫 سیستم مدیریت مدرسه هوشمند - نسخه 2.0');
 console.log('✅ ذخیره‌سازی در localStorage فعال است');
 console.log('✅ کلاس‌ها بعد از رفرش هم باقی می‌مانند');
+console.log('✅ خروجی اکسل با دسته‌بندی کامل و مرتب');
+console.log('✅ همگام‌سازی بین دستگاه‌ها با فایل پشتیبان');
 console.log('🔑 مدیر: admin / Admin@1404');
 console.log('👨‍🏫 معلم: T001 / Teacher@123');
-console.log('📌 دکمه پایگاه داده برای تست ذخیره‌سازی');
+console.log('📌 دکمه ابر برای پشتیبان‌گیری و بارگذاری');
 </script>
 </body>
 </html>
