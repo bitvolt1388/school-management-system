@@ -74,6 +74,7 @@
         .scroll-top.show { display: flex; }
         .scroll-top:hover { background: var(--primary); color: white; border-color: var(--primary); }
         
+        /* ===== LOGIN ===== */
         .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .login-box { background: var(--bg-card); border-radius: var(--radius); padding: 40px 30px; max-width: 420px; width: 100%; border: 1px solid var(--border); box-shadow: var(--shadow); transition: var(--transition); }
         .login-logo { text-align: center; margin-bottom: 30px; }
@@ -94,6 +95,7 @@
         .login-hint { text-align: center; margin-top: 10px; font-size: 11px; color: var(--text-secondary); }
         .login-hint span { background: var(--bg-input); padding: 4px 12px; border-radius: 6px; }
         
+        /* ===== HEADER ===== */
         .header {
             padding: 10px 16px;
             background: var(--bg-card);
@@ -128,6 +130,7 @@
         .role-badge.admin { background: rgba(124,77,255,0.2); color: var(--primary); }
         .role-badge.teacher { background: rgba(0,188,212,0.2); color: var(--secondary); }
         
+        /* ===== SIDEBAR ===== */
         .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 999; animation: fadeIn 0.3s ease; }
         .sidebar-overlay.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -451,12 +454,12 @@
         <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
             <div class="form-group">
                 <label id="lblUsername"><i class="fas fa-user"></i> نام کاربری</label>
-                <input type="text" id="loginUsername" placeholder="نام کاربری را وارد کنید" value="admin" required>
+                <input type="text" id="loginUsername" placeholder="نام کاربری را وارد کنید" required>
             </div>
             <div class="form-group">
                 <label id="lblPassword"><i class="fas fa-lock"></i> رمز عبور</label>
                 <div class="password-wrapper">
-                    <input type="password" id="loginPassword" placeholder="رمز عبور را وارد کنید" value="Admin@1404" required>
+                    <input type="password" id="loginPassword" placeholder="رمز عبور را وارد کنید" required>
                     <button type="button" class="toggle-password" onclick="togglePassword()">
                         <i class="fas fa-eye" id="passwordIcon"></i>
                     </button>
@@ -1051,7 +1054,7 @@
 
 <script>
 // ============================================================
-// ================ VERSION FINAL - COMPLETE SCHOOL MANAGEMENT =
+// ================ VERSION FIXED - LOGIN WORKING =============
 // ============================================================
 
 // ============================================================
@@ -1226,9 +1229,15 @@ const DATA = {
     currentUser: null
 };
 
-// Admin credentials - simple direct comparison
-const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'Admin@1404';
+// ============================================================
+// ================ ADMIN CREDENTIALS (SIMPLIFIED) ============
+// ============================================================
+
+// Simple direct comparison - NO HASH, NO COMPLEXITY
+const ADMIN_CREDENTIALS = {
+    username: 'admin',
+    password: 'Admin@1404'
+};
 
 let confirmCallback = null;
 let searchTimeout = null;
@@ -1237,14 +1246,12 @@ let searchTimeout = null;
 // ================ CLEAR OLD DATA =============================
 // ============================================================
 
-// Clear old storage keys to prevent conflicts
-localStorage.removeItem('schoolDataFinal');
-localStorage.removeItem('schoolDataV17');
-localStorage.removeItem('schoolDataV16');
-localStorage.removeItem('schoolDataV15');
+// Clear all old storage keys
+const oldKeys = ['schoolDataFinal', 'schoolDataV17', 'schoolDataV16', 'schoolDataV15', 'schoolDataStable'];
+oldKeys.forEach(key => localStorage.removeItem(key));
 
 // ============================================================
-// ================ NAVIGATION SYSTEM (FIXED) ==================
+// ================ NAVIGATION SYSTEM ==========================
 // ============================================================
 
 function navigateTo(page) {
@@ -1300,55 +1307,90 @@ function navigateTo(page) {
 }
 
 // ============================================================
-// ================ AUTH =======================================
+// ================ AUTH - SIMPLIFIED AND WORKING ==============
 // ============================================================
 
 function handleLogin(e) {
     e.preventDefault();
+    
     const username = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('loginPassword').value;
     const role = document.getElementById('loginRole').value;
     const error = document.getElementById('loginError');
     
-    let isValid = false;
+    // DEBUG - log what was entered
+    console.log('🔑 Trying login with:', username, password, role);
+    console.log('👑 Admin expected:', ADMIN_CREDENTIALS.username, ADMIN_CREDENTIALS.password);
     
-    // Check admin - simple direct comparison
-    if (role === 'admin' && username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+    let isValid = false;
+    let userData = null;
+    
+    // Check admin - DIRECT comparison (NO HASH)
+    if (role === 'admin' && username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
         isValid = true;
-        DATA.currentUser = { username: ADMIN_USERNAME, name: 'مدیر سیستم', role: 'admin' };
+        userData = { 
+            username: ADMIN_CREDENTIALS.username, 
+            name: 'مدیر سیستم', 
+            role: 'admin' 
+        };
+        console.log('✅ Admin login successful!');
     } else {
         // Check teacher
         const teacher = DATA.teachers.find(t => t.id === username && t.password === password);
         if (teacher) {
             isValid = true;
-            DATA.currentUser = {
+            userData = {
                 username: teacher.id,
                 name: teacher.name,
                 role: 'teacher',
                 classes: teacher.classes || [],
                 subjects: teacher.subjects || []
             };
+            console.log('✅ Teacher login successful:', teacher.name);
         }
     }
     
-    if (isValid) {
+    if (isValid && userData) {
+        DATA.currentUser = userData;
+        
         showToast('✅ خوش آمدید ' + DATA.currentUser.name, 'success');
+        
+        // Hide login, show dashboard
         document.getElementById('loginPage').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        // Load data first, then setup UI
+        
+        // Load data and setup
         loadAllData();
         setupUI();
         updateDashboard();
         updateSetupWizard();
+        
+        // Save session
         sessionStorage.setItem('currentUser', JSON.stringify(DATA.currentUser));
         
+        // Load saved theme and language
         const savedTheme = localStorage.getItem('schoolTheme');
         if (savedTheme) { currentTheme = savedTheme; document.documentElement.setAttribute('data-theme', currentTheme); }
         const savedLang = localStorage.getItem('schoolLang');
         if (savedLang) { currentLang = savedLang; applyTranslations(); }
+        
+        // Navigate to home
+        navigateTo('home');
+        
     } else {
+        console.log('❌ Login failed');
         error.style.display = 'block';
-        setTimeout(() => error.style.display = 'none', 3000);
+        error.textContent = '❌ نام کاربری یا رمز عبور اشتباه است!';
+        error.style.color = 'var(--danger)';
+        
+        // Shake animation
+        const box = document.querySelector('.login-box');
+        box.style.animation = 'shake 0.5s ease';
+        setTimeout(() => { box.style.animation = ''; }, 500);
+        
+        // Clear password field
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('loginPassword').focus();
     }
 }
 
@@ -1365,6 +1407,7 @@ function handleLogout() {
         sessionStorage.removeItem('currentUser');
         document.getElementById('dashboard').style.display = 'none';
         document.getElementById('loginPage').style.display = 'flex';
+        document.getElementById('loginPassword').value = '';
         showToast('👋 خروج موفق', 'info');
     });
 }
@@ -1554,7 +1597,7 @@ function updateStudentAverages() {
 
 function loadAllData() {
     try {
-        const saved = localStorage.getItem('schoolDataStable');
+        const saved = localStorage.getItem('schoolDataV18');
         if (saved) {
             const parsed = JSON.parse(saved);
             const user = DATA.currentUser;
@@ -1599,7 +1642,7 @@ function loadAllData() {
 
 function saveData() {
     try {
-        localStorage.setItem('schoolDataStable', JSON.stringify(DATA));
+        localStorage.setItem('schoolDataV18', JSON.stringify(DATA));
     } catch(e) { console.warn('خطا در ذخیره داده:', e); }
 }
 
@@ -2917,11 +2960,9 @@ if (savedTheme) { currentTheme = savedTheme; document.documentElement.setAttribu
 const savedLang = localStorage.getItem('schoolLang');
 if (savedLang) { currentLang = savedLang; }
 
-// Clear old storage keys to prevent conflicts
-localStorage.removeItem('schoolDataFinal');
-localStorage.removeItem('schoolDataV17');
-localStorage.removeItem('schoolDataV16');
-localStorage.removeItem('schoolDataV15');
+// Clear old storage keys
+const oldKeys2 = ['schoolDataFinal', 'schoolDataV17', 'schoolDataV16', 'schoolDataV15', 'schoolDataStable', 'schoolDataV18'];
+oldKeys2.forEach(key => localStorage.removeItem(key));
 
 // Check for existing session
 const savedSession = sessionStorage.getItem('currentUser');
@@ -2939,15 +2980,10 @@ if (savedSession) {
     } catch(e) {}
 }
 
-console.log('🏫 سیستم مدیریت مدرسه هوشمند - نسخه نهایی');
-console.log('✅ همه منوها با navigateTo() کار می‌کنند');
-console.log('✅ ترجمه کامل فارسی/انگلیسی');
-console.log('✅ CRUD کامل برای همه بخش‌ها');
-console.log('✅ محاسبه معدل وزنی');
-console.log('✅ ذخیره‌سازی دائمی در localStorage');
-console.log('✅ کلیدهای قدیمی پاک شدند');
+console.log('🏫 سیستم مدیریت مدرسه هوشمند - نسخه نهایی با ورود اصلاح شده');
 console.log('🔑 مدیر: admin / Admin@1404');
 console.log('👨‍🏫 معلم: T001 / Teacher@123');
+console.log('✅ ورود با مقایسه مستقیم و ساده');
 console.log('📱 سازگار با موبایل و دسکتاپ');
 console.log('🌐 دوزبانه کامل');
 </script>
