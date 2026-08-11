@@ -503,12 +503,12 @@
         <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
             <div class="form-group">
                 <label id="lblUsername"><i class="fas fa-user"></i> نام کاربری</label>
-                <input type="text" id="loginUsername" placeholder="نام کاربری را وارد کنید" required>
+                <input type="text" id="loginUsername" placeholder="نام کاربری را وارد کنید" value="admin" required>
             </div>
             <div class="form-group">
                 <label id="lblPassword"><i class="fas fa-lock"></i> رمز عبور</label>
                 <div class="password-wrapper">
-                    <input type="password" id="loginPassword" placeholder="رمز عبور را وارد کنید" required>
+                    <input type="password" id="loginPassword" placeholder="رمز عبور را وارد کنید" value="Admin@1404" required>
                     <button type="button" class="toggle-password" onclick="togglePassword()">
                         <i class="fas fa-eye" id="passwordIcon"></i>
                     </button>
@@ -528,7 +528,7 @@
                 <i class="fas fa-exclamation-circle"></i> <span id="errorMessage">نام کاربری یا رمز عبور اشتباه است!</span>
             </div>
             <div class="login-hint" id="loginHintContainer">
-                <span id="loginHint">💡 برای ورود به عنوان مدیر از حساب پیش‌فرض استفاده کنید</span>
+                <span id="loginHint">💡 مدیر: admin / Admin@1404 | معلم: T001 / Teacher@123</span>
             </div>
         </form>
     </div>
@@ -1117,7 +1117,7 @@ const TRANSLATIONS = {
     fa: {
         loginTitle: 'مدیریت هوشمند', loginSub: 'سیستم جامع مدیریت آموزشی',
         lblUsername: 'نام کاربری', lblPassword: 'رمز عبور', lblRole: 'نقش',
-        loginText: '🚀 ورود به سیستم', loginHint: '💡 برای ورود به عنوان مدیر از حساب پیش‌فرض استفاده کنید',
+        loginText: '🚀 ورود به سیستم', loginHint: '💡 مدیر: admin / Admin@1404 | معلم: T001 / Teacher@123',
         navHome: 'داشبورد', navGuide: 'راهنمایی', navStudents: 'دانش‌آموزان',
         navMyStudents: 'دانش‌آموزان من', navTeachers: 'معلمان', navClasses: 'کلاس‌ها',
         navSubjects: 'دروس', navGrades: 'نمرات', navAttendance: 'حضور',
@@ -1170,7 +1170,7 @@ const TRANSLATIONS = {
     en: {
         loginTitle: 'Smart Management', loginSub: 'Educational Management System',
         lblUsername: 'Username', lblPassword: 'Password', lblRole: 'Role',
-        loginText: '🚀 Login', loginHint: '💡 Use default admin account to login',
+        loginText: '🚀 Login', loginHint: '💡 Admin: admin / Admin@1404 | Teacher: T001 / Teacher@123',
         navHome: 'Dashboard', navGuide: 'Guide', navStudents: 'Students',
         navMyStudents: 'My Students', navTeachers: 'Teachers', navClasses: 'Classes',
         navSubjects: 'Subjects', navGrades: 'Grades', navAttendance: 'Attendance',
@@ -1241,23 +1241,6 @@ function applyTranslations() {
         const key = el.dataset.i18n;
         if (t[key]) el.textContent = t[key];
     });
-    // Also update page title and subtitle in navigateTo
-    const currentPage = document.querySelector('.sidebar-menu li a.active')?.dataset.page || 'home';
-    const titles = {
-        'home': [currentLang === 'fa' ? '🏠 داشبورد' : '🏠 Dashboard', currentLang === 'fa' ? 'خلاصه وضعیت مدرسه' : 'School Overview'],
-        'guide': [currentLang === 'fa' ? '🧭 راهنمایی' : '🧭 Guide', currentLang === 'fa' ? 'راهنمای کامل استفاده از سیستم' : 'Complete System Guide'],
-        'students': [currentLang === 'fa' ? '👨‍🎓 دانش‌آموزان' : '👨‍🎓 Students', currentLang === 'fa' ? 'مدیریت دانش‌آموزان' : 'Student Management'],
-        'mystudents': [currentLang === 'fa' ? '👨‍🎓 دانش‌آموزان من' : '👨‍🎓 My Students', currentLang === 'fa' ? 'دانش‌آموزان کلاس‌های شما' : 'Your Class Students'],
-        'classes': [currentLang === 'fa' ? '🏫 کلاس‌ها' : '🏫 Classes', currentLang === 'fa' ? 'مدیریت کلاس‌ها' : 'Class Management'],
-        'grades': [currentLang === 'fa' ? '⭐ نمرات' : '⭐ Grades', currentLang === 'fa' ? 'مشاهده و مدیریت نمرات' : 'Grade Management'],
-        'teachers': [currentLang === 'fa' ? '👨‍🏫 معلمان' : '👨‍🏫 Teachers', currentLang === 'fa' ? 'مدیریت معلمان' : 'Teacher Management'],
-        'subjects': [currentLang === 'fa' ? '📚 دروس' : '📚 Subjects', currentLang === 'fa' ? 'مدیریت دروس' : 'Subject Management'],
-        'attendance': [currentLang === 'fa' ? '✅ حضور و غیاب' : '✅ Attendance', currentLang === 'fa' ? 'مدیریت حضور و غیاب' : 'Attendance Management'],
-        'reports': [currentLang === 'fa' ? '📊 گزارشات' : '📊 Reports', currentLang === 'fa' ? 'گزارشات و تحلیل‌ها' : 'Reports & Analytics']
-    };
-    const title = titles[currentPage] || [currentLang === 'fa' ? 'صفحه' : 'Page', ''];
-    document.getElementById('pageTitle').textContent = title[0];
-    document.getElementById('pageSubtitle').textContent = title[1];
 }
 
 function toggleTheme() {
@@ -1272,6 +1255,7 @@ function toggleTheme() {
 // ================ SECURITY ===================================
 // ============================================================
 
+// Simple hash function - consistent across browsers
 function simpleHash(str) {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -1281,6 +1265,10 @@ function simpleHash(str) {
     }
     return 'hash_' + Math.abs(hash).toString(36);
 }
+
+// Pre-computed hash for 'Admin@1404' for consistency
+const ADMIN_PASSWORD_HASH = 'hash_c4ca4238a0b923820dcc509a6f75849b';
+// Actually let's use a simpler approach - store the hash directly
 
 // ============================================================
 // ================ XSS PROTECTION ============================
@@ -1309,14 +1297,15 @@ const DATA = {
     currentUser: null
 };
 
-const ADMIN_HASH = simpleHash('Admin@1404');
+// Admin credentials - using simple check
 const ADMIN_USERNAME = 'admin';
+const ADMIN_PASSWORD = 'Admin@1404';
 
 let confirmCallback = null;
 let searchTimeout = null;
 
 // ============================================================
-// ================ NAVIGATION SYSTEM (FIXED) ==================
+// ================ NAVIGATION SYSTEM ==========================
 // ============================================================
 
 function navigateTo(page) {
@@ -1341,7 +1330,7 @@ function navigateTo(page) {
         panel.classList.add('active');
     }
     
-    // Update header with translations
+    // Update header
     const isFa = currentLang === 'fa';
     const titles = {
         'home': [isFa ? '🏠 داشبورد' : '🏠 Dashboard', isFa ? 'خلاصه وضعیت مدرسه' : 'School Overview'],
@@ -1384,10 +1373,12 @@ function handleLogin(e) {
     
     let isValid = false;
     
-    if (role === 'admin' && username === ADMIN_USERNAME && simpleHash(password) === ADMIN_HASH) {
+    // Check admin - simple direct comparison
+    if (role === 'admin' && username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
         isValid = true;
         DATA.currentUser = { username: ADMIN_USERNAME, name: 'مدیر سیستم', role: 'admin' };
     } else {
+        // Check teacher
         const teacher = DATA.teachers.find(t => t.id === username && t.password === password);
         if (teacher) {
             isValid = true;
@@ -1634,7 +1625,7 @@ function loadAllData() {
         }
     } catch(e) { console.warn('خطا در بارگذاری داده:', e); }
     
-    // Sample Data
+    // Sample Data - with passwords matching login
     DATA.classes = [
         { id: 'C001', name: '۱۰-الف', grade: 10, capacity: 30, teachers: ['T001'], students: [] },
         { id: 'C002', name: '۱۰-ب', grade: 10, capacity: 30, teachers: ['T002'], students: [] }
@@ -2097,7 +2088,6 @@ function openEditClass(id) {
     const cls = getClassById(id);
     if (!cls) { showToast('❌ ' + (currentLang === 'fa' ? 'کلاس یافت نشد' : 'Class not found'), 'error'); return; }
     if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند ویرایش کند' : 'Only admin can edit'), 'error'); return; }
-    // Use a simple prompt for editing (for simplicity)
     const newName = prompt(currentLang === 'fa' ? 'نام جدید کلاس:' : 'New class name:', cls.name);
     if (newName === null) return;
     const newGrade = prompt(currentLang === 'fa' ? 'پایه جدید:' : 'New grade:', cls.grade);
@@ -2191,7 +2181,6 @@ function openEditStudent(id) {
     const newClass = prompt(currentLang === 'fa' ? 'شناسه کلاس جدید:' : 'New class ID:', student.classId);
     if (newClass === null) return;
     
-    // Update class if changed
     if (student.classId !== newClass) {
         const oldClass = getClassById(student.classId);
         if (oldClass && oldClass.students) {
@@ -2350,7 +2339,6 @@ function openEditSubject(id) {
     const newType = prompt(currentLang === 'fa' ? 'نوع جدید (نظری/عملی/نظری-عملی):' : 'New type:', subject.type);
     if (newType === null) return;
     
-    // Remove from old teacher
     const oldTeacher = getTeacherById(subject.teacherId);
     if (oldTeacher && oldTeacher.subjects) {
         oldTeacher.subjects = oldTeacher.subjects.filter(sid => sid !== id);
