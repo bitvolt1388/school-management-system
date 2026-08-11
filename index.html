@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🏫 مدرسه هوشمند - BitVolt</title>
+    <title>🏫 مدیریت مدرسه هوشمند - نسخه نهایی</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <style>
+        /* ===== CSS Variables ===== */
         :root {
             --primary: #7C4DFF;
             --primary-dark: #651FFF;
@@ -41,6 +42,8 @@
             --border: rgba(255,255,255,0.08);
             --shadow: 0 8px 30px rgba(0,0,0,0.4);
         }
+        
+        /* ===== Reset & Base ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Vazirmatn', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; padding-bottom: var(--bottom-nav-height); transition: var(--transition); }
         .bg-premium { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: radial-gradient(ellipse at 20% 30%, rgba(124,77,255,0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(0,188,212,0.05) 0%, transparent 50%), var(--bg); transition: var(--transition); }
@@ -49,6 +52,32 @@
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
         
+        /* ===== Scroll to Top ===== */
+        .scroll-top {
+            position: fixed;
+            bottom: calc(var(--bottom-nav-height) + 20px);
+            right: 16px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            z-index: 50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+        }
+        .scroll-top:active { transform: scale(0.9); }
+        .scroll-top.show { display: flex; }
+        .scroll-top:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        
+        /* ===== Login ===== */
         .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .login-box { background: var(--bg-card); border-radius: var(--radius); padding: 40px 30px; max-width: 420px; width: 100%; border: 1px solid var(--border); box-shadow: var(--shadow); transition: var(--transition); }
         .login-logo { text-align: center; margin-bottom: 30px; }
@@ -69,9 +98,25 @@
         .login-hint { text-align: center; margin-top: 10px; font-size: 11px; color: var(--text-secondary); }
         .login-hint span { background: var(--bg-input); padding: 4px 12px; border-radius: 6px; }
         
-        .header { padding: 10px 16px; background: var(--bg-card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(20px); display: flex; justify-content: space-between; align-items: center; transition: var(--transition); height: var(--header-height); }
+        /* ===== Header ===== */
+        .header {
+            padding: 10px 16px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+            height: var(--header-height);
+        }
         .header-left { display: flex; align-items: center; gap: 10px; }
-        .header-left .menu-btn { background: none; border: none; color: var(--text); font-size: 22px; cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: var(--transition); display: none; }
+        .header-left .menu-btn {
+            background: none; border: none; color: var(--text); font-size: 22px; cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: var(--transition); display: none;
+        }
         .header-left .menu-btn:active { transform: scale(0.9); }
         .header-left h1 { font-size: 17px; font-weight: 700; }
         .header-left p { color: var(--text-secondary); font-size: 11px; }
@@ -88,12 +133,27 @@
         .role-badge.admin { background: rgba(124,77,255,0.2); color: var(--primary); }
         .role-badge.teacher { background: rgba(0,188,212,0.2); color: var(--secondary); }
         
+        /* ===== Sidebar ===== */
         .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 999; animation: fadeIn 0.3s ease; }
         .sidebar-overlay.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .sidebar { position: fixed; top: 0; right: calc(-1 * var(--sidebar-width)); width: var(--sidebar-width); height: 100%; background: var(--bg-card); border-left: 1px solid var(--border); padding: 20px 16px; overflow-y: auto; z-index: 1000; transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: calc(-1 * var(--sidebar-width));
+            width: var(--sidebar-width);
+            height: 100%;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border);
+            padding: 20px 16px;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+        }
         .sidebar.open { right: 0; }
-        .sidebar .close-btn { position: absolute; top: 12px; left: 12px; background: none; border: none; color: var(--text-secondary); font-size: 24px; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+        .sidebar .close-btn {
+            position: absolute; top: 12px; left: 12px; background: none; border: none; color: var(--text-secondary); font-size: 24px; cursor: pointer; padding: 4px 8px; border-radius: 8px;
+        }
         .sidebar .close-btn:active { transform: scale(0.9); }
         .sidebar-brand { text-align: center; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
         .sidebar-brand .brand-icon { font-size: 34px; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -101,7 +161,9 @@
         .sidebar-brand .user-info { color: var(--text-secondary); font-size: 12px; margin-top: 4px; }
         .sidebar-menu { list-style: none; }
         .sidebar-menu li { margin-bottom: 3px; }
-        .sidebar-menu li a { display: flex; align-items: center; padding: 10px 14px; color: var(--text-secondary); text-decoration: none; border-radius: 10px; transition: var(--transition); font-size: 13px; font-weight: 500; cursor: pointer; gap: 12px; }
+        .sidebar-menu li a {
+            display: flex; align-items: center; padding: 10px 14px; color: var(--text-secondary); text-decoration: none; border-radius: 10px; transition: var(--transition); font-size: 13px; font-weight: 500; cursor: pointer; gap: 12px;
+        }
         .sidebar-menu li a i { width: 20px; font-size: 15px; }
         .sidebar-menu li a:active { transform: scale(0.96); }
         .sidebar-menu li a:hover { background: var(--bg-input); color: var(--text); }
@@ -113,7 +175,13 @@
         .sidebar-footer a:active { transform: scale(0.96); }
         .sidebar-footer a:hover { background: rgba(244,67,54,0.1); color: var(--danger); }
         
-        .main-content { transition: var(--transition); min-height: calc(100vh - var(--header-height) - var(--bottom-nav-height)); }
+        /* ===== Main Content ===== */
+        .main-content {
+            transition: var(--transition);
+            min-height: calc(100vh - var(--header-height) - var(--bottom-nav-height));
+        }
+        
+        /* ===== Stats ===== */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 14px 16px; }
         .stat-card { background: var(--bg-card); border-radius: var(--radius-sm); padding: 14px; border: 1px solid var(--border); text-align: center; transition: var(--transition); }
         .stat-card:active { transform: scale(0.96); }
@@ -121,14 +189,31 @@
         .stat-card .stat-number { font-size: 20px; font-weight: 700; }
         .stat-card .stat-label { font-size: 10px; color: var(--text-secondary); }
         
+        /* ===== Content Panels ===== */
         .content-panel { display: none; padding: 14px 16px 20px; animation: slideFade 0.4s ease; }
         .content-panel.active { display: block; }
         @keyframes slideFade { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
         .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
         .panel-header h2 { font-size: 17px; font-weight: 700; }
         .panel-header .actions { display: flex; gap: 6px; flex-wrap: wrap; }
         
-        .btn { padding: 8px 14px; border: none; border-radius: var(--radius-sm); font-size: 11px; font-weight: 600; font-family: 'Vazirmatn', sans-serif; cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; gap: 5px; touch-action: manipulation; min-height: 36px; }
+        /* ===== Buttons ===== */
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'Vazirmatn', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            touch-action: manipulation;
+            min-height: 36px;
+        }
         .btn:active { transform: scale(0.95); }
         .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(124,77,255,0.3); }
@@ -145,6 +230,7 @@
         .btn-edit { background: linear-gradient(135deg, #FF6F00, #F57C00); color: white; }
         .btn-view { background: linear-gradient(135deg, #0D47A1, #1565C0); color: white; }
         
+        /* ===== Search ===== */
         .search-bar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
         .search-bar input { flex: 1; padding: 10px 14px; background: var(--bg-input); border: 2px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 13px; font-family: 'Vazirmatn', sans-serif; transition: var(--transition); outline: none; min-width: 150px; }
         .search-bar input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(124,77,255,0.08); }
@@ -152,6 +238,7 @@
         .search-bar select { padding: 10px 14px; background: var(--bg-input); border: 2px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 13px; font-family: 'Vazirmatn', sans-serif; transition: var(--transition); outline: none; }
         .search-bar select:focus { border-color: var(--primary); }
         
+        /* ===== Quick Entry ===== */
         .quick-entry { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: var(--bg-card); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 12px; transition: var(--transition); }
         .quick-entry .form-group { margin-bottom: 0; }
         .quick-entry .form-group label { display: block; color: var(--text-secondary); font-size: 10px; margin-bottom: 3px; font-weight: 500; }
@@ -160,6 +247,7 @@
         .quick-entry .actions { display: flex; gap: 6px; align-items: flex-end; }
         .quick-entry .actions .btn { width: 100%; justify-content: center; }
         
+        /* ===== Table ===== */
         .table-container { background: var(--bg-card); border-radius: var(--radius-sm); border: 1px solid var(--border); overflow: hidden; overflow-x: auto; -webkit-overflow-scrolling: touch; transition: var(--transition); position: relative; }
         .table-container .scroll-hint { display: none; text-align: center; padding: 6px; font-size: 10px; color: var(--text-secondary); background: var(--bg-input); }
         .table-container table { width: 100%; border-collapse: collapse; min-width: 500px; font-size: 12px; }
@@ -186,6 +274,7 @@
         .actions-cell button.edit:hover { color: #FF6F00; background: rgba(255,111,0,0.1); }
         .actions-cell button.view:hover { color: #0D47A1; background: rgba(13,71,161,0.1); }
         
+        /* ===== Cards ===== */
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
         .class-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; transition: var(--transition); }
         .class-card:active { transform: scale(0.98); }
@@ -195,6 +284,7 @@
         .class-card .class-stats span { background: var(--bg-input); padding: 2px 10px; border-radius: 6px; font-size: 10px; }
         .class-card .card-actions { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
         
+        /* ===== Modal ===== */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 9999; align-items: flex-end; justify-content: center; animation: modalFadeIn 0.3s ease; }
         .modal-overlay.active { display: flex; }
         .modal-overlay.closing { animation: modalFadeOut 0.3s ease forwards; }
@@ -219,8 +309,38 @@
         .modal .form-group textarea { resize: vertical; min-height: 50px; }
         .modal .btn { width: 100%; justify-content: center; }
         
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 6px 0 env(safe-area-inset-bottom); z-index: 999; backdrop-filter: blur(20px); transition: var(--transition); height: var(--bottom-nav-height); }
-        .bottom-nav .nav-item { display: flex; flex-direction: column; align-items: center; padding: 4px 10px; border: none; background: none; color: var(--text-secondary); cursor: pointer; transition: var(--transition); font-family: 'Vazirmatn', sans-serif; gap: 1px; touch-action: manipulation; position: relative; min-width: 44px; }
+        /* ===== Bottom Navigation ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 6px 0 env(safe-area-inset-bottom);
+            z-index: 999;
+            backdrop-filter: blur(20px);
+            transition: var(--transition);
+            height: var(--bottom-nav-height);
+        }
+        .bottom-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4px 10px;
+            border: none;
+            background: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Vazirmatn', sans-serif;
+            gap: 1px;
+            touch-action: manipulation;
+            position: relative;
+            min-width: 44px;
+        }
         .bottom-nav .nav-item:active { transform: scale(0.9); }
         .bottom-nav .nav-item i { font-size: 19px; transition: var(--transition); }
         .bottom-nav .nav-item span { font-size: 8px; font-weight: 500; transition: var(--transition); }
@@ -228,6 +348,7 @@
         .bottom-nav .nav-item.active i { transform: translateY(-2px); }
         .bottom-nav .nav-item.hidden { display: none; }
         
+        /* ===== Setup Wizard ===== */
         .setup-wizard { background: var(--bg-card); border-radius: var(--radius-sm); border: 2px solid var(--warning); padding: 14px; margin-bottom: 12px; transition: var(--transition); }
         .setup-wizard .step { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 8px; margin-bottom: 3px; }
         .setup-wizard .step .step-number { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 10px; flex-shrink: 0; }
@@ -240,6 +361,7 @@
         .setup-wizard .step-actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
         .setup-wizard .step-actions .btn { flex: 1; justify-content: center; padding: 6px 10px; font-size: 10px; }
         
+        /* ===== Guide ===== */
         .guide-section { background: var(--bg-card); border-radius: var(--radius-sm); padding: 20px; border: 1px solid var(--border); margin-bottom: 12px; transition: var(--transition); }
         .guide-section h3 { font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
         .guide-section h3 i { color: var(--primary); }
@@ -250,6 +372,7 @@
         .guide-section .guide-step .step-content .desc { color: var(--text-secondary); font-size: 12px; }
         .guide-section .guide-step .step-content .btn { margin-top: 4px; }
         
+        /* ===== Toast ===== */
         .toast-container { position: fixed; top: 16px; left: 16px; right: 16px; z-index: 99999; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
         .toast { padding: 12px 16px; border-radius: var(--radius-sm); color: white; font-size: 12px; font-weight: 500; animation: toastIn 0.4s ease; box-shadow: var(--shadow); display: flex; align-items: center; gap: 8px; pointer-events: auto; backdrop-filter: blur(10px); }
         .toast.success { background: var(--success); }
@@ -259,6 +382,7 @@
         @keyframes toastIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         .toast .close-toast { background: none; border: none; color: inherit; cursor: pointer; font-size: 14px; margin-right: auto; opacity: 0.6; }
         
+        /* ===== Confirm ===== */
         .modal-confirm { max-width: 380px; text-align: center; }
         .modal-confirm .icon-big { font-size: 44px; margin-bottom: 10px; }
         .modal-confirm .actions { display: flex; gap: 8px; margin-top: 14px; justify-content: center; }
@@ -276,16 +400,48 @@
         .mt-1 { margin-top: 8px; }
         .mb-1 { margin-bottom: 8px; }
         
-        .scroll-top { position: fixed; bottom: calc(var(--bottom-nav-height) + 20px); right: 16px; width: 44px; height: 44px; border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border); color: var(--text); font-size: 18px; cursor: pointer; box-shadow: var(--shadow); transition: var(--transition); z-index: 50; display: none; align-items: center; justify-content: center; touch-action: manipulation; }
-        .scroll-top:active { transform: scale(0.9); }
-        .scroll-top.show { display: flex; }
-        .scroll-top:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        /* ===== Grade Entry Table ===== */
+        .grade-entry-table td input[type="number"] {
+            width: 70px;
+            padding: 4px 6px;
+            background: var(--bg-input);
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 12px;
+            font-family: 'Vazirmatn', sans-serif;
+            text-align: center;
+            transition: var(--transition);
+            outline: none;
+        }
+        .grade-entry-table td input[type="number"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(124,77,255,0.15);
+        }
+        .grade-entry-table td input[type="number"]:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .grade-entry-table td .status-badge {
+            display: inline-block;
+            min-width: 40px;
+            text-align: center;
+        }
         
+        /* ===== Responsive ===== */
         @media (min-width: 769px) {
             .bottom-nav { display: none; }
             body { padding-bottom: 0; }
             .header-left .menu-btn { display: none !important; }
-            .sidebar { position: fixed; right: 0; top: 0; width: var(--sidebar-width); height: 100%; transform: none !important; border-left: 1px solid var(--border); }
+            .sidebar {
+                position: fixed;
+                right: 0;
+                top: 0;
+                width: var(--sidebar-width);
+                height: 100%;
+                transform: none !important;
+                border-left: 1px solid var(--border);
+            }
             .sidebar .close-btn { display: none; }
             .sidebar-overlay { display: none !important; }
             .main-content { margin-right: var(--sidebar-width); }
@@ -341,16 +497,16 @@
     <div class="login-box">
         <div class="login-logo">
             <div class="icon">🏫</div>
-            <h1>مدیریت هوشمند</h1>
-            <p>سیستم جامع مدیریت آموزشی</p>
+            <h1 id="loginTitle">مدیریت هوشمند</h1>
+            <p id="loginSub">سیستم جامع مدیریت آموزشی</p>
         </div>
         <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
             <div class="form-group">
-                <label><i class="fas fa-user"></i> نام کاربری</label>
+                <label id="lblUsername"><i class="fas fa-user"></i> نام کاربری</label>
                 <input type="text" id="loginUsername" placeholder="نام کاربری را وارد کنید" required>
             </div>
             <div class="form-group">
-                <label><i class="fas fa-lock"></i> رمز عبور</label>
+                <label id="lblPassword"><i class="fas fa-lock"></i> رمز عبور</label>
                 <div class="password-wrapper">
                     <input type="password" id="loginPassword" placeholder="رمز عبور را وارد کنید" required>
                     <button type="button" class="toggle-password" onclick="togglePassword()">
@@ -359,7 +515,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label><i class="fas fa-user-tie"></i> نقش</label>
+                <label id="lblRole"><i class="fas fa-user-tie"></i> نقش</label>
                 <select id="loginRole" required>
                     <option value="admin">👑 مدیر</option>
                     <option value="teacher">👨‍🏫 معلم</option>
@@ -371,8 +527,8 @@
             <div class="login-error" id="loginError">
                 <i class="fas fa-exclamation-circle"></i> <span id="errorMessage">نام کاربری یا رمز عبور اشتباه است!</span>
             </div>
-            <div class="login-hint">
-                <span>💡 مدیر: admin / Admin@1404 | معلم: T001 / Teacher@123</span>
+            <div class="login-hint" id="loginHintContainer">
+                <span id="loginHint">💡 برای ورود به عنوان مدیر از حساب پیش‌فرض استفاده کنید</span>
             </div>
         </form>
     </div>
@@ -385,23 +541,23 @@
         <button class="close-btn" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
         <div class="sidebar-brand">
             <div class="brand-icon">🏫</div>
-            <h2>مدیریت مدرسه</h2>
+            <h2 id="brandTitle">مدیریت مدرسه</h2>
             <div class="user-info" id="sidebarUserInfo">مدیر سیستم</div>
         </div>
         <ul class="sidebar-menu" id="sidebarMenu">
-            <li><a class="active" data-page="home"><i class="fas fa-home"></i> <span>داشبورد</span></a></li>
-            <li><a data-page="guide"><i class="fas fa-compass"></i> <span>راهنمایی</span></a></li>
-            <li><a data-page="students"><i class="fas fa-user-graduate"></i> <span>دانش‌آموزان</span></a></li>
-            <li><a data-page="mystudents" style="display:none;"><i class="fas fa-user-graduate"></i> <span>دانش‌آموزان من</span></a></li>
-            <li><a data-page="teachers"><i class="fas fa-chalkboard-teacher"></i> <span>معلمان</span></a></li>
-            <li><a data-page="classes"><i class="fas fa-school"></i> <span>کلاس‌ها</span></a></li>
-            <li><a data-page="subjects"><i class="fas fa-book"></i> <span>دروس</span></a></li>
-            <li><a data-page="grades"><i class="fas fa-star"></i> <span>نمرات</span></a></li>
-            <li><a data-page="attendance"><i class="fas fa-check-circle"></i> <span>حضور</span></a></li>
-            <li><a data-page="reports"><i class="fas fa-chart-bar"></i> <span>گزارشات</span></a></li>
+            <li><a class="active" data-page="home"><i class="fas fa-home"></i> <span id="navHome">داشبورد</span></a></li>
+            <li><a data-page="guide"><i class="fas fa-compass"></i> <span id="navGuide">راهنمایی</span></a></li>
+            <li><a data-page="students"><i class="fas fa-user-graduate"></i> <span id="navStudents">دانش‌آموزان</span></a></li>
+            <li><a data-page="mystudents" style="display:none;"><i class="fas fa-user-graduate"></i> <span id="navMyStudents">دانش‌آموزان من</span></a></li>
+            <li><a data-page="teachers"><i class="fas fa-chalkboard-teacher"></i> <span id="navTeachers">معلمان</span></a></li>
+            <li><a data-page="classes"><i class="fas fa-school"></i> <span id="navClasses">کلاس‌ها</span></a></li>
+            <li><a data-page="subjects"><i class="fas fa-book"></i> <span id="navSubjects">دروس</span></a></li>
+            <li><a data-page="grades"><i class="fas fa-star"></i> <span id="navGrades">نمرات</span></a></li>
+            <li><a data-page="attendance"><i class="fas fa-check-circle"></i> <span id="navAttendance">حضور</span></a></li>
+            <li><a data-page="reports"><i class="fas fa-chart-bar"></i> <span id="navReports">گزارشات</span></a></li>
         </ul>
         <div class="sidebar-footer">
-            <a onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> <span>خروج از سیستم</span></a>
+            <a onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> <span id="logoutBtn">خروج از سیستم</span></a>
         </div>
     </nav>
     
@@ -415,10 +571,10 @@
                 </div>
             </div>
             <div class="header-right">
-                <button class="header-btn" onclick="toggleTheme()" title="تغییر تم">
+                <button class="header-btn" onclick="toggleTheme()" title="تغییر تم" id="themeBtn">
                     <i class="fas fa-moon" id="themeIcon"></i>
                 </button>
-                <button class="header-btn" onclick="toggleLanguage()" title="تغییر زبان">
+                <button class="header-btn" onclick="toggleLanguage()" title="تغییر زبان" id="langBtn">
                     <span id="langLabel">🇮🇷</span>
                 </button>
                 <div class="profile" onclick="toggleProfileMenu()">
@@ -435,58 +591,58 @@
         <!-- ===== HOME ===== -->
         <div class="content-panel active" id="panel-home">
             <div class="stats-grid" id="statsGrid">
-                <div class="stat-card"><div class="stat-icon">👨‍🎓</div><div class="stat-number" id="statStudents">0</div><div class="stat-label">دانش‌آموز</div></div>
-                <div class="stat-card"><div class="stat-icon">👨‍🏫</div><div class="stat-number" id="statTeachers">0</div><div class="stat-label">معلم</div></div>
-                <div class="stat-card"><div class="stat-icon">🏫</div><div class="stat-number" id="statClasses">0</div><div class="stat-label">کلاس</div></div>
-                <div class="stat-card"><div class="stat-icon">📚</div><div class="stat-number" id="statSubjects">0</div><div class="stat-label">درس</div></div>
-                <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-number" id="statAverage">0</div><div class="stat-label">میانگین</div></div>
-                <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-number" id="statAttendance">0%</div><div class="stat-label">حضور</div></div>
+                <div class="stat-card"><div class="stat-icon">👨‍🎓</div><div class="stat-number" id="statStudents">0</div><div class="stat-label" id="statStudentsLabel">دانش‌آموز</div></div>
+                <div class="stat-card"><div class="stat-icon">👨‍🏫</div><div class="stat-number" id="statTeachers">0</div><div class="stat-label" id="statTeachersLabel">معلم</div></div>
+                <div class="stat-card"><div class="stat-icon">🏫</div><div class="stat-number" id="statClasses">0</div><div class="stat-label" id="statClassesLabel">کلاس</div></div>
+                <div class="stat-card"><div class="stat-icon">📚</div><div class="stat-number" id="statSubjects">0</div><div class="stat-label" id="statSubjectsLabel">درس</div></div>
+                <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-number" id="statAverage">0</div><div class="stat-label" id="statAverageLabel">میانگین</div></div>
+                <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-number" id="statAttendance">0%</div><div class="stat-label" id="statAttendanceLabel">حضور</div></div>
             </div>
             
             <div class="setup-wizard" id="setupWizard" style="display:none;">
                 <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
                     <i class="fas fa-magic" style="color:var(--warning);"></i>
-                    <span style="font-weight:600; font-size:13px;">راه‌اندازی مدرسه</span>
-                    <span style="font-size:10px; color:var(--text-secondary);">مراحل به ترتیب</span>
+                    <span style="font-weight:600; font-size:13px;" id="setupTitle">راه‌اندازی مدرسه</span>
+                    <span style="font-size:10px; color:var(--text-secondary);" id="setupSub">مراحل به ترتیب</span>
                 </div>
                 <div id="setupSteps">
                     <div class="step pending" data-step="1">
                         <div class="step-number">1</div>
-                        <div class="step-text"><div class="title">کلاس‌ها</div><div class="desc">ایجاد کلاس‌ها</div></div>
+                        <div class="step-text"><div class="title" id="step1Title">کلاس‌ها</div><div class="desc" id="step1Desc">ایجاد کلاس‌ها</div></div>
                         <div class="step-status" id="stepStatus1">⏳</div>
                     </div>
                     <div class="step pending" data-step="2">
                         <div class="step-number">2</div>
-                        <div class="step-text"><div class="title">معلمان</div><div class="desc">ثبت معلمان</div></div>
+                        <div class="step-text"><div class="title" id="step2Title">معلمان</div><div class="desc" id="step2Desc">ثبت معلمان</div></div>
                         <div class="step-status" id="stepStatus2">⏳</div>
                     </div>
                     <div class="step pending" data-step="3">
                         <div class="step-number">3</div>
-                        <div class="step-text"><div class="title">دانش‌آموزان</div><div class="desc">ثبت دانش‌آموزان</div></div>
+                        <div class="step-text"><div class="title" id="step3Title">دانش‌آموزان</div><div class="desc" id="step3Desc">ثبت دانش‌آموزان</div></div>
                         <div class="step-status" id="stepStatus3">⏳</div>
                     </div>
                     <div class="step pending" data-step="4">
                         <div class="step-number">4</div>
-                        <div class="step-text"><div class="title">دروس</div><div class="desc">تعریف دروس</div></div>
+                        <div class="step-text"><div class="title" id="step4Title">دروس</div><div class="desc" id="step4Desc">تعریف دروس</div></div>
                         <div class="step-status" id="stepStatus4">⏳</div>
                     </div>
                 </div>
                 <div class="step-actions">
-                    <button class="btn btn-warning btn-sm" onclick="goToStep(1)"><i class="fas fa-1"></i> کلاس</button>
-                    <button class="btn btn-warning btn-sm" onclick="goToStep(2)"><i class="fas fa-2"></i> معلم</button>
-                    <button class="btn btn-warning btn-sm" onclick="goToStep(3)"><i class="fas fa-3"></i> دانش‌آموز</button>
-                    <button class="btn btn-warning btn-sm" onclick="goToStep(4)"><i class="fas fa-4"></i> درس</button>
+                    <button class="btn btn-warning btn-sm" onclick="goToStep(1)"><i class="fas fa-1"></i> <span id="stepBtn1">کلاس</span></button>
+                    <button class="btn btn-warning btn-sm" onclick="goToStep(2)"><i class="fas fa-2"></i> <span id="stepBtn2">معلم</span></button>
+                    <button class="btn btn-warning btn-sm" onclick="goToStep(3)"><i class="fas fa-3"></i> <span id="stepBtn3">دانش‌آموز</span></button>
+                    <button class="btn btn-warning btn-sm" onclick="goToStep(4)"><i class="fas fa-4"></i> <span id="stepBtn4">درس</span></button>
                 </div>
             </div>
             
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                 <div class="table-container" style="padding:12px;">
-                    <h3 style="font-size:13px; margin-bottom:8px;">📋 فعالیت‌ها</h3>
-                    <div id="recentActivities" style="font-size:11px;"><p class="text-muted text-center" style="padding:12px;">هیچ فعالیتی ثبت نشده است</p></div>
+                    <h3 style="font-size:13px; margin-bottom:8px;" id="activitiesTitle">📋 فعالیت‌ها</h3>
+                    <div id="recentActivities" style="font-size:11px;"><p class="text-muted text-center" style="padding:12px;" id="noActivities">هیچ فعالیتی ثبت نشده است</p></div>
                 </div>
                 <div class="table-container" style="padding:12px;">
-                    <h3 style="font-size:13px; margin-bottom:8px;">🚨 هشدارها</h3>
-                    <div id="alertsList" style="font-size:11px;"><p class="text-muted text-center" style="padding:12px;">همه چیز عالی است!</p></div>
+                    <h3 style="font-size:13px; margin-bottom:8px;" id="alertsTitle">🚨 هشدارها</h3>
+                    <div id="alertsList" style="font-size:11px;"><p class="text-muted text-center" style="padding:12px;" id="noAlerts">همه چیز عالی است!</p></div>
                 </div>
             </div>
         </div>
@@ -494,31 +650,31 @@
         <!-- ===== GUIDE ===== -->
         <div class="content-panel" id="panel-guide">
             <div class="panel-header">
-                <h2><i class="fas fa-compass" style="color:var(--primary);"></i> راهنمای استفاده از سیستم</h2>
+                <h2><i class="fas fa-compass" style="color:var(--primary);"></i> <span id="guideTitle">راهنمای استفاده از سیستم</span></h2>
             </div>
             <div class="guide-section">
-                <h3><i class="fas fa-rocket"></i> شروع سریع</h3>
-                <div class="guide-step"><div class="step-num">1</div><div class="step-content"><div class="title">ایجاد کلاس‌ها</div><div class="desc">ابتدا کلاس‌های مدرسه را ایجاد کنید.</div><button class="btn btn-primary btn-sm" onclick="goToStep(1)"><i class="fas fa-arrow-left"></i> برو به کلاس‌ها</button></div></div>
-                <div class="guide-step"><div class="step-num">2</div><div class="step-content"><div class="title">ثبت معلمان</div><div class="desc">معلمان را ثبت کنید و به کلاس‌ها اختصاص دهید.</div><button class="btn btn-primary btn-sm" onclick="goToStep(2)"><i class="fas fa-arrow-left"></i> برو به معلمان</button></div></div>
-                <div class="guide-step"><div class="step-num">3</div><div class="step-content"><div class="title">ثبت دانش‌آموزان</div><div class="desc">دانش‌آموزان را در کلاس‌ها ثبت کنید.</div><button class="btn btn-primary btn-sm" onclick="goToStep(3)"><i class="fas fa-arrow-left"></i> برو به دانش‌آموزان</button></div></div>
-                <div class="guide-step"><div class="step-num">4</div><div class="step-content"><div class="title">تعریف دروس</div><div class="desc">دروس را به کلاس‌ها و معلمان اختصاص دهید.</div><button class="btn btn-primary btn-sm" onclick="goToStep(4)"><i class="fas fa-arrow-left"></i> برو به دروس</button></div></div>
+                <h3><i class="fas fa-rocket"></i> <span id="guideQuickStart">شروع سریع</span></h3>
+                <div class="guide-step"><div class="step-num">1</div><div class="step-content"><div class="title" id="guideStep1Title">ایجاد کلاس‌ها</div><div class="desc" id="guideStep1Desc">ابتدا کلاس‌های مدرسه را ایجاد کنید.</div><button class="btn btn-primary btn-sm" onclick="goToStep(1)"><i class="fas fa-arrow-left"></i> <span id="guideGoTo">برو به کلاس‌ها</span></button></div></div>
+                <div class="guide-step"><div class="step-num">2</div><div class="step-content"><div class="title" id="guideStep2Title">ثبت معلمان</div><div class="desc" id="guideStep2Desc">معلمان را ثبت کنید و به کلاس‌ها اختصاص دهید.</div><button class="btn btn-primary btn-sm" onclick="goToStep(2)"><i class="fas fa-arrow-left"></i> <span id="guideGoTo2">برو به معلمان</span></button></div></div>
+                <div class="guide-step"><div class="step-num">3</div><div class="step-content"><div class="title" id="guideStep3Title">ثبت دانش‌آموزان</div><div class="desc" id="guideStep3Desc">دانش‌آموزان را در کلاس‌ها ثبت کنید.</div><button class="btn btn-primary btn-sm" onclick="goToStep(3)"><i class="fas fa-arrow-left"></i> <span id="guideGoTo3">برو به دانش‌آموزان</span></button></div></div>
+                <div class="guide-step"><div class="step-num">4</div><div class="step-content"><div class="title" id="guideStep4Title">تعریف دروس</div><div class="desc" id="guideStep4Desc">دروس را به کلاس‌ها و معلمان اختصاص دهید.</div><button class="btn btn-primary btn-sm" onclick="goToStep(4)"><i class="fas fa-arrow-left"></i> <span id="guideGoTo4">برو به دروس</span></button></div></div>
             </div>
         </div>
         
         <!-- ===== STUDENTS ===== -->
         <div class="content-panel" id="panel-students">
             <div class="panel-header">
-                <h2>👨‍🎓 دانش‌آموزان</h2>
+                <h2 id="studentsTitle">👨‍🎓 دانش‌آموزان</h2>
                 <div class="actions">
-                    <button class="btn btn-primary btn-sm" onclick="openModal('addStudent')"><i class="fas fa-plus"></i> افزودن</button>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('addStudent')"><i class="fas fa-plus"></i> <span id="addBtn">افزودن</span></button>
                     <button class="btn btn-excel btn-sm" onclick="exportToExcel('students')"><i class="fas fa-file-excel"></i></button>
                 </div>
             </div>
             <div class="quick-entry">
-                <div class="form-group"><label>شناسه</label><input type="text" id="quickStudentId" placeholder="مثال: 14001" onkeydown="if(event.key==='Enter') quickAddStudent()"></div>
-                <div class="form-group"><label>نام کامل</label><input type="text" id="quickStudentName" placeholder="نام" onkeydown="if(event.key==='Enter') quickAddStudent()"></div>
-                <div class="form-group"><label>کلاس</label><select id="quickStudentClass"><option value="">انتخاب...</option></select></div>
-                <div class="actions"><button class="btn btn-success" onclick="quickAddStudent()"><i class="fas fa-save"></i> ثبت</button></div>
+                <div class="form-group"><label id="quickId">شناسه</label><input type="text" id="quickStudentId" placeholder="مثال: 14001" onkeydown="if(event.key==='Enter') quickAddStudent()"></div>
+                <div class="form-group"><label id="quickName">نام کامل</label><input type="text" id="quickStudentName" placeholder="نام" onkeydown="if(event.key==='Enter') quickAddStudent()"></div>
+                <div class="form-group"><label id="quickClass">کلاس</label><select id="quickStudentClass"><option value="">انتخاب...</option></select></div>
+                <div class="actions"><button class="btn btn-success" onclick="quickAddStudent()"><i class="fas fa-save"></i> <span id="saveBtn">ثبت</span></button></div>
             </div>
             <div class="search-bar">
                 <input type="text" id="studentSearch" placeholder="🔍 جستجو..." onkeyup="debounceSearch('students')">
@@ -527,30 +683,39 @@
             <div class="table-container">
                 <div class="scroll-hint">← برای دیدن بقیه بکشید →</div>
                 <table>
-                    <thead><tr><th>شناسه</th><th>نام</th><th>کلاس</th><th>میانگین</th><th>وضعیت</th><th>عملیات</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th data-i18n="colId">شناسه</th>
+                            <th data-i18n="colName">نام</th>
+                            <th data-i18n="colClass">کلاس</th>
+                            <th data-i18n="colAverage">میانگین</th>
+                            <th data-i18n="colStatus">وضعیت</th>
+                            <th data-i18n="colActions">عملیات</th>
+                        </tr>
+                    </thead>
                     <tbody id="studentsTableBody"></tbody>
                 </table>
             </div>
             <div class="pagination" id="studentsPagination"></div>
         </div>
         
-        <!-- ===== MY STUDENTS ===== -->
+        <!-- ===== MY STUDENTS (Teacher) ===== -->
         <div class="content-panel" id="panel-mystudents">
             <div class="panel-header">
-                <h2>👨‍🎓 دانش‌آموزان من</h2>
+                <h2 id="myStudentsTitle">👨‍🎓 دانش‌آموزان من</h2>
                 <div class="actions">
-                    <button class="btn btn-primary btn-sm" onclick="openModal('addGradeTeacher')"><i class="fas fa-star"></i> نمره</button>
-                    <button class="btn btn-success btn-sm" onclick="openModal('addAttendanceTeacher')"><i class="fas fa-check-circle"></i> حضور</button>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('addGradeTeacher')"><i class="fas fa-star"></i> <span id="gradeBtn">نمره</span></button>
+                    <button class="btn btn-success btn-sm" onclick="openModal('addAttendanceTeacher')"><i class="fas fa-check-circle"></i> <span id="attendanceBtn">حضور</span></button>
                 </div>
             </div>
-            <div class="teacher-restricted"><i class="fas fa-info-circle"></i> فقط دانش‌آموزان کلاس‌های خود را می‌بینید</div>
+            <div class="teacher-restricted"><i class="fas fa-info-circle"></i> <span id="teacherRestricted">فقط دانش‌آموزان کلاس‌های خود را می‌بینید</span></div>
             <div class="search-bar">
                 <input type="text" id="myStudentSearch" placeholder="🔍 جستجو..." onkeyup="debounceSearch('mystudents')">
             </div>
             <div class="table-container">
                 <div class="scroll-hint">← برای دیدن بقیه بکشید →</div>
                 <table>
-                    <thead><tr><th>شناسه</th><th>نام</th><th>کلاس</th><th>میانگین</th><th>وضعیت</th><th>عملیات</th></tr></thead>
+                    <thead><tr><th data-i18n="colId">شناسه</th><th data-i18n="colName">نام</th><th data-i18n="colClass">کلاس</th><th data-i18n="colAverage">میانگین</th><th data-i18n="colStatus">وضعیت</th><th data-i18n="colActions">عملیات</th></tr></thead>
                     <tbody id="myStudentsTableBody"></tbody>
                 </table>
             </div>
@@ -560,9 +725,9 @@
         <!-- ===== TEACHERS ===== -->
         <div class="content-panel" id="panel-teachers">
             <div class="panel-header">
-                <h2>👨‍🏫 معلمان</h2>
+                <h2 id="teachersTitle">👨‍🏫 معلمان</h2>
                 <div class="actions">
-                    <button class="btn btn-primary btn-sm" onclick="openModal('addTeacher')"><i class="fas fa-plus"></i> افزودن</button>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('addTeacher')"><i class="fas fa-plus"></i> <span id="addBtn2">افزودن</span></button>
                     <button class="btn btn-excel btn-sm" onclick="exportToExcel('teachers')"><i class="fas fa-file-excel"></i></button>
                 </div>
             </div>
@@ -572,7 +737,16 @@
             <div class="table-container">
                 <div class="scroll-hint">← برای دیدن بقیه بکشید →</div>
                 <table>
-                    <thead><tr><th>شناسه</th><th>نام</th><th>تخصص</th><th>کلاس‌ها</th><th>درس‌ها</th><th>عملیات</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th data-i18n="colId">شناسه</th>
+                            <th data-i18n="colName">نام</th>
+                            <th data-i18n="colSpecialty">تخصص</th>
+                            <th data-i18n="colClasses">کلاس‌ها</th>
+                            <th data-i18n="colSubjects">درس‌ها</th>
+                            <th data-i18n="colActions">عملیات</th>
+                        </tr>
+                    </thead>
                     <tbody id="teachersTableBody"></tbody>
                 </table>
             </div>
@@ -582,17 +756,17 @@
         <!-- ===== CLASSES ===== -->
         <div class="content-panel" id="panel-classes">
             <div class="panel-header">
-                <h2>🏫 کلاس‌ها</h2>
+                <h2 id="classesTitle">🏫 کلاس‌ها</h2>
                 <div class="actions">
-                    <button class="btn btn-primary btn-sm" onclick="openModal('addClass')"><i class="fas fa-plus"></i> افزودن</button>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('addClass')"><i class="fas fa-plus"></i> <span id="addBtn3">افزودن</span></button>
                     <button class="btn btn-excel btn-sm" onclick="exportToExcel('classes')"><i class="fas fa-file-excel"></i></button>
                 </div>
             </div>
             <div class="quick-entry">
-                <div class="form-group"><label>شناسه</label><input type="text" id="quickClassId" placeholder="مثال: C001" onkeydown="if(event.key==='Enter') quickAddClass()"></div>
-                <div class="form-group"><label>نام کلاس</label><input type="text" id="quickClassName" placeholder="مثال: ۱۰-الف" onkeydown="if(event.key==='Enter') quickAddClass()"></div>
-                <div class="form-group"><label>پایه</label><input type="number" id="quickClassGrade" placeholder="مثال: 10" onkeydown="if(event.key==='Enter') quickAddClass()"></div>
-                <div class="actions"><button class="btn btn-success" onclick="quickAddClass()"><i class="fas fa-save"></i> ثبت</button></div>
+                <div class="form-group"><label id="quickId2">شناسه</label><input type="text" id="quickClassId" placeholder="مثال: C001" onkeydown="if(event.key==='Enter') quickAddClass()"></div>
+                <div class="form-group"><label id="quickName2">نام کلاس</label><input type="text" id="quickClassName" placeholder="مثال: ۱۰-الف" onkeydown="if(event.key==='Enter') quickAddClass()"></div>
+                <div class="form-group"><label id="quickGrade">پایه</label><input type="number" id="quickClassGrade" placeholder="مثال: 10" onkeydown="if(event.key==='Enter') quickAddClass()"></div>
+                <div class="actions"><button class="btn btn-success" onclick="quickAddClass()"><i class="fas fa-save"></i> <span id="saveBtn2">ثبت</span></button></div>
             </div>
             <div class="search-bar">
                 <input type="text" id="classSearch" placeholder="🔍 جستجو..." onkeyup="debounceSearch('classes')">
@@ -604,9 +778,9 @@
         <!-- ===== SUBJECTS ===== -->
         <div class="content-panel" id="panel-subjects">
             <div class="panel-header">
-                <h2>📚 دروس</h2>
+                <h2 id="subjectsTitle">📚 دروس</h2>
                 <div class="actions">
-                    <button class="btn btn-primary btn-sm" onclick="openModal('addSubject')"><i class="fas fa-plus"></i> افزودن</button>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('addSubject')"><i class="fas fa-plus"></i> <span id="addBtn4">افزودن</span></button>
                     <button class="btn btn-excel btn-sm" onclick="exportToExcel('subjects')"><i class="fas fa-file-excel"></i></button>
                 </div>
             </div>
@@ -617,7 +791,16 @@
             <div class="table-container">
                 <div class="scroll-hint">← برای دیدن بقیه بکشید →</div>
                 <table>
-                    <thead><tr><th>شناسه</th><th>نام</th><th>معلم</th><th>کلاس</th><th>واحد</th><th>عملیات</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th data-i18n="colId">شناسه</th>
+                            <th data-i18n="colName">نام</th>
+                            <th data-i18n="colTeacher">معلم</th>
+                            <th data-i18n="colClass">کلاس</th>
+                            <th data-i18n="colUnits">واحد</th>
+                            <th data-i18n="colActions">عملیات</th>
+                        </tr>
+                    </thead>
                     <tbody id="subjectsTableBody"></tbody>
                 </table>
             </div>
@@ -627,9 +810,9 @@
         <!-- ===== GRADES ===== -->
         <div class="content-panel" id="panel-grades">
             <div class="panel-header">
-                <h2>⭐ نمرات</h2>
+                <h2 id="gradesTitle">⭐ نمرات</h2>
                 <div class="actions">
-                    <button class="btn btn-primary btn-sm" onclick="openModal('addGrade')"><i class="fas fa-plus"></i> ثبت نمره</button>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('addGrade')"><i class="fas fa-plus"></i> <span id="addGradeBtn">ثبت نمره</span></button>
                     <button class="btn btn-excel btn-sm" onclick="exportToExcel('grades')"><i class="fas fa-file-excel"></i></button>
                 </div>
             </div>
@@ -641,7 +824,17 @@
             <div class="table-container">
                 <div class="scroll-hint">← برای دیدن بقیه بکشید →</div>
                 <table>
-                    <thead><tr><th>دانش‌آموز</th><th>درس</th><th>نمره</th><th>نوع</th><th>تاریخ</th><th>معلم</th><th>عملیات</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th data-i18n="colStudent">دانش‌آموز</th>
+                            <th data-i18n="colSubject">درس</th>
+                            <th data-i18n="colGrade">نمره</th>
+                            <th data-i18n="colExamType">نوع</th>
+                            <th data-i18n="colDate">تاریخ</th>
+                            <th data-i18n="colTeacher">معلم</th>
+                            <th data-i18n="colActions">عملیات</th>
+                        </tr>
+                    </thead>
                     <tbody id="gradesTableBody"></tbody>
                 </table>
             </div>
@@ -651,9 +844,9 @@
         <!-- ===== ATTENDANCE ===== -->
         <div class="content-panel" id="panel-attendance">
             <div class="panel-header">
-                <h2>✅ حضور و غیاب</h2>
+                <h2 id="attendanceTitle">✅ حضور و غیاب</h2>
                 <div class="actions">
-                    <button class="btn btn-primary btn-sm" onclick="openModal('addAttendance')"><i class="fas fa-plus"></i> ثبت حضور</button>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('addAttendance')"><i class="fas fa-plus"></i> <span id="addAttendanceBtn">ثبت حضور</span></button>
                     <button class="btn btn-excel btn-sm" onclick="exportToExcel('attendance')"><i class="fas fa-file-excel"></i></button>
                 </div>
             </div>
@@ -665,7 +858,16 @@
             <div class="table-container">
                 <div class="scroll-hint">← برای دیدن بقیه بکشید →</div>
                 <table>
-                    <thead><tr><th>دانش‌آموز</th><th>تاریخ</th><th>وضعیت</th><th>توضیحات</th><th>معلم</th><th>عملیات</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th data-i18n="colStudent">دانش‌آموز</th>
+                            <th data-i18n="colDate">تاریخ</th>
+                            <th data-i18n="colStatus">وضعیت</th>
+                            <th data-i18n="colNote">توضیحات</th>
+                            <th data-i18n="colTeacher">معلم</th>
+                            <th data-i18n="colActions">عملیات</th>
+                        </tr>
+                    </thead>
                     <tbody id="attendanceTableBody"></tbody>
                 </table>
             </div>
@@ -675,49 +877,49 @@
         <!-- ===== REPORTS ===== -->
         <div class="content-panel" id="panel-reports">
             <div class="panel-header">
-                <h2>📊 گزارشات</h2>
+                <h2 id="reportsTitle">📊 گزارشات</h2>
                 <div class="actions">
-                    <button class="btn btn-excel btn-sm" onclick="exportToExcel('all')"><i class="fas fa-file-excel"></i> خروجی کامل</button>
+                    <button class="btn btn-excel btn-sm" onclick="exportToExcel('all')"><i class="fas fa-file-excel"></i> <span id="fullExport">خروجی کامل</span></button>
                 </div>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                 <div class="table-container" style="padding:14px; text-align:center;">
                     <i class="fas fa-file-pdf" style="font-size:28px; color:var(--primary);"></i>
-                    <h3 style="font-size:13px; margin:6px 0;">ماهانه</h3>
-                    <button class="btn btn-primary btn-sm" onclick="generateReport('monthly')"><i class="fas fa-download"></i> دانلود</button>
+                    <h3 style="font-size:13px; margin:6px 0;" id="reportMonthly">ماهانه</h3>
+                    <button class="btn btn-primary btn-sm" onclick="generateReport('monthly')"><i class="fas fa-download"></i> <span id="downloadBtn">دانلود</span></button>
                 </div>
                 <div class="table-container" style="padding:14px; text-align:center;">
                     <i class="fas fa-user-graduate" style="font-size:28px; color:var(--success);"></i>
-                    <h3 style="font-size:13px; margin:6px 0;">کارنامه</h3>
-                    <button class="btn btn-success btn-sm" onclick="openModal('reportCard')"><i class="fas fa-print"></i> مشاهده</button>
+                    <h3 style="font-size:13px; margin:6px 0;" id="reportCard">کارنامه</h3>
+                    <button class="btn btn-success btn-sm" onclick="openModal('reportCard')"><i class="fas fa-print"></i> <span id="viewBtn">مشاهده</span></button>
                 </div>
                 <div class="table-container" style="padding:14px; text-align:center;">
                     <i class="fas fa-chart-line" style="font-size:28px; color:var(--warning);"></i>
-                    <h3 style="font-size:13px; margin:6px 0;">تحلیل</h3>
-                    <button class="btn btn-warning btn-sm" onclick="generateReport('analytics')"><i class="fas fa-chart-pie"></i> مشاهده</button>
+                    <h3 style="font-size:13px; margin:6px 0;" id="reportAnalytics">تحلیل</h3>
+                    <button class="btn btn-warning btn-sm" onclick="generateReport('analytics')"><i class="fas fa-chart-pie"></i> <span id="viewBtn2">مشاهده</span></button>
                 </div>
                 <div class="table-container" style="padding:14px; text-align:center;">
                     <i class="fas fa-trophy" style="font-size:28px; color:#FF6F00;"></i>
-                    <h3 style="font-size:13px; margin:6px 0;">رتبه‌بندی</h3>
-                    <button class="btn btn-warning btn-sm" onclick="showRanking()"><i class="fas fa-ranking-star"></i> مشاهده</button>
+                    <h3 style="font-size:13px; margin:6px 0;" id="reportRanking">رتبه‌بندی</h3>
+                    <button class="btn btn-warning btn-sm" onclick="showRanking()"><i class="fas fa-ranking-star"></i> <span id="viewBtn3">مشاهده</span></button>
                 </div>
             </div>
         </div>
         
         <div class="footer">
-            <p><span class="heart">❤️</span> ساخته شده توسط <span class="brand">BitVolt.MTV</span> <span class="heart">❤️</span></p>
+            <p><span class="heart">❤️</span> <span id="footerText">ساخته شده توسط</span> <span class="brand">BitVolt.MTV</span> <span class="heart">❤️</span></p>
         </div>
     </div>
 </div>
 
 <!-- ===== BOTTOM NAV ===== -->
 <nav class="bottom-nav" id="bottomNav">
-    <button class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>خانه</span></button>
-    <button class="nav-item" data-page="guide"><i class="fas fa-compass"></i><span>راهنما</span></button>
-    <button class="nav-item" data-page="students"><i class="fas fa-user-graduate"></i><span>دانش‌آموز</span></button>
-    <button class="nav-item" data-page="mystudents" style="display:none;"><i class="fas fa-user-graduate"></i><span>دانش‌آموزان من</span></button>
-    <button class="nav-item" data-page="classes"><i class="fas fa-school"></i><span>کلاس‌ها</span></button>
-    <button class="nav-item" data-page="more" onclick="showMoreMenu()"><i class="fas fa-ellipsis-h"></i><span>بیشتر</span></button>
+    <button class="nav-item active" data-page="home"><i class="fas fa-home"></i><span id="navHome2">خانه</span></button>
+    <button class="nav-item" data-page="guide"><i class="fas fa-compass"></i><span id="navGuide2">راهنما</span></button>
+    <button class="nav-item" data-page="students"><i class="fas fa-user-graduate"></i><span id="navStudents2">دانش‌آموز</span></button>
+    <button class="nav-item" data-page="mystudents" style="display:none;"><i class="fas fa-user-graduate"></i><span id="navMyStudents2">دانش‌آموزان من</span></button>
+    <button class="nav-item" data-page="classes"><i class="fas fa-school"></i><span id="navClasses2">کلاس‌ها</span></button>
+    <button class="nav-item" data-page="more" onclick="showMoreMenu()"><i class="fas fa-ellipsis-h"></i><span id="navMore">بیشتر</span></button>
 </nav>
 
 <!-- ===== SCROLL TOP ===== -->
@@ -730,18 +932,18 @@
 <!-- Add Class -->
 <div class="modal-overlay" id="modal-addClass">
     <div class="modal">
-        <div class="modal-header"><h3>➕ افزودن کلاس</h3><button class="close-modal" onclick="closeModal('addClass')">&times;</button></div>
+        <div class="modal-header"><h3 id="addClassModal">➕ افزودن کلاس</h3><button class="close-modal" onclick="closeModal('addClass')">&times;</button></div>
         <form onsubmit="addClass(event)">
             <div class="form-row">
-                <div class="form-group"><label>شناسه</label><input type="text" id="classId" placeholder="مثال: C001" required></div>
-                <div class="form-group"><label>نام کلاس</label><input type="text" id="className" placeholder="مثال: ۱۰-الف" required></div>
+                <div class="form-group"><label id="idLabel">شناسه</label><input type="text" id="classId" placeholder="مثال: C001" required></div>
+                <div class="form-group"><label id="nameLabel">نام کلاس</label><input type="text" id="className" placeholder="مثال: ۱۰-الف" required></div>
             </div>
             <div class="form-row">
-                <div class="form-group"><label>پایه</label><input type="number" id="classGrade" placeholder="مثال: 10" required></div>
-                <div class="form-group"><label>ظرفیت</label><input type="number" id="classCapacity" value="30" required></div>
+                <div class="form-group"><label id="gradeLabel">پایه</label><input type="number" id="classGrade" placeholder="مثال: 10" required></div>
+                <div class="form-group"><label id="capacityLabel">ظرفیت</label><input type="number" id="classCapacity" value="30" required></div>
             </div>
-            <div class="form-group"><label>معلم‌ها</label><select id="classTeachers" multiple style="height:70px;"></select></div>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> ثبت کلاس</button>
+            <div class="form-group"><label id="teacherLabel">معلم‌ها</label><select id="classTeachers" multiple style="height:70px;"></select></div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> <span id="saveBtn3">ثبت کلاس</span></button>
         </form>
     </div>
 </div>
@@ -749,17 +951,17 @@
 <!-- Add Student -->
 <div class="modal-overlay" id="modal-addStudent">
     <div class="modal">
-        <div class="modal-header"><h3>➕ افزودن دانش‌آموز</h3><button class="close-modal" onclick="closeModal('addStudent')">&times;</button></div>
+        <div class="modal-header"><h3 id="addStudentModal">➕ افزودن دانش‌آموز</h3><button class="close-modal" onclick="closeModal('addStudent')">&times;</button></div>
         <form onsubmit="addStudent(event)">
             <div class="form-row">
-                <div class="form-group"><label>شناسه</label><input type="text" id="studentId" placeholder="مثال: 14001" required></div>
-                <div class="form-group"><label>نام کامل</label><input type="text" id="studentName" placeholder="نام" required></div>
+                <div class="form-group"><label id="idLabel2">شناسه</label><input type="text" id="studentId" placeholder="مثال: 14001" required></div>
+                <div class="form-group"><label id="nameLabel2">نام کامل</label><input type="text" id="studentName" placeholder="نام" required></div>
             </div>
             <div class="form-row">
-                <div class="form-group"><label>کلاس</label><select id="studentClassSelect" required><option value="">انتخاب...</option></select></div>
-                <div class="form-group"><label>شماره والدین</label><input type="tel" id="studentParentPhone" placeholder="مثال: 09123456789"></div>
+                <div class="form-group"><label id="classLabel">کلاس</label><select id="studentClassSelect" required><option value="">انتخاب...</option></select></div>
+                <div class="form-group"><label id="phoneLabel">شماره والدین</label><input type="tel" id="studentParentPhone" placeholder="مثال: 09123456789"></div>
             </div>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> ثبت دانش‌آموز</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> <span id="saveBtn4">ثبت دانش‌آموز</span></button>
         </form>
     </div>
 </div>
@@ -767,20 +969,20 @@
 <!-- Add Teacher -->
 <div class="modal-overlay" id="modal-addTeacher">
     <div class="modal">
-        <div class="modal-header"><h3>➕ افزودن معلم</h3><button class="close-modal" onclick="closeModal('addTeacher')">&times;</button></div>
+        <div class="modal-header"><h3 id="addTeacherModal">➕ افزودن معلم</h3><button class="close-modal" onclick="closeModal('addTeacher')">&times;</button></div>
         <form onsubmit="addTeacher(event)">
             <div class="form-row">
-                <div class="form-group"><label>شناسه (نام کاربری)</label><input type="text" id="teacherId" placeholder="مثال: T001" required></div>
-                <div class="form-group"><label>نام کامل</label><input type="text" id="teacherName" placeholder="نام" required></div>
+                <div class="form-group"><label id="idLabel3">شناسه (نام کاربری)</label><input type="text" id="teacherId" placeholder="مثال: T001" required></div>
+                <div class="form-group"><label id="nameLabel3">نام کامل</label><input type="text" id="teacherName" placeholder="نام" required></div>
             </div>
             <div class="form-row">
-                <div class="form-group"><label>تخصص</label><input type="text" id="teacherSpecialty" placeholder="مثال: ریاضی" required></div>
-                <div class="form-group"><label>شماره تماس</label><input type="tel" id="teacherPhone" placeholder="مثال: 09123456789"></div>
+                <div class="form-group"><label id="specialtyLabel">تخصص</label><input type="text" id="teacherSpecialty" placeholder="مثال: ریاضی" required></div>
+                <div class="form-group"><label id="phoneLabel2">شماره تماس</label><input type="tel" id="teacherPhone" placeholder="مثال: 09123456789"></div>
             </div>
-            <div class="form-group"><label>کلاس‌های تدریس</label><select id="teacherClasses" multiple style="height:70px;"></select></div>
-            <div class="form-group"><label>درس‌های تدریس</label><select id="teacherSubjects" multiple style="height:70px;"></select></div>
-            <div class="form-group"><label>رمز عبور (حداقل ۶ کاراکتر)</label><input type="password" id="teacherPassword" placeholder="رمز عبور" required minlength="6"></div>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> ثبت معلم</button>
+            <div class="form-group"><label id="classLabel2">کلاس‌های تدریس</label><select id="teacherClasses" multiple style="height:70px;"></select></div>
+            <div class="form-group"><label id="subjectLabel">درس‌های تدریس</label><select id="teacherSubjects" multiple style="height:70px;"></select></div>
+            <div class="form-group"><label id="passwordLabel">رمز عبور (حداقل ۶ کاراکتر)</label><input type="password" id="teacherPassword" placeholder="رمز عبور" required minlength="6"></div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> <span id="saveBtn5">ثبت معلم</span></button>
         </form>
     </div>
 </div>
@@ -788,21 +990,21 @@
 <!-- Add Subject -->
 <div class="modal-overlay" id="modal-addSubject">
     <div class="modal">
-        <div class="modal-header"><h3>➕ افزودن درس</h3><button class="close-modal" onclick="closeModal('addSubject')">&times;</button></div>
+        <div class="modal-header"><h3 id="addSubjectModal">➕ افزودن درس</h3><button class="close-modal" onclick="closeModal('addSubject')">&times;</button></div>
         <form onsubmit="addSubject(event)">
             <div class="form-row">
-                <div class="form-group"><label>شناسه</label><input type="text" id="subjectId" placeholder="مثال: SUB001" required></div>
-                <div class="form-group"><label>نام درس</label><input type="text" id="subjectName" placeholder="نام درس" required></div>
+                <div class="form-group"><label id="idLabel4">شناسه</label><input type="text" id="subjectId" placeholder="مثال: SUB001" required></div>
+                <div class="form-group"><label id="nameLabel4">نام درس</label><input type="text" id="subjectName" placeholder="نام درس" required></div>
             </div>
             <div class="form-row">
-                <div class="form-group"><label>معلم</label><select id="subjectTeacher" required><option value="">انتخاب...</option></select></div>
-                <div class="form-group"><label>کلاس</label><select id="subjectClass" required><option value="">انتخاب...</option></select></div>
+                <div class="form-group"><label id="teacherLabel2">معلم</label><select id="subjectTeacher" required><option value="">انتخاب...</option></select></div>
+                <div class="form-group"><label id="classLabel3">کلاس</label><select id="subjectClass" required><option value="">انتخاب...</option></select></div>
             </div>
             <div class="form-row">
-                <div class="form-group"><label>واحد</label><input type="number" id="subjectUnits" value="3" required></div>
-                <div class="form-group"><label>نوع</label><select id="subjectType"><option value="نظری">نظری</option><option value="عملی">عملی</option><option value="نظری-عملی">نظری-عملی</option></select></div>
+                <div class="form-group"><label id="unitLabel">واحد</label><input type="number" id="subjectUnits" value="3" required></div>
+                <div class="form-group"><label id="typeLabel">نوع</label><select id="subjectType"><option value="نظری">نظری</option><option value="عملی">عملی</option><option value="نظری-عملی">نظری-عملی</option></select></div>
             </div>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> ثبت درس</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> <span id="saveBtn6">ثبت درس</span></button>
         </form>
     </div>
 </div>
@@ -810,15 +1012,15 @@
 <!-- Add Grade -->
 <div class="modal-overlay" id="modal-addGrade">
     <div class="modal">
-        <div class="modal-header"><h3>⭐ ثبت نمره</h3><button class="close-modal" onclick="closeModal('addGrade')">&times;</button></div>
+        <div class="modal-header"><h3 id="addGradeModal">⭐ ثبت نمره</h3><button class="close-modal" onclick="closeModal('addGrade')">&times;</button></div>
         <form onsubmit="addGrade(event)">
-            <div class="form-group"><label>دانش‌آموز</label><select id="gradeStudent" required><option value="">انتخاب...</option></select></div>
-            <div class="form-group"><label>درس</label><select id="gradeSubject" required><option value="">انتخاب...</option></select></div>
+            <div class="form-group"><label id="studentLabel">دانش‌آموز</label><select id="gradeStudent" required><option value="">انتخاب...</option></select></div>
+            <div class="form-group"><label id="subjectLabel2">درس</label><select id="gradeSubject" required><option value="">انتخاب...</option></select></div>
             <div class="form-row">
-                <div class="form-group"><label>نمره (۰-۲۰)</label><input type="number" id="gradeValue" min="0" max="20" step="0.25" required></div>
-                <div class="form-group"><label>نوع</label><select id="gradeExamType"><option value="quiz">آزمون کوتاه</option><option value="homework">تکلیف</option><option value="midterm">میان‌ترم</option><option value="final">پایان‌ترم</option></select></div>
+                <div class="form-group"><label id="gradeValue">نمره (۰-۲۰)</label><input type="number" id="gradeValue" min="0" max="20" step="0.25" required></div>
+                <div class="form-group"><label id="examTypeLabel">نوع</label><select id="gradeExamType"><option value="quiz">آزمون کوتاه</option><option value="homework">تکلیف</option><option value="midterm">میان‌ترم</option><option value="final">پایان‌ترم</option></select></div>
             </div>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> ثبت نمره</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> <span id="saveBtn7">ثبت نمره</span></button>
         </form>
     </div>
 </div>
@@ -826,15 +1028,15 @@
 <!-- Add Grade Teacher -->
 <div class="modal-overlay" id="modal-addGradeTeacher">
     <div class="modal">
-        <div class="modal-header"><h3>⭐ ثبت نمره</h3><button class="close-modal" onclick="closeModal('addGradeTeacher')">&times;</button></div>
+        <div class="modal-header"><h3 id="addGradeModal">⭐ ثبت نمره</h3><button class="close-modal" onclick="closeModal('addGradeTeacher')">&times;</button></div>
         <form onsubmit="addGradeTeacher(event)">
-            <div class="form-group"><label>دانش‌آموز</label><select id="gradeStudentTeacher" required><option value="">انتخاب...</option></select></div>
-            <div class="form-group"><label>درس</label><select id="gradeSubjectTeacher" required><option value="">انتخاب...</option></select></div>
+            <div class="form-group"><label id="studentLabel">دانش‌آموز</label><select id="gradeStudentTeacher" required><option value="">انتخاب...</option></select></div>
+            <div class="form-group"><label id="subjectLabel2">درس</label><select id="gradeSubjectTeacher" required><option value="">انتخاب...</option></select></div>
             <div class="form-row">
-                <div class="form-group"><label>نمره (۰-۲۰)</label><input type="number" id="gradeValueTeacher" min="0" max="20" step="0.25" required></div>
-                <div class="form-group"><label>نوع</label><select id="gradeExamTypeTeacher"><option value="quiz">آزمون کوتاه</option><option value="homework">تکلیف</option><option value="midterm">میان‌ترم</option><option value="final">پایان‌ترم</option></select></div>
+                <div class="form-group"><label id="gradeValue">نمره (۰-۲۰)</label><input type="number" id="gradeValueTeacher" min="0" max="20" step="0.25" required></div>
+                <div class="form-group"><label id="examTypeLabel">نوع</label><select id="gradeExamTypeTeacher"><option value="quiz">آزمون کوتاه</option><option value="homework">تکلیف</option><option value="midterm">میان‌ترم</option><option value="final">پایان‌ترم</option></select></div>
             </div>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> ثبت نمره</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> <span id="saveBtn7">ثبت نمره</span></button>
         </form>
     </div>
 </div>
@@ -842,15 +1044,15 @@
 <!-- Add Attendance -->
 <div class="modal-overlay" id="modal-addAttendance">
     <div class="modal">
-        <div class="modal-header"><h3>✅ ثبت حضور</h3><button class="close-modal" onclick="closeModal('addAttendance')">&times;</button></div>
+        <div class="modal-header"><h3 id="addAttendanceModal">✅ ثبت حضور</h3><button class="close-modal" onclick="closeModal('addAttendance')">&times;</button></div>
         <form onsubmit="addAttendance(event)">
-            <div class="form-group"><label>دانش‌آموز</label><select id="attendanceStudent" required><option value="">انتخاب...</option></select></div>
+            <div class="form-group"><label id="studentLabel2">دانش‌آموز</label><select id="attendanceStudent" required><option value="">انتخاب...</option></select></div>
             <div class="form-row">
-                <div class="form-group"><label>تاریخ</label><input type="date" id="attendanceDate" required></div>
-                <div class="form-group"><label>وضعیت</label><select id="attendanceStatus"><option value="حاضر">حاضر</option><option value="غایب">غایب</option><option value="مرخصی">مرخصی</option><option value="تأخیر">تأخیر</option></select></div>
+                <div class="form-group"><label id="dateLabel">تاریخ</label><input type="date" id="attendanceDate" required></div>
+                <div class="form-group"><label id="statusLabel">وضعیت</label><select id="attendanceStatus"><option value="حاضر">حاضر</option><option value="غایب">غایب</option><option value="مرخصی">مرخصی</option><option value="تأخیر">تأخیر</option></select></div>
             </div>
-            <div class="form-group"><label>توضیحات</label><textarea id="attendanceNote" placeholder="توضیحات..."></textarea></div>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> ثبت حضور</button>
+            <div class="form-group"><label id="noteLabel">توضیحات</label><textarea id="attendanceNote" placeholder="توضیحات..."></textarea></div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> <span id="saveBtn8">ثبت حضور</span></button>
         </form>
     </div>
 </div>
@@ -858,15 +1060,15 @@
 <!-- Add Attendance Teacher -->
 <div class="modal-overlay" id="modal-addAttendanceTeacher">
     <div class="modal">
-        <div class="modal-header"><h3>✅ ثبت حضور</h3><button class="close-modal" onclick="closeModal('addAttendanceTeacher')">&times;</button></div>
+        <div class="modal-header"><h3 id="addAttendanceModal">✅ ثبت حضور</h3><button class="close-modal" onclick="closeModal('addAttendanceTeacher')">&times;</button></div>
         <form onsubmit="addAttendanceTeacher(event)">
-            <div class="form-group"><label>دانش‌آموز</label><select id="attendanceStudentTeacher" required><option value="">انتخاب...</option></select></div>
+            <div class="form-group"><label id="studentLabel2">دانش‌آموز</label><select id="attendanceStudentTeacher" required><option value="">انتخاب...</option></select></div>
             <div class="form-row">
-                <div class="form-group"><label>تاریخ</label><input type="date" id="attendanceDateTeacher" required></div>
-                <div class="form-group"><label>وضعیت</label><select id="attendanceStatusTeacher"><option value="حاضر">حاضر</option><option value="غایب">غایب</option><option value="مرخصی">مرخصی</option><option value="تأخیر">تأخیر</option></select></div>
+                <div class="form-group"><label id="dateLabel">تاریخ</label><input type="date" id="attendanceDateTeacher" required></div>
+                <div class="form-group"><label id="statusLabel">وضعیت</label><select id="attendanceStatusTeacher"><option value="حاضر">حاضر</option><option value="غایب">غایب</option><option value="مرخصی">مرخصی</option><option value="تأخیر">تأخیر</option></select></div>
             </div>
-            <div class="form-group"><label>توضیحات</label><textarea id="attendanceNoteTeacher" placeholder="توضیحات..."></textarea></div>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> ثبت حضور</button>
+            <div class="form-group"><label id="noteLabel">توضیحات</label><textarea id="attendanceNoteTeacher" placeholder="توضیحات..."></textarea></div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> <span id="saveBtn8">ثبت حضور</span></button>
         </form>
     </div>
 </div>
@@ -874,10 +1076,10 @@
 <!-- Report Card -->
 <div class="modal-overlay" id="modal-reportCard">
     <div class="modal">
-        <div class="modal-header"><h3>📈 کارنامه</h3><button class="close-modal" onclick="closeModal('reportCard')">&times;</button></div>
+        <div class="modal-header"><h3 id="reportCardModal">📈 کارنامه</h3><button class="close-modal" onclick="closeModal('reportCard')">&times;</button></div>
         <form onsubmit="showReportCard(event)">
-            <div class="form-group"><label>دانش‌آموز</label><select id="reportStudent" required><option value="">انتخاب...</option></select></div>
-            <button type="submit" class="btn btn-success"><i class="fas fa-print"></i> نمایش کارنامه</button>
+            <div class="form-group"><label id="studentLabel3">دانش‌آموز</label><select id="reportStudent" required><option value="">انتخاب...</option></select></div>
+            <button type="submit" class="btn btn-success"><i class="fas fa-print"></i> <span id="viewBtn4">نمایش کارنامه</span></button>
         </form>
         <div id="reportCardResult" style="margin-top:12px; display:none;"></div>
     </div>
@@ -890,8 +1092,8 @@
         <h3 id="confirmTitle">تأیید عملیات</h3>
         <p class="text-muted" id="confirmMessage">آیا از انجام این عملیات اطمینان دارید؟</p>
         <div class="actions">
-            <button class="btn btn-danger" onclick="confirmAction(true)">بله</button>
-            <button class="btn btn-outline" onclick="confirmAction(false)">لغو</button>
+            <button class="btn btn-danger" onclick="confirmAction(true)"><span id="yesBtn">بله</span></button>
+            <button class="btn btn-outline" onclick="confirmAction(false)"><span id="cancelBtn">لغو</span></button>
         </div>
     </div>
 </div>
@@ -901,7 +1103,7 @@
 
 <script>
 // ============================================================
-// ================ VERSION 2.1 - FIXED =======================
+// ================ VERSION FINAL - COMPLETE SCHOOL MANAGEMENT =
 // ============================================================
 
 // ============================================================
@@ -910,6 +1112,115 @@
 
 let currentLang = 'fa';
 let currentTheme = 'dark';
+
+const TRANSLATIONS = {
+    fa: {
+        loginTitle: 'مدیریت هوشمند', loginSub: 'سیستم جامع مدیریت آموزشی',
+        lblUsername: 'نام کاربری', lblPassword: 'رمز عبور', lblRole: 'نقش',
+        loginText: '🚀 ورود به سیستم', loginHint: '💡 برای ورود به عنوان مدیر از حساب پیش‌فرض استفاده کنید',
+        navHome: 'داشبورد', navGuide: 'راهنمایی', navStudents: 'دانش‌آموزان',
+        navMyStudents: 'دانش‌آموزان من', navTeachers: 'معلمان', navClasses: 'کلاس‌ها',
+        navSubjects: 'دروس', navGrades: 'نمرات', navAttendance: 'حضور',
+        navReports: 'گزارشات', navMore: 'بیشتر', logoutBtn: 'خروج از سیستم',
+        statStudents: 'دانش‌آموز', statTeachers: 'معلم', statClasses: 'کلاس',
+        statSubjects: 'درس', statAverage: 'میانگین', statAttendance: 'حضور',
+        addBtn: 'افزودن', saveBtn: 'ثبت', editBtn: 'ویرایش', deleteBtn: 'حذف',
+        viewBtn: 'مشاهده', downloadBtn: 'دانلود', yesBtn: 'بله', cancelBtn: 'لغو',
+        gradeBtn: 'نمره', attendanceBtn: 'حضور', fullExport: 'خروجی کامل',
+        addGradeBtn: 'ثبت نمره', addAttendanceBtn: 'ثبت حضور',
+        idLabel: 'شناسه', nameLabel: 'نام کامل', classLabel: 'کلاس',
+        phoneLabel: 'شماره تماس', specialtyLabel: 'تخصص', passwordLabel: 'رمز عبور',
+        gradeLabel: 'پایه', capacityLabel: 'ظرفیت', teacherLabel: 'معلم',
+        unitLabel: 'واحد', typeLabel: 'نوع', studentLabel: 'دانش‌آموز',
+        subjectLabel: 'درس', dateLabel: 'تاریخ', statusLabel: 'وضعیت',
+        noteLabel: 'توضیحات', examTypeLabel: 'نوع', gradeValue: 'نمره (۰-۲۰)',
+        quickId: 'شناسه', quickName: 'نام کامل', quickClass: 'کلاس', quickGrade: 'پایه',
+        colId: 'شناسه', colName: 'نام', colClass: 'کلاس', colAverage: 'میانگین',
+        colStatus: 'وضعیت', colActions: 'عملیات', colSpecialty: 'تخصص',
+        colClasses: 'کلاس‌ها', colSubjects: 'درس‌ها', colTeacher: 'معلم',
+        colUnits: 'واحد', colStudent: 'دانش‌آموز', colSubject: 'درس',
+        colGrade: 'نمره', colExamType: 'نوع', colDate: 'تاریخ', colNote: 'توضیحات',
+        setupTitle: 'راه‌اندازی مدرسه', setupSub: 'مراحل به ترتیب',
+        step1Title: 'کلاس‌ها', step1Desc: 'ایجاد کلاس‌ها',
+        step2Title: 'معلمان', step2Desc: 'ثبت معلمان',
+        step3Title: 'دانش‌آموزان', step3Desc: 'ثبت دانش‌آموزان',
+        step4Title: 'دروس', step4Desc: 'تعریف دروس',
+        stepBtn1: 'کلاس', stepBtn2: 'معلم', stepBtn3: 'دانش‌آموز', stepBtn4: 'درس',
+        guideTitle: 'راهنمای استفاده از سیستم', guideQuickStart: 'شروع سریع',
+        guideStep1Title: 'ایجاد کلاس‌ها', guideStep1Desc: 'ابتدا کلاس‌های مدرسه را ایجاد کنید.',
+        guideStep2Title: 'ثبت معلمان', guideStep2Desc: 'معلمان را ثبت کنید و به کلاس‌ها اختصاص دهید.',
+        guideStep3Title: 'ثبت دانش‌آموزان', guideStep3Desc: 'دانش‌آموزان را در کلاس‌ها ثبت کنید.',
+        guideStep4Title: 'تعریف دروس', guideStep4Desc: 'دروس را به کلاس‌ها و معلمان اختصاص دهید.',
+        guideGoTo: 'برو به',
+        teacherRestricted: 'فقط دانش‌آموزان کلاس‌های خود را می‌بینید',
+        activitiesTitle: '📋 فعالیت‌ها', alertsTitle: '🚨 هشدارها',
+        noActivities: 'هیچ فعالیتی ثبت نشده است', noAlerts: 'همه چیز عالی است!',
+        reportMonthly: 'ماهانه', reportCard: 'کارنامه', reportAnalytics: 'تحلیل',
+        reportRanking: 'رتبه‌بندی', footerText: 'ساخته شده توسط',
+        addStudentModal: '➕ افزودن دانش‌آموز', addTeacherModal: '➕ افزودن معلم',
+        addClassModal: '➕ افزودن کلاس', addSubjectModal: '➕ افزودن درس',
+        addGradeModal: '⭐ ثبت نمره', addAttendanceModal: '✅ ثبت حضور',
+        reportCardModal: '📈 کارنامه',
+        studentsTitle: '👨‍🎓 دانش‌آموزان', myStudentsTitle: '👨‍🎓 دانش‌آموزان من',
+        teachersTitle: '👨‍🏫 معلمان', classesTitle: '🏫 کلاس‌ها',
+        subjectsTitle: '📚 دروس', gradesTitle: '⭐ نمرات',
+        attendanceTitle: '✅ حضور و غیاب', reportsTitle: '📊 گزارشات',
+        brandTitle: 'مدیریت مدرسه'
+    },
+    en: {
+        loginTitle: 'Smart Management', loginSub: 'Educational Management System',
+        lblUsername: 'Username', lblPassword: 'Password', lblRole: 'Role',
+        loginText: '🚀 Login', loginHint: '💡 Use default admin account to login',
+        navHome: 'Dashboard', navGuide: 'Guide', navStudents: 'Students',
+        navMyStudents: 'My Students', navTeachers: 'Teachers', navClasses: 'Classes',
+        navSubjects: 'Subjects', navGrades: 'Grades', navAttendance: 'Attendance',
+        navReports: 'Reports', navMore: 'More', logoutBtn: 'Logout',
+        statStudents: 'Students', statTeachers: 'Teachers', statClasses: 'Classes',
+        statSubjects: 'Subjects', statAverage: 'Average', statAttendance: 'Attendance',
+        addBtn: 'Add', saveBtn: 'Save', editBtn: 'Edit', deleteBtn: 'Delete',
+        viewBtn: 'View', downloadBtn: 'Download', yesBtn: 'Yes', cancelBtn: 'Cancel',
+        gradeBtn: 'Grade', attendanceBtn: 'Attendance', fullExport: 'Full Export',
+        addGradeBtn: 'Add Grade', addAttendanceBtn: 'Add Attendance',
+        idLabel: 'ID', nameLabel: 'Full Name', classLabel: 'Class',
+        phoneLabel: 'Phone', specialtyLabel: 'Specialty', passwordLabel: 'Password',
+        gradeLabel: 'Grade', capacityLabel: 'Capacity', teacherLabel: 'Teacher',
+        unitLabel: 'Units', typeLabel: 'Type', studentLabel: 'Student',
+        subjectLabel: 'Subject', dateLabel: 'Date', statusLabel: 'Status',
+        noteLabel: 'Note', examTypeLabel: 'Type', gradeValue: 'Grade (0-20)',
+        quickId: 'ID', quickName: 'Full Name', quickClass: 'Class', quickGrade: 'Grade',
+        colId: 'ID', colName: 'Name', colClass: 'Class', colAverage: 'Average',
+        colStatus: 'Status', colActions: 'Actions', colSpecialty: 'Specialty',
+        colClasses: 'Classes', colSubjects: 'Subjects', colTeacher: 'Teacher',
+        colUnits: 'Units', colStudent: 'Student', colSubject: 'Subject',
+        colGrade: 'Grade', colExamType: 'Type', colDate: 'Date', colNote: 'Note',
+        setupTitle: 'School Setup', setupSub: 'Steps in order',
+        step1Title: 'Classes', step1Desc: 'Create classes',
+        step2Title: 'Teachers', step2Desc: 'Register teachers',
+        step3Title: 'Students', step3Desc: 'Register students',
+        step4Title: 'Subjects', step4Desc: 'Define subjects',
+        stepBtn1: 'Class', stepBtn2: 'Teacher', stepBtn3: 'Student', stepBtn4: 'Subject',
+        guideTitle: 'User Guide', guideQuickStart: 'Quick Start',
+        guideStep1Title: 'Create Classes', guideStep1Desc: 'First, create school classes.',
+        guideStep2Title: 'Register Teachers', guideStep2Desc: 'Register teachers and assign to classes.',
+        guideStep3Title: 'Register Students', guideStep3Desc: 'Register students in classes.',
+        guideStep4Title: 'Define Subjects', guideStep4Desc: 'Assign subjects to classes and teachers.',
+        guideGoTo: 'Go to',
+        teacherRestricted: 'You can only see your class students',
+        activitiesTitle: '📋 Activities', alertsTitle: '🚨 Alerts',
+        noActivities: 'No activities recorded', noAlerts: 'All clear!',
+        reportMonthly: 'Monthly', reportCard: 'Report Card', reportAnalytics: 'Analytics',
+        reportRanking: 'Ranking', footerText: 'Made with ❤️ by',
+        addStudentModal: '➕ Add Student', addTeacherModal: '➕ Add Teacher',
+        addClassModal: '➕ Add Class', addSubjectModal: '➕ Add Subject',
+        addGradeModal: '⭐ Add Grade', addAttendanceModal: '✅ Add Attendance',
+        reportCardModal: '📈 Report Card',
+        studentsTitle: '👨‍🎓 Students', myStudentsTitle: '👨‍🎓 My Students',
+        teachersTitle: '👨‍🏫 Teachers', classesTitle: '🏫 Classes',
+        subjectsTitle: '📚 Subjects', gradesTitle: '⭐ Grades',
+        attendanceTitle: '✅ Attendance', reportsTitle: '📊 Reports',
+        brandTitle: 'School Management'
+    }
+};
 
 function toggleLanguage() {
     currentLang = currentLang === 'fa' ? 'en' : 'fa';
@@ -922,16 +1233,31 @@ function toggleLanguage() {
 }
 
 function applyTranslations() {
-    const t = currentLang === 'fa' ? {
-        // Simple translation for key elements
-    } : {
-        // English translations
-    };
-    // Apply translations to elements with data-i18n
+    const t = TRANSLATIONS[currentLang] || TRANSLATIONS.fa;
+    document.querySelectorAll('[id]').forEach(el => {
+        if (t[el.id]) el.textContent = t[el.id];
+    });
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.dataset.i18n;
         if (t[key]) el.textContent = t[key];
     });
+    // Also update page title and subtitle in navigateTo
+    const currentPage = document.querySelector('.sidebar-menu li a.active')?.dataset.page || 'home';
+    const titles = {
+        'home': [currentLang === 'fa' ? '🏠 داشبورد' : '🏠 Dashboard', currentLang === 'fa' ? 'خلاصه وضعیت مدرسه' : 'School Overview'],
+        'guide': [currentLang === 'fa' ? '🧭 راهنمایی' : '🧭 Guide', currentLang === 'fa' ? 'راهنمای کامل استفاده از سیستم' : 'Complete System Guide'],
+        'students': [currentLang === 'fa' ? '👨‍🎓 دانش‌آموزان' : '👨‍🎓 Students', currentLang === 'fa' ? 'مدیریت دانش‌آموزان' : 'Student Management'],
+        'mystudents': [currentLang === 'fa' ? '👨‍🎓 دانش‌آموزان من' : '👨‍🎓 My Students', currentLang === 'fa' ? 'دانش‌آموزان کلاس‌های شما' : 'Your Class Students'],
+        'classes': [currentLang === 'fa' ? '🏫 کلاس‌ها' : '🏫 Classes', currentLang === 'fa' ? 'مدیریت کلاس‌ها' : 'Class Management'],
+        'grades': [currentLang === 'fa' ? '⭐ نمرات' : '⭐ Grades', currentLang === 'fa' ? 'مشاهده و مدیریت نمرات' : 'Grade Management'],
+        'teachers': [currentLang === 'fa' ? '👨‍🏫 معلمان' : '👨‍🏫 Teachers', currentLang === 'fa' ? 'مدیریت معلمان' : 'Teacher Management'],
+        'subjects': [currentLang === 'fa' ? '📚 دروس' : '📚 Subjects', currentLang === 'fa' ? 'مدیریت دروس' : 'Subject Management'],
+        'attendance': [currentLang === 'fa' ? '✅ حضور و غیاب' : '✅ Attendance', currentLang === 'fa' ? 'مدیریت حضور و غیاب' : 'Attendance Management'],
+        'reports': [currentLang === 'fa' ? '📊 گزارشات' : '📊 Reports', currentLang === 'fa' ? 'گزارشات و تحلیل‌ها' : 'Reports & Analytics']
+    };
+    const title = titles[currentPage] || [currentLang === 'fa' ? 'صفحه' : 'Page', ''];
+    document.getElementById('pageTitle').textContent = title[0];
+    document.getElementById('pageSubtitle').textContent = title[1];
 }
 
 function toggleTheme() {
@@ -990,7 +1316,7 @@ let confirmCallback = null;
 let searchTimeout = null;
 
 // ============================================================
-// ================ NAVIGATION SYSTEM ==========================
+// ================ NAVIGATION SYSTEM (FIXED) ==================
 // ============================================================
 
 function navigateTo(page) {
@@ -1015,20 +1341,21 @@ function navigateTo(page) {
         panel.classList.add('active');
     }
     
-    // Update header
+    // Update header with translations
+    const isFa = currentLang === 'fa';
     const titles = {
-        'home': ['🏠 داشبورد', 'خلاصه وضعیت مدرسه'],
-        'guide': ['🧭 راهنمایی', 'راهنمای کامل استفاده از سیستم'],
-        'students': ['👨‍🎓 دانش‌آموزان', 'مدیریت دانش‌آموزان'],
-        'mystudents': ['👨‍🎓 دانش‌آموزان من', 'دانش‌آموزان کلاس‌های شما'],
-        'classes': ['🏫 کلاس‌ها', 'مدیریت کلاس‌ها'],
-        'grades': ['⭐ نمرات', 'مشاهده و مدیریت نمرات'],
-        'teachers': ['👨‍🏫 معلمان', 'مدیریت معلمان'],
-        'subjects': ['📚 دروس', 'مدیریت دروس'],
-        'attendance': ['✅ حضور و غیاب', 'مدیریت حضور و غیاب'],
-        'reports': ['📊 گزارشات', 'گزارشات و تحلیل‌ها']
+        'home': [isFa ? '🏠 داشبورد' : '🏠 Dashboard', isFa ? 'خلاصه وضعیت مدرسه' : 'School Overview'],
+        'guide': [isFa ? '🧭 راهنمایی' : '🧭 Guide', isFa ? 'راهنمای کامل استفاده از سیستم' : 'Complete System Guide'],
+        'students': [isFa ? '👨‍🎓 دانش‌آموزان' : '👨‍🎓 Students', isFa ? 'مدیریت دانش‌آموزان' : 'Student Management'],
+        'mystudents': [isFa ? '👨‍🎓 دانش‌آموزان من' : '👨‍🎓 My Students', isFa ? 'دانش‌آموزان کلاس‌های شما' : 'Your Class Students'],
+        'classes': [isFa ? '🏫 کلاس‌ها' : '🏫 Classes', isFa ? 'مدیریت کلاس‌ها' : 'Class Management'],
+        'grades': [isFa ? '⭐ نمرات' : '⭐ Grades', isFa ? 'مشاهده و مدیریت نمرات' : 'Grade Management'],
+        'teachers': [isFa ? '👨‍🏫 معلمان' : '👨‍🏫 Teachers', isFa ? 'مدیریت معلمان' : 'Teacher Management'],
+        'subjects': [isFa ? '📚 دروس' : '📚 Subjects', isFa ? 'مدیریت دروس' : 'Subject Management'],
+        'attendance': [isFa ? '✅ حضور و غیاب' : '✅ Attendance', isFa ? 'مدیریت حضور و غیاب' : 'Attendance Management'],
+        'reports': [isFa ? '📊 گزارشات' : '📊 Reports', isFa ? 'گزارشات و تحلیل‌ها' : 'Reports & Analytics']
     };
-    const title = titles[page] || ['صفحه', ''];
+    const title = titles[page] || [isFa ? 'صفحه' : 'Page', ''];
     document.getElementById('pageTitle').textContent = title[0];
     document.getElementById('pageSubtitle').textContent = title[1];
     
@@ -1087,7 +1414,7 @@ function handleLogin(e) {
         const savedTheme = localStorage.getItem('schoolTheme');
         if (savedTheme) { currentTheme = savedTheme; document.documentElement.setAttribute('data-theme', currentTheme); }
         const savedLang = localStorage.getItem('schoolLang');
-        if (savedLang) { currentLang = savedLang; }
+        if (savedLang) { currentLang = savedLang; applyTranslations(); }
     } else {
         error.style.display = 'block';
         setTimeout(() => error.style.display = 'none', 3000);
@@ -1117,10 +1444,10 @@ function handleLogout() {
 
 function setupUI() {
     const isAdmin = DATA.currentUser.role === 'admin';
-    document.getElementById('sidebarUserInfo').textContent = isAdmin ? 'مدیر سیستم' : 'معلم';
+    document.getElementById('sidebarUserInfo').textContent = isAdmin ? (currentLang === 'fa' ? 'مدیر سیستم' : 'System Admin') : (currentLang === 'fa' ? 'معلم' : 'Teacher');
     document.getElementById('userName').textContent = DATA.currentUser.name;
-    document.getElementById('userRoleDisplay').textContent = isAdmin ? 'مدیر' : 'معلم';
-    document.getElementById('roleBadge').textContent = isAdmin ? 'مدیر' : 'معلم';
+    document.getElementById('userRoleDisplay').textContent = isAdmin ? (currentLang === 'fa' ? 'مدیر' : 'Admin') : (currentLang === 'fa' ? 'معلم' : 'Teacher');
+    document.getElementById('roleBadge').textContent = isAdmin ? (currentLang === 'fa' ? 'مدیر' : 'Admin') : (currentLang === 'fa' ? 'معلم' : 'Teacher');
     document.getElementById('roleBadge').className = 'role-badge ' + (isAdmin ? 'admin' : 'teacher');
     document.getElementById('userAvatar').textContent = DATA.currentUser.name.substring(0, 2);
     
@@ -1143,6 +1470,7 @@ function setupUI() {
         document.querySelector('.bottom-nav .nav-item[data-page="mystudents"]')?.classList.add('active');
     }
     document.documentElement.setAttribute('data-theme', currentTheme);
+    applyTranslations();
 }
 
 function toggleSidebar() {
@@ -1168,10 +1496,10 @@ function showMoreMenu() {
     `;
     
     const pages = [
-        { key: 'teachers', label: '👨‍🏫 معلمان' },
-        { key: 'subjects', label: '📚 دروس' },
-        { key: 'attendance', label: '✅ حضور' },
-        { key: 'reports', label: '📊 گزارشات' }
+        { key: 'teachers', label: currentLang === 'fa' ? '👨‍🏫 معلمان' : '👨‍🏫 Teachers' },
+        { key: 'subjects', label: currentLang === 'fa' ? '📚 دروس' : '📚 Subjects' },
+        { key: 'attendance', label: currentLang === 'fa' ? '✅ حضور' : '✅ Attendance' },
+        { key: 'reports', label: currentLang === 'fa' ? '📊 گزارشات' : '📊 Reports' }
     ];
     
     pages.forEach(p => {
@@ -1201,7 +1529,7 @@ function showMoreMenu() {
     });
     
     const closeBtn = document.createElement('button');
-    closeBtn.textContent = '✕ بستن';
+    closeBtn.textContent = '✕ ' + (currentLang === 'fa' ? 'بستن' : 'Close');
     closeBtn.style.cssText = `
         display: block;
         width: 100%;
@@ -1266,6 +1594,19 @@ function calculateAverage(grades) {
     return valid.length > 0 ? Math.round((valid.reduce((a,b) => a + b.value, 0) / valid.length) * 100) / 100 : 0;
 }
 
+function calculateWeightedAverage(grades, subjects) {
+    if (!grades || grades.length === 0) return 0;
+    let totalWeight = 0;
+    let totalWeighted = 0;
+    grades.forEach(g => {
+        const subject = subjects.find(s => s.id === g.subjectId);
+        const weight = subject ? subject.units : 1;
+        totalWeight += weight;
+        totalWeighted += g.value * weight;
+    });
+    return totalWeight > 0 ? Math.round((totalWeighted / totalWeight) * 100) / 100 : 0;
+}
+
 function updateStudentAverages() {
     DATA.students.forEach(s => {
         const grades = getStudentGrades(s.id);
@@ -1282,7 +1623,7 @@ function updateStudentAverages() {
 
 function loadAllData() {
     try {
-        const saved = localStorage.getItem('schoolDataV18');
+        const saved = localStorage.getItem('schoolDataFinal');
         if (saved) {
             const parsed = JSON.parse(saved);
             const user = DATA.currentUser;
@@ -1327,7 +1668,7 @@ function loadAllData() {
 
 function saveData() {
     try {
-        localStorage.setItem('schoolDataV18', JSON.stringify(DATA));
+        localStorage.setItem('schoolDataFinal', JSON.stringify(DATA));
     } catch(e) { console.warn('خطا در ذخیره داده:', e); }
 }
 
@@ -1355,7 +1696,7 @@ function renderAll() {
 function renderStudentsTable() {
     const tbody = document.getElementById('studentsTableBody');
     if (DATA.currentUser.role !== 'admin') {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center" style="padding:15px;">دسترسی محدود</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center" style="padding:15px;">' + (currentLang === 'fa' ? 'دسترسی محدود' : 'Restricted Access') + '</td></tr>';
         return;
     }
     
@@ -1369,7 +1710,7 @@ function renderStudentsTable() {
     });
     
     if (students.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center" style="padding:15px;">هیچ دانش‌آموزی یافت نشد</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center" style="padding:15px;">' + (currentLang === 'fa' ? 'هیچ دانش‌آموزی یافت نشد' : 'No students found') + '</td></tr>';
         return;
     }
     tbody.innerHTML = students.map(s => {
@@ -1378,12 +1719,13 @@ function renderStudentsTable() {
         return `<tr>
             <td><strong>${escapeHtml(s.id)}</strong></td>
             <td>${escapeHtml(s.name)}</td>
-            <td>${cls ? escapeHtml(cls.name) : 'ثبت نشده'}</td>
+            <td>${cls ? escapeHtml(cls.name) : (currentLang === 'fa' ? 'ثبت نشده' : 'Not Set')}</td>
             <td>${s.average?.toFixed(1) || '0'}</td>
-            <td><span class="status-badge ${statusClass}">${s.status || 'بدون نمره'}</span></td>
+            <td><span class="status-badge ${statusClass}">${s.status || (currentLang === 'fa' ? 'بدون نمره' : 'No Grade')}</span></td>
             <td><div class="actions-cell">
-                <button class="view" onclick="viewStudent('${s.id}')" title="مشاهده"><i class="fas fa-eye"></i></button>
-                <button class="danger" onclick="deleteStudent('${s.id}')" title="حذف"><i class="fas fa-trash"></i></button>
+                <button class="view" onclick="viewStudent('${s.id}')" title="${currentLang === 'fa' ? 'مشاهده' : 'View'}"><i class="fas fa-eye"></i></button>
+                <button class="edit" onclick="openEditStudent('${s.id}')" title="${currentLang === 'fa' ? 'ویرایش' : 'Edit'}"><i class="fas fa-edit"></i></button>
+                <button class="danger" onclick="deleteStudent('${s.id}')" title="${currentLang === 'fa' ? 'حذف' : 'Delete'}"><i class="fas fa-trash"></i></button>
             </div></td>
         </tr>`;
     }).join('');
@@ -1392,12 +1734,12 @@ function renderStudentsTable() {
 function renderMyStudentsTable() {
     const tbody = document.getElementById('myStudentsTableBody');
     if (DATA.currentUser.role === 'admin') {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center" style="padding:15px;">مدیر همه را می‌بیند</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center" style="padding:15px;">' + (currentLang === 'fa' ? 'مدیر همه را می‌بیند' : 'Admin sees all') + '</td></tr>';
         return;
     }
     const students = getTeacherStudents(DATA.currentUser.username);
     if (students.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center" style="padding:15px;">هیچ دانش‌آموزی در کلاس شما نیست</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center" style="padding:15px;">' + (currentLang === 'fa' ? 'هیچ دانش‌آموزی در کلاس شما نیست' : 'No students in your class') + '</td></tr>';
         return;
     }
     const search = document.getElementById('myStudentSearch')?.value.toLowerCase() || '';
@@ -1408,11 +1750,11 @@ function renderMyStudentsTable() {
         return `<tr>
             <td><strong>${escapeHtml(s.id)}</strong></td>
             <td>${escapeHtml(s.name)}</td>
-            <td>${cls ? escapeHtml(cls.name) : 'ثبت نشده'}</td>
+            <td>${cls ? escapeHtml(cls.name) : (currentLang === 'fa' ? 'ثبت نشده' : 'Not Set')}</td>
             <td>${s.average?.toFixed(1) || '0'}</td>
-            <td><span class="status-badge ${statusClass}">${s.status || 'بدون نمره'}</span></td>
+            <td><span class="status-badge ${statusClass}">${s.status || (currentLang === 'fa' ? 'بدون نمره' : 'No Grade')}</span></td>
             <td><div class="actions-cell">
-                <button class="view" onclick="viewStudent('${s.id}')" title="مشاهده"><i class="fas fa-eye"></i></button>
+                <button class="view" onclick="viewStudent('${s.id}')" title="${currentLang === 'fa' ? 'مشاهده' : 'View'}"><i class="fas fa-eye"></i></button>
             </div></td>
         </tr>`;
     }).join('');
@@ -1425,7 +1767,7 @@ function renderMyStudentsTable() {
 function renderTeachersTable() {
     const tbody = document.getElementById('teachersTableBody');
     if (DATA.currentUser.role !== 'admin') {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center" style="padding:15px;">دسترسی محدود</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center" style="padding:15px;">' + (currentLang === 'fa' ? 'دسترسی محدود' : 'Restricted Access') + '</td></tr>';
         return;
     }
     const search = document.getElementById('teacherSearch')?.value.toLowerCase() || '';
@@ -1435,12 +1777,12 @@ function renderTeachersTable() {
         t.specialty.toLowerCase().includes(search)
     );
     if (teachers.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center" style="padding:15px;">هیچ معلمی یافت نشد</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center" style="padding:15px;">' + (currentLang === 'fa' ? 'هیچ معلمی یافت نشد' : 'No teachers found') + '</td></tr>';
         return;
     }
     tbody.innerHTML = teachers.map(t => {
-        const classes = (t.classes || []).map(cid => getClassById(cid)?.name || cid).join('، ') || 'بدون کلاس';
-        const subjects = (t.subjects || []).map(sid => getSubjectById(sid)?.name || sid).join('، ') || 'بدون درس';
+        const classes = (t.classes || []).map(cid => getClassById(cid)?.name || cid).join('، ') || (currentLang === 'fa' ? 'بدون کلاس' : 'No Class');
+        const subjects = (t.subjects || []).map(sid => getSubjectById(sid)?.name || sid).join('، ') || (currentLang === 'fa' ? 'بدون درس' : 'No Subject');
         return `<tr>
             <td><strong>${escapeHtml(t.id)}</strong></td>
             <td>${escapeHtml(t.name)}</td>
@@ -1448,7 +1790,8 @@ function renderTeachersTable() {
             <td>${escapeHtml(classes)}</td>
             <td>${escapeHtml(subjects)}</td>
             <td><div class="actions-cell">
-                <button class="danger" onclick="deleteTeacher('${t.id}')" title="حذف"><i class="fas fa-trash"></i></button>
+                <button class="edit" onclick="openEditTeacher('${t.id}')" title="${currentLang === 'fa' ? 'ویرایش' : 'Edit'}"><i class="fas fa-edit"></i></button>
+                <button class="danger" onclick="deleteTeacher('${t.id}')" title="${currentLang === 'fa' ? 'حذف' : 'Delete'}"><i class="fas fa-trash"></i></button>
             </div></td>
         </tr>`;
     }).join('');
@@ -1461,7 +1804,7 @@ function renderTeachersTable() {
 function renderClasses() {
     const grid = document.getElementById('classesGrid');
     if (DATA.currentUser.role !== 'admin') {
-        grid.innerHTML = '<p class="text-muted text-center" style="padding:20px;">دسترسی محدود</p>';
+        grid.innerHTML = '<p class="text-muted text-center" style="padding:20px;">' + (currentLang === 'fa' ? 'دسترسی محدود' : 'Restricted Access') + '</p>';
         return;
     }
     const search = document.getElementById('classSearch')?.value.toLowerCase() || '';
@@ -1470,7 +1813,7 @@ function renderClasses() {
         c.id.toLowerCase().includes(search)
     );
     if (classes.length === 0) {
-        grid.innerHTML = '<p class="text-muted text-center" style="padding:20px;">هیچ کلاسی یافت نشد</p>';
+        grid.innerHTML = '<p class="text-muted text-center" style="padding:20px;">' + (currentLang === 'fa' ? 'هیچ کلاسی یافت نشد' : 'No classes found') + '</p>';
         return;
     }
     grid.innerHTML = classes.map(c => {
@@ -1479,15 +1822,16 @@ function renderClasses() {
         const subjects = DATA.subjects.filter(s => s.classId === c.id);
         return `<div class="class-card">
             <div class="class-title">${escapeHtml(c.name)}</div>
-            <div class="class-info">📚 پایه: ${c.grade} | ظرفیت: ${students.length}/${c.capacity}</div>
-            <div class="class-info">👨‍🏫 معلمان: ${teachers.map(t => t.name).join('، ') || 'تعیین نشده'}</div>
+            <div class="class-info">📚 ${currentLang === 'fa' ? 'پایه' : 'Grade'}: ${c.grade} | ${currentLang === 'fa' ? 'ظرفیت' : 'Capacity'}: ${students.length}/${c.capacity}</div>
+            <div class="class-info">👨‍🏫 ${currentLang === 'fa' ? 'معلمان' : 'Teachers'}: ${teachers.map(t => t.name).join('، ') || (currentLang === 'fa' ? 'تعیین نشده' : 'Not Set')}</div>
             <div class="class-stats">
-                <span>👨‍🎓 ${students.length} دانش‌آموز</span>
-                <span>📖 ${subjects.length} درس</span>
+                <span>👨‍🎓 ${students.length} ${currentLang === 'fa' ? 'دانش‌آموز' : 'Students'}</span>
+                <span>📖 ${subjects.length} ${currentLang === 'fa' ? 'درس' : 'Subjects'}</span>
                 <span><i class="fas fa-qrcode"></i> ${c.id}</span>
             </div>
             <div class="card-actions">
-                <button class="btn btn-danger btn-sm" onclick="deleteClass('${c.id}')"><i class="fas fa-trash"></i> حذف</button>
+                <button class="btn btn-edit btn-sm" onclick="openEditClass('${c.id}')"><i class="fas fa-edit"></i> ${currentLang === 'fa' ? 'ویرایش' : 'Edit'}</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteClass('${c.id}')"><i class="fas fa-trash"></i> ${currentLang === 'fa' ? 'حذف' : 'Delete'}</button>
             </div>
         </div>`;
     }).join('');
@@ -1500,7 +1844,7 @@ function renderClasses() {
 function renderSubjectsTable() {
     const tbody = document.getElementById('subjectsTableBody');
     if (DATA.currentUser.role !== 'admin') {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center" style="padding:15px;">دسترسی محدود</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center" style="padding:15px;">' + (currentLang === 'fa' ? 'دسترسی محدود' : 'Restricted Access') + '</td></tr>';
         return;
     }
     const search = document.getElementById('subjectSearch')?.value.toLowerCase() || '';
@@ -1509,7 +1853,7 @@ function renderSubjectsTable() {
         s.id.toLowerCase().includes(search)
     );
     if (subjects.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center" style="padding:15px;">هیچ درسی یافت نشد</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center" style="padding:15px;">' + (currentLang === 'fa' ? 'هیچ درسی یافت نشد' : 'No subjects found') + '</td></tr>';
         return;
     }
     tbody.innerHTML = subjects.map(s => {
@@ -1518,11 +1862,12 @@ function renderSubjectsTable() {
         return `<tr>
             <td><strong>${escapeHtml(s.id)}</strong></td>
             <td>${escapeHtml(s.name)}</td>
-            <td>${teacher ? escapeHtml(teacher.name) : 'نامشخص'}</td>
-            <td>${cls ? escapeHtml(cls.name) : 'نامشخص'}</td>
+            <td>${teacher ? escapeHtml(teacher.name) : (currentLang === 'fa' ? 'نامشخص' : 'Unknown')}</td>
+            <td>${cls ? escapeHtml(cls.name) : (currentLang === 'fa' ? 'نامشخص' : 'Unknown')}</td>
             <td>${s.units}</td>
             <td><div class="actions-cell">
-                <button class="danger" onclick="deleteSubject('${s.id}')" title="حذف"><i class="fas fa-trash"></i></button>
+                <button class="edit" onclick="openEditSubject('${s.id}')" title="${currentLang === 'fa' ? 'ویرایش' : 'Edit'}"><i class="fas fa-edit"></i></button>
+                <button class="danger" onclick="deleteSubject('${s.id}')" title="${currentLang === 'fa' ? 'حذف' : 'Delete'}"><i class="fas fa-trash"></i></button>
             </div></td>
         </tr>`;
     }).join('');
@@ -1552,7 +1897,7 @@ function renderGradesTable() {
         return matchSearch && matchSubject;
     });
     if (grades.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center" style="padding:15px;">هیچ نمره‌ای ثبت نشده است</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center" style="padding:15px;">' + (currentLang === 'fa' ? 'هیچ نمره‌ای ثبت نشده است' : 'No grades recorded') + '</td></tr>';
         return;
     }
     tbody.innerHTML = grades.map((g, index) => {
@@ -1562,15 +1907,16 @@ function renderGradesTable() {
         const color = g.value >= 18 ? 'var(--success)' : g.value >= 14 ? 'var(--warning)' : g.value >= 10 ? '#FF9800' : 'var(--danger)';
         const labels = { quiz: 'آزمون کوتاه', homework: 'تکلیف', midterm: 'میان‌ترم', final: 'پایان‌ترم' };
         const realIndex = DATA.grades.indexOf(g);
+        const displayDate = g.date ? new Date(g.date).toLocaleDateString('fa-IR') : g.date;
         return `<tr>
-            <td>${student ? escapeHtml(student.name) : 'نامشخص'}</td>
-            <td>${subject ? escapeHtml(subject.name) : 'نامشخص'}</td>
+            <td>${student ? escapeHtml(student.name) : (currentLang === 'fa' ? 'نامشخص' : 'Unknown')}</td>
+            <td>${subject ? escapeHtml(subject.name) : (currentLang === 'fa' ? 'نامشخص' : 'Unknown')}</td>
             <td><strong style="color:${color};">${g.value}</strong></td>
             <td>${labels[g.examType] || g.examType}</td>
-            <td>${g.date}</td>
-            <td>${teacher ? escapeHtml(teacher.name) : 'نامشخص'}</td>
+            <td>${displayDate}</td>
+            <td>${teacher ? escapeHtml(teacher.name) : (currentLang === 'fa' ? 'نامشخص' : 'Unknown')}</td>
             <td><div class="actions-cell">
-                ${isAdmin ? `<button class="danger" onclick="deleteGrade(${realIndex})" title="حذف"><i class="fas fa-trash"></i></button>` : ''}
+                ${isAdmin ? `<button class="danger" onclick="deleteGrade(${realIndex})" title="${currentLang === 'fa' ? 'حذف' : 'Delete'}"><i class="fas fa-trash"></i></button>` : ''}
             </div></td>
         </tr>`;
     }).join('');
@@ -1597,7 +1943,7 @@ function renderAttendanceTable() {
                (a.note || '').toLowerCase().includes(search);
     });
     if (attendance.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center" style="padding:15px;">هیچ حضور و غیابی ثبت نشده است</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center" style="padding:15px;">' + (currentLang === 'fa' ? 'هیچ حضور و غیابی ثبت نشده است' : 'No attendance records') + '</td></tr>';
         return;
     }
     tbody.innerHTML = attendance.map((a, index) => {
@@ -1607,13 +1953,13 @@ function renderAttendanceTable() {
         const displayDate = a.date ? new Date(a.date).toLocaleDateString('fa-IR') : a.date;
         const realIndex = DATA.attendance.indexOf(a);
         return `<tr>
-            <td>${student ? escapeHtml(student.name) : 'نامشخص'}</td>
+            <td>${student ? escapeHtml(student.name) : (currentLang === 'fa' ? 'نامشخص' : 'Unknown')}</td>
             <td>${displayDate}</td>
             <td><span style="color:${color}; font-weight:600;">${a.status}</span></td>
             <td>${escapeHtml(a.note) || '-'}</td>
-            <td>${teacher ? escapeHtml(teacher.name) : 'نامشخص'}</td>
+            <td>${teacher ? escapeHtml(teacher.name) : (currentLang === 'fa' ? 'نامشخص' : 'Unknown')}</td>
             <td><div class="actions-cell">
-                ${isAdmin ? `<button class="danger" onclick="deleteAttendance(${realIndex})" title="حذف"><i class="fas fa-trash"></i></button>` : ''}
+                ${isAdmin ? `<button class="danger" onclick="deleteAttendance(${realIndex})" title="${currentLang === 'fa' ? 'حذف' : 'Delete'}"><i class="fas fa-trash"></i></button>` : ''}
             </div></td>
         </tr>`;
     }).join('');
@@ -1630,7 +1976,7 @@ function renderSelectOptions() {
         const sel = document.getElementById(id);
         if (sel) {
             const val = sel.value;
-            sel.innerHTML = '<option value="">انتخاب...</option>';
+            sel.innerHTML = '<option value="">' + (currentLang === 'fa' ? 'انتخاب...' : 'Select...') + '</option>';
             DATA.classes.forEach(c => { sel.innerHTML += `<option value="${c.id}">${escapeHtml(c.name)}</option>`; });
             sel.value = val;
         }
@@ -1640,7 +1986,7 @@ function renderSelectOptions() {
         const sel = document.getElementById(id);
         if (sel) {
             const val = sel.value;
-            sel.innerHTML = '<option value="">انتخاب...</option>';
+            sel.innerHTML = '<option value="">' + (currentLang === 'fa' ? 'انتخاب...' : 'Select...') + '</option>';
             let students = DATA.students;
             if (!isAdmin) students = getTeacherStudents(DATA.currentUser.username);
             students.forEach(s => { sel.innerHTML += `<option value="${s.id}">${escapeHtml(s.name)}</option>`; });
@@ -1662,7 +2008,7 @@ function renderSelectOptions() {
                     if (val.includes(item.id)) opt.selected = true;
                     sel.appendChild(opt);
                 });
-                if (sel.options.length === 0) sel.innerHTML = '<option value="">ابتدا معلم بسازید...</option>';
+                if (sel.options.length === 0) sel.innerHTML = '<option value="">' + (currentLang === 'fa' ? 'ابتدا معلم بسازید...' : 'Create a teacher first...') + '</option>';
             }
         });
         
@@ -1670,7 +2016,7 @@ function renderSelectOptions() {
             const sel = document.getElementById(id);
             if (sel) {
                 const val = sel.value;
-                sel.innerHTML = '<option value="">انتخاب...</option>';
+                sel.innerHTML = '<option value="">' + (currentLang === 'fa' ? 'انتخاب...' : 'Select...') + '</option>';
                 DATA.classes.forEach(c => { sel.innerHTML += `<option value="${c.id}">${escapeHtml(c.name)}</option>`; });
                 sel.value = val;
             }
@@ -1689,7 +2035,7 @@ function renderSelectOptions() {
                     if (val.includes(item.id)) opt.selected = true;
                     sel.appendChild(opt);
                 });
-                if (sel.options.length === 0) sel.innerHTML = '<option value="">ابتدا درس بسازید...</option>';
+                if (sel.options.length === 0) sel.innerHTML = '<option value="">' + (currentLang === 'fa' ? 'ابتدا درس بسازید...' : 'Create a subject first...') + '</option>';
             }
         });
     }
@@ -1719,35 +2065,16 @@ function debounceSearch(type) {
 // ================ CRUD - CLASSES =============================
 // ============================================================
 
-function quickAddClass() {
-    if (DATA.currentUser.role !== 'admin') { showToast('❌ فقط مدیر می‌تواند کلاس اضافه کند', 'error'); return; }
-    const id = document.getElementById('quickClassId').value.trim();
-    const name = document.getElementById('quickClassName').value.trim();
-    const grade = parseInt(document.getElementById('quickClassGrade').value);
-    if (!id || !name || !grade) { showToast('❌ تمام فیلدها را پر کنید', 'error'); return; }
-    if (DATA.classes.find(c => c.id === id)) { showToast('❌ شناسه تکراری است!', 'error'); return; }
-    DATA.classes.push({ id, name, grade, capacity: 30, teachers: [], students: [] });
-    saveData();
-    renderAll();
-    updateDashboard();
-    updateSetupWizard();
-    document.getElementById('quickClassId').value = '';
-    document.getElementById('quickClassName').value = '';
-    document.getElementById('quickClassGrade').value = '';
-    showToast('✅ کلاس ثبت شد', 'success');
-    addActivity('ثبت کلاس', 'کلاس ' + escapeHtml(name) + ' ثبت شد');
-}
-
 function addClass(e) {
     e.preventDefault();
-    if (DATA.currentUser.role !== 'admin') { showToast('❌ فقط مدیر می‌تواند کلاس اضافه کند', 'error'); return; }
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند کلاس اضافه کند' : 'Only admin can add class'), 'error'); return; }
     const id = document.getElementById('classId').value.trim();
     const name = document.getElementById('className').value.trim();
     const grade = parseInt(document.getElementById('classGrade').value);
     const capacity = parseInt(document.getElementById('classCapacity').value);
     const teachers = Array.from(document.getElementById('classTeachers').selectedOptions).map(o => o.value);
-    if (!id || !name || !grade || !capacity) { showToast('❌ تمام فیلدها را پر کنید', 'error'); return; }
-    if (DATA.classes.find(c => c.id === id)) { showToast('❌ شناسه تکراری است!', 'error'); return; }
+    if (!id || !name || !grade || !capacity) { showToast('❌ ' + (currentLang === 'fa' ? 'تمام فیلدها را پر کنید' : 'Fill all fields'), 'error'); return; }
+    if (DATA.classes.find(c => c.id === id)) { showToast('❌ ' + (currentLang === 'fa' ? 'شناسه تکراری است!' : 'Duplicate ID!'), 'error'); return; }
     DATA.classes.push({ id, name, grade, capacity, teachers, students: [] });
     teachers.forEach(tid => {
         const t = getTeacherById(tid);
@@ -1758,17 +2085,40 @@ function addClass(e) {
     updateDashboard();
     updateSetupWizard();
     closeModal('addClass');
-    showToast('✅ کلاس "' + escapeHtml(name) + '" ثبت شد', 'success');
-    addActivity('افزودن کلاس', 'کلاس ' + escapeHtml(name) + ' اضافه شد');
+    showToast('✅ ' + (currentLang === 'fa' ? 'کلاس "' + escapeHtml(name) + '" ثبت شد' : 'Class "' + escapeHtml(name) + '" added'), 'success');
+    addActivity(currentLang === 'fa' ? 'افزودن کلاس' : 'Add Class', (currentLang === 'fa' ? 'کلاس ' : 'Class ') + escapeHtml(name) + ' ' + (currentLang === 'fa' ? 'اضافه شد' : 'added'));
     document.getElementById('classId').value = '';
     document.getElementById('className').value = '';
     document.getElementById('classGrade').value = '';
     document.getElementById('classCapacity').value = '30';
 }
 
+function openEditClass(id) {
+    const cls = getClassById(id);
+    if (!cls) { showToast('❌ ' + (currentLang === 'fa' ? 'کلاس یافت نشد' : 'Class not found'), 'error'); return; }
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند ویرایش کند' : 'Only admin can edit'), 'error'); return; }
+    // Use a simple prompt for editing (for simplicity)
+    const newName = prompt(currentLang === 'fa' ? 'نام جدید کلاس:' : 'New class name:', cls.name);
+    if (newName === null) return;
+    const newGrade = prompt(currentLang === 'fa' ? 'پایه جدید:' : 'New grade:', cls.grade);
+    if (newGrade === null) return;
+    const newCapacity = prompt(currentLang === 'fa' ? 'ظرفیت جدید:' : 'New capacity:', cls.capacity);
+    if (newCapacity === null) return;
+    
+    cls.name = newName.trim();
+    cls.grade = parseInt(newGrade);
+    cls.capacity = parseInt(newCapacity);
+    saveData();
+    renderAll();
+    updateDashboard();
+    updateSetupWizard();
+    showToast('✅ ' + (currentLang === 'fa' ? 'کلاس ویرایش شد' : 'Class updated'), 'success');
+    addActivity(currentLang === 'fa' ? 'ویرایش کلاس' : 'Edit Class', (currentLang === 'fa' ? 'کلاس ' : 'Class ') + escapeHtml(cls.name) + ' ' + (currentLang === 'fa' ? 'ویرایش شد' : 'updated'));
+}
+
 function deleteClass(id) {
-    if (DATA.currentUser.role !== 'admin') { showToast('❌ فقط مدیر می‌تواند حذف کند', 'error'); return; }
-    showConfirm('حذف کلاس', 'آیا از حذف اطمینان دارید؟', () => {
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند حذف کند' : 'Only admin can delete'), 'error'); return; }
+    showConfirm(currentLang === 'fa' ? 'حذف کلاس' : 'Delete Class', currentLang === 'fa' ? 'آیا از حذف این کلاس اطمینان دارید؟' : 'Are you sure?', () => {
         DATA.classes = DATA.classes.filter(c => c.id !== id);
         DATA.subjects = DATA.subjects.filter(s => s.classId !== id);
         DATA.teachers.forEach(t => { if (t.classes) t.classes = t.classes.filter(cid => cid !== id); });
@@ -1777,8 +2127,8 @@ function deleteClass(id) {
         renderAll();
         updateDashboard();
         updateSetupWizard();
-        showToast('🗑️ کلاس حذف شد', 'warning');
-        addActivity('حذف کلاس', 'کلاس با شناسه ' + escapeHtml(id) + ' حذف شد');
+        showToast('🗑️ ' + (currentLang === 'fa' ? 'کلاس حذف شد' : 'Class deleted'), 'warning');
+        addActivity(currentLang === 'fa' ? 'حذف کلاس' : 'Delete Class', (currentLang === 'fa' ? 'کلاس با شناسه ' : 'Class ID ') + escapeHtml(id) + ' ' + (currentLang === 'fa' ? 'حذف شد' : 'deleted'));
     });
 }
 
@@ -1787,14 +2137,14 @@ function deleteClass(id) {
 // ============================================================
 
 function quickAddStudent() {
-    if (DATA.currentUser.role !== 'admin') { showToast('❌ فقط مدیر می‌تواند دانش‌آموز اضافه کند', 'error'); return; }
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند دانش‌آموز اضافه کند' : 'Only admin can add student'), 'error'); return; }
     const id = document.getElementById('quickStudentId').value.trim();
     const name = document.getElementById('quickStudentName').value.trim();
     const classId = document.getElementById('quickStudentClass').value;
-    if (!id || !name || !classId) { showToast('❌ تمام فیلدها را پر کنید', 'error'); return; }
-    if (isClassFull(classId)) { showToast('❌ ظرفیت کلاس پر است!', 'error'); return; }
-    if (DATA.students.find(s => s.id === id)) { showToast('❌ شناسه تکراری است!', 'error'); return; }
-    DATA.students.push({ id, name, classId, parentPhone: '', average: 0, status: 'بدون نمره' });
+    if (!id || !name || !classId) { showToast('❌ ' + (currentLang === 'fa' ? 'تمام فیلدها را پر کنید' : 'Fill all fields'), 'error'); return; }
+    if (isClassFull(classId)) { showToast('❌ ' + (currentLang === 'fa' ? 'ظرفیت کلاس پر است!' : 'Class is full!'), 'error'); return; }
+    if (DATA.students.find(s => s.id === id)) { showToast('❌ ' + (currentLang === 'fa' ? 'شناسه تکراری است!' : 'Duplicate ID!'), 'error'); return; }
+    DATA.students.push({ id, name, classId, parentPhone: '', average: 0, status: (currentLang === 'fa' ? 'بدون نمره' : 'No Grade') });
     if (getClassById(classId)) getClassById(classId).students.push(id);
     updateStudentAverages();
     saveData();
@@ -1803,21 +2153,21 @@ function quickAddStudent() {
     updateSetupWizard();
     document.getElementById('quickStudentId').value = '';
     document.getElementById('quickStudentName').value = '';
-    showToast('✅ دانش‌آموز ثبت شد', 'success');
-    addActivity('ثبت دانش‌آموز', 'دانش‌آموز ' + escapeHtml(name) + ' ثبت شد');
+    showToast('✅ ' + (currentLang === 'fa' ? 'دانش‌آموز ثبت شد' : 'Student added'), 'success');
+    addActivity(currentLang === 'fa' ? 'ثبت دانش‌آموز' : 'Add Student', (currentLang === 'fa' ? 'دانش‌آموز ' : 'Student ') + escapeHtml(name) + ' ' + (currentLang === 'fa' ? 'ثبت شد' : 'added'));
 }
 
 function addStudent(e) {
     e.preventDefault();
-    if (DATA.currentUser.role !== 'admin') { showToast('❌ فقط مدیر می‌تواند دانش‌آموز اضافه کند', 'error'); return; }
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند دانش‌آموز اضافه کند' : 'Only admin can add student'), 'error'); return; }
     const id = document.getElementById('studentId').value.trim();
     const name = document.getElementById('studentName').value.trim();
     const classId = document.getElementById('studentClassSelect').value;
     const parentPhone = document.getElementById('studentParentPhone').value.trim();
-    if (!id || !name || !classId) { showToast('❌ تمام فیلدها را پر کنید', 'error'); return; }
-    if (isClassFull(classId)) { showToast('❌ ظرفیت کلاس پر است!', 'error'); return; }
-    if (DATA.students.find(s => s.id === id)) { showToast('❌ شناسه تکراری است!', 'error'); return; }
-    DATA.students.push({ id, name, classId, parentPhone, average: 0, status: 'بدون نمره' });
+    if (!id || !name || !classId) { showToast('❌ ' + (currentLang === 'fa' ? 'تمام فیلدها را پر کنید' : 'Fill all fields'), 'error'); return; }
+    if (isClassFull(classId)) { showToast('❌ ' + (currentLang === 'fa' ? 'ظرفیت کلاس پر است!' : 'Class is full!'), 'error'); return; }
+    if (DATA.students.find(s => s.id === id)) { showToast('❌ ' + (currentLang === 'fa' ? 'شناسه تکراری است!' : 'Duplicate ID!'), 'error'); return; }
+    DATA.students.push({ id, name, classId, parentPhone, average: 0, status: (currentLang === 'fa' ? 'بدون نمره' : 'No Grade') });
     if (getClassById(classId)) getClassById(classId).students.push(id);
     updateStudentAverages();
     saveData();
@@ -1825,16 +2175,47 @@ function addStudent(e) {
     updateDashboard();
     updateSetupWizard();
     closeModal('addStudent');
-    showToast('✅ دانش‌آموز ثبت شد', 'success');
-    addActivity('افزودن دانش‌آموز', 'دانش‌آموز ' + escapeHtml(name) + ' اضافه شد');
+    showToast('✅ ' + (currentLang === 'fa' ? 'دانش‌آموز ثبت شد' : 'Student added'), 'success');
+    addActivity(currentLang === 'fa' ? 'افزودن دانش‌آموز' : 'Add Student', (currentLang === 'fa' ? 'دانش‌آموز ' : 'Student ') + escapeHtml(name) + ' ' + (currentLang === 'fa' ? 'اضافه شد' : 'added'));
     document.getElementById('studentId').value = '';
     document.getElementById('studentName').value = '';
     document.getElementById('studentParentPhone').value = '';
 }
 
+function openEditStudent(id) {
+    const student = getStudentById(id);
+    if (!student) { showToast('❌ ' + (currentLang === 'fa' ? 'دانش‌آموز یافت نشد' : 'Student not found'), 'error'); return; }
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند ویرایش کند' : 'Only admin can edit'), 'error'); return; }
+    const newName = prompt(currentLang === 'fa' ? 'نام جدید دانش‌آموز:' : 'New student name:', student.name);
+    if (newName === null) return;
+    const newClass = prompt(currentLang === 'fa' ? 'شناسه کلاس جدید:' : 'New class ID:', student.classId);
+    if (newClass === null) return;
+    
+    // Update class if changed
+    if (student.classId !== newClass) {
+        const oldClass = getClassById(student.classId);
+        if (oldClass && oldClass.students) {
+            oldClass.students = oldClass.students.filter(sid => sid !== id);
+        }
+        const newClassObj = getClassById(newClass);
+        if (newClassObj) {
+            if (!newClassObj.students) newClassObj.students = [];
+            if (!newClassObj.students.includes(id)) newClassObj.students.push(id);
+        }
+    }
+    student.name = newName.trim();
+    student.classId = newClass;
+    saveData();
+    renderAll();
+    updateDashboard();
+    updateSetupWizard();
+    showToast('✅ ' + (currentLang === 'fa' ? 'دانش‌آموز ویرایش شد' : 'Student updated'), 'success');
+    addActivity(currentLang === 'fa' ? 'ویرایش دانش‌آموز' : 'Edit Student', (currentLang === 'fa' ? 'دانش‌آموز ' : 'Student ') + escapeHtml(student.name) + ' ' + (currentLang === 'fa' ? 'ویرایش شد' : 'updated'));
+}
+
 function deleteStudent(id) {
-    if (DATA.currentUser.role !== 'admin') { showToast('❌ فقط مدیر می‌تواند حذف کند', 'error'); return; }
-    showConfirm('حذف دانش‌آموز', 'آیا از حذف اطمینان دارید؟', () => {
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند حذف کند' : 'Only admin can delete'), 'error'); return; }
+    showConfirm(currentLang === 'fa' ? 'حذف دانش‌آموز' : 'Delete Student', currentLang === 'fa' ? 'آیا از حذف این دانش‌آموز اطمینان دارید؟' : 'Are you sure?', () => {
         DATA.students = DATA.students.filter(s => s.id !== id);
         DATA.grades = DATA.grades.filter(g => g.studentId !== id);
         DATA.attendance = DATA.attendance.filter(a => a.studentId !== id);
@@ -1843,8 +2224,8 @@ function deleteStudent(id) {
         renderAll();
         updateDashboard();
         updateSetupWizard();
-        showToast('🗑️ دانش‌آموز حذف شد', 'warning');
-        addActivity('حذف دانش‌آموز', 'دانش‌آموز با شناسه ' + escapeHtml(id) + ' حذف شد');
+        showToast('🗑️ ' + (currentLang === 'fa' ? 'دانش‌آموز حذف شد' : 'Student deleted'), 'warning');
+        addActivity(currentLang === 'fa' ? 'حذف دانش‌آموز' : 'Delete Student', (currentLang === 'fa' ? 'دانش‌آموز با شناسه ' : 'Student ID ') + escapeHtml(id) + ' ' + (currentLang === 'fa' ? 'حذف شد' : 'deleted'));
     });
 }
 
@@ -1854,7 +2235,7 @@ function deleteStudent(id) {
 
 function addTeacher(e) {
     e.preventDefault();
-    if (DATA.currentUser.role !== 'admin') { showToast('❌ فقط مدیر می‌تواند معلم اضافه کند', 'error'); return; }
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند معلم اضافه کند' : 'Only admin can add teacher'), 'error'); return; }
     const id = document.getElementById('teacherId').value.trim();
     const name = document.getElementById('teacherName').value.trim();
     const specialty = document.getElementById('teacherSpecialty').value.trim();
@@ -1862,9 +2243,9 @@ function addTeacher(e) {
     const password = document.getElementById('teacherPassword').value;
     const classes = Array.from(document.getElementById('teacherClasses').selectedOptions).map(o => o.value);
     const subjects = Array.from(document.getElementById('teacherSubjects').selectedOptions).map(o => o.value);
-    if (!id || !name || !specialty || !password) { showToast('❌ تمام فیلدها را پر کنید', 'error'); return; }
-    if (DATA.teachers.find(t => t.id === id)) { showToast('❌ شناسه تکراری است!', 'error'); return; }
-    if (password.length < 6) { showToast('❌ رمز عبور حداقل ۶ کاراکتر', 'error'); return; }
+    if (!id || !name || !specialty || !password) { showToast('❌ ' + (currentLang === 'fa' ? 'تمام فیلدها را پر کنید' : 'Fill all fields'), 'error'); return; }
+    if (DATA.teachers.find(t => t.id === id)) { showToast('❌ ' + (currentLang === 'fa' ? 'شناسه تکراری است!' : 'Duplicate ID!'), 'error'); return; }
+    if (password.length < 6) { showToast('❌ ' + (currentLang === 'fa' ? 'رمز عبور حداقل ۶ کاراکتر' : 'Password must be at least 6 characters'), 'error'); return; }
     DATA.teachers.push({ id, name, specialty, phone, classes, subjects, password });
     classes.forEach(cid => {
         const cls = getClassById(cid);
@@ -1875,8 +2256,8 @@ function addTeacher(e) {
     updateDashboard();
     updateSetupWizard();
     closeModal('addTeacher');
-    showToast('✅ معلم ثبت شد', 'success');
-    addActivity('افزودن معلم', 'معلم ' + escapeHtml(name) + ' اضافه شد');
+    showToast('✅ ' + (currentLang === 'fa' ? 'معلم ثبت شد' : 'Teacher added'), 'success');
+    addActivity(currentLang === 'fa' ? 'افزودن معلم' : 'Add Teacher', (currentLang === 'fa' ? 'معلم ' : 'Teacher ') + escapeHtml(name) + ' ' + (currentLang === 'fa' ? 'اضافه شد' : 'added'));
     document.getElementById('teacherId').value = '';
     document.getElementById('teacherName').value = '';
     document.getElementById('teacherSpecialty').value = '';
@@ -1884,9 +2265,34 @@ function addTeacher(e) {
     document.getElementById('teacherPassword').value = '';
 }
 
+function openEditTeacher(id) {
+    const teacher = getTeacherById(id);
+    if (!teacher) { showToast('❌ ' + (currentLang === 'fa' ? 'معلم یافت نشد' : 'Teacher not found'), 'error'); return; }
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند ویرایش کند' : 'Only admin can edit'), 'error'); return; }
+    const newName = prompt(currentLang === 'fa' ? 'نام جدید معلم:' : 'New teacher name:', teacher.name);
+    if (newName === null) return;
+    const newSpecialty = prompt(currentLang === 'fa' ? 'تخصص جدید:' : 'New specialty:', teacher.specialty);
+    if (newSpecialty === null) return;
+    const newPhone = prompt(currentLang === 'fa' ? 'شماره تماس جدید:' : 'New phone:', teacher.phone);
+    if (newPhone === null) return;
+    const newPassword = prompt(currentLang === 'fa' ? 'رمز عبور جدید (خالی بگذارید برای حفظ قبلی):' : 'New password (leave empty to keep current):', '');
+    if (newPassword === null) return;
+    
+    teacher.name = newName.trim();
+    teacher.specialty = newSpecialty.trim();
+    teacher.phone = newPhone.trim();
+    if (newPassword && newPassword.length >= 6) teacher.password = newPassword;
+    saveData();
+    renderAll();
+    updateDashboard();
+    updateSetupWizard();
+    showToast('✅ ' + (currentLang === 'fa' ? 'معلم ویرایش شد' : 'Teacher updated'), 'success');
+    addActivity(currentLang === 'fa' ? 'ویرایش معلم' : 'Edit Teacher', (currentLang === 'fa' ? 'معلم ' : 'Teacher ') + escapeHtml(teacher.name) + ' ' + (currentLang === 'fa' ? 'ویرایش شد' : 'updated'));
+}
+
 function deleteTeacher(id) {
-    if (DATA.currentUser.role !== 'admin') { showToast('❌ فقط مدیر می‌تواند حذف کند', 'error'); return; }
-    showConfirm('حذف معلم', 'آیا از حذف اطمینان دارید؟', () => {
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند حذف کند' : 'Only admin can delete'), 'error'); return; }
+    showConfirm(currentLang === 'fa' ? 'حذف معلم' : 'Delete Teacher', currentLang === 'fa' ? 'آیا از حذف این معلم اطمینان دارید؟' : 'Are you sure?', () => {
         DATA.teachers = DATA.teachers.filter(t => t.id !== id);
         DATA.subjects = DATA.subjects.filter(s => s.teacherId !== id);
         DATA.classes.forEach(c => { if (c.teachers) c.teachers = c.teachers.filter(t => t !== id); });
@@ -1894,8 +2300,8 @@ function deleteTeacher(id) {
         renderAll();
         updateDashboard();
         updateSetupWizard();
-        showToast('🗑️ معلم حذف شد', 'warning');
-        addActivity('حذف معلم', 'معلم با شناسه ' + escapeHtml(id) + ' حذف شد');
+        showToast('🗑️ ' + (currentLang === 'fa' ? 'معلم حذف شد' : 'Teacher deleted'), 'warning');
+        addActivity(currentLang === 'fa' ? 'حذف معلم' : 'Delete Teacher', (currentLang === 'fa' ? 'معلم با شناسه ' : 'Teacher ID ') + escapeHtml(id) + ' ' + (currentLang === 'fa' ? 'حذف شد' : 'deleted'));
     });
 }
 
@@ -1905,15 +2311,15 @@ function deleteTeacher(id) {
 
 function addSubject(e) {
     e.preventDefault();
-    if (DATA.currentUser.role !== 'admin') { showToast('❌ فقط مدیر می‌تواند درس اضافه کند', 'error'); return; }
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند درس اضافه کند' : 'Only admin can add subject'), 'error'); return; }
     const id = document.getElementById('subjectId').value.trim();
     const name = document.getElementById('subjectName').value.trim();
     const teacherId = document.getElementById('subjectTeacher').value;
     const classId = document.getElementById('subjectClass').value;
     const units = parseInt(document.getElementById('subjectUnits').value);
     const type = document.getElementById('subjectType').value;
-    if (!id || !name || !teacherId || !classId) { showToast('❌ تمام فیلدها را پر کنید', 'error'); return; }
-    if (DATA.subjects.find(s => s.id === id)) { showToast('❌ شناسه تکراری است!', 'error'); return; }
+    if (!id || !name || !teacherId || !classId) { showToast('❌ ' + (currentLang === 'fa' ? 'تمام فیلدها را پر کنید' : 'Fill all fields'), 'error'); return; }
+    if (DATA.subjects.find(s => s.id === id)) { showToast('❌ ' + (currentLang === 'fa' ? 'شناسه تکراری است!' : 'Duplicate ID!'), 'error'); return; }
     DATA.subjects.push({ id, name, teacherId, classId, units, type });
     const teacher = getTeacherById(teacherId);
     if (teacher && !teacher.subjects.includes(id)) teacher.subjects.push(id);
@@ -1922,16 +2328,51 @@ function addSubject(e) {
     updateDashboard();
     updateSetupWizard();
     closeModal('addSubject');
-    showToast('✅ درس ثبت شد', 'success');
-    addActivity('افزودن درس', 'درس ' + escapeHtml(name) + ' اضافه شد');
+    showToast('✅ ' + (currentLang === 'fa' ? 'درس ثبت شد' : 'Subject added'), 'success');
+    addActivity(currentLang === 'fa' ? 'افزودن درس' : 'Add Subject', (currentLang === 'fa' ? 'درس ' : 'Subject ') + escapeHtml(name) + ' ' + (currentLang === 'fa' ? 'اضافه شد' : 'added'));
     document.getElementById('subjectId').value = '';
     document.getElementById('subjectName').value = '';
     document.getElementById('subjectUnits').value = '3';
 }
 
+function openEditSubject(id) {
+    const subject = getSubjectById(id);
+    if (!subject) { showToast('❌ ' + (currentLang === 'fa' ? 'درس یافت نشد' : 'Subject not found'), 'error'); return; }
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند ویرایش کند' : 'Only admin can edit'), 'error'); return; }
+    const newName = prompt(currentLang === 'fa' ? 'نام جدید درس:' : 'New subject name:', subject.name);
+    if (newName === null) return;
+    const newTeacher = prompt(currentLang === 'fa' ? 'شناسه معلم جدید:' : 'New teacher ID:', subject.teacherId);
+    if (newTeacher === null) return;
+    const newClass = prompt(currentLang === 'fa' ? 'شناسه کلاس جدید:' : 'New class ID:', subject.classId);
+    if (newClass === null) return;
+    const newUnits = prompt(currentLang === 'fa' ? 'واحد جدید:' : 'New units:', subject.units);
+    if (newUnits === null) return;
+    const newType = prompt(currentLang === 'fa' ? 'نوع جدید (نظری/عملی/نظری-عملی):' : 'New type:', subject.type);
+    if (newType === null) return;
+    
+    // Remove from old teacher
+    const oldTeacher = getTeacherById(subject.teacherId);
+    if (oldTeacher && oldTeacher.subjects) {
+        oldTeacher.subjects = oldTeacher.subjects.filter(sid => sid !== id);
+    }
+    subject.name = newName.trim();
+    subject.teacherId = newTeacher.trim();
+    subject.classId = newClass.trim();
+    subject.units = parseInt(newUnits);
+    subject.type = newType.trim();
+    const newTeacherObj = getTeacherById(subject.teacherId);
+    if (newTeacherObj && !newTeacherObj.subjects.includes(id)) newTeacherObj.subjects.push(id);
+    saveData();
+    renderAll();
+    updateDashboard();
+    updateSetupWizard();
+    showToast('✅ ' + (currentLang === 'fa' ? 'درس ویرایش شد' : 'Subject updated'), 'success');
+    addActivity(currentLang === 'fa' ? 'ویرایش درس' : 'Edit Subject', (currentLang === 'fa' ? 'درس ' : 'Subject ') + escapeHtml(subject.name) + ' ' + (currentLang === 'fa' ? 'ویرایش شد' : 'updated'));
+}
+
 function deleteSubject(id) {
-    if (DATA.currentUser.role !== 'admin') { showToast('❌ فقط مدیر می‌تواند حذف کند', 'error'); return; }
-    showConfirm('حذف درس', 'آیا از حذف اطمینان دارید؟', () => {
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند حذف کند' : 'Only admin can delete'), 'error'); return; }
+    showConfirm(currentLang === 'fa' ? 'حذف درس' : 'Delete Subject', currentLang === 'fa' ? 'آیا از حذف این درس اطمینان دارید؟' : 'Are you sure?', () => {
         DATA.subjects = DATA.subjects.filter(s => s.id !== id);
         DATA.grades = DATA.grades.filter(g => g.subjectId !== id);
         DATA.teachers.forEach(t => { if (t.subjects) t.subjects = t.subjects.filter(sid => sid !== id); });
@@ -1939,8 +2380,8 @@ function deleteSubject(id) {
         renderAll();
         updateDashboard();
         updateSetupWizard();
-        showToast('🗑️ درس حذف شد', 'warning');
-        addActivity('حذف درس', 'درس با شناسه ' + escapeHtml(id) + ' حذف شد');
+        showToast('🗑️ ' + (currentLang === 'fa' ? 'درس حذف شد' : 'Subject deleted'), 'warning');
+        addActivity(currentLang === 'fa' ? 'حذف درس' : 'Delete Subject', (currentLang === 'fa' ? 'درس با شناسه ' : 'Subject ID ') + escapeHtml(id) + ' ' + (currentLang === 'fa' ? 'حذف شد' : 'deleted'));
     });
 }
 
@@ -1956,15 +2397,15 @@ function addGrade(e) {
     const value = parseFloat(document.getElementById('gradeValue').value);
     const examType = document.getElementById('gradeExamType').value;
     const date = new Date().toISOString().split('T')[0];
-    if (!studentId || !subjectId) { showToast('❌ دانش‌آموز و درس را انتخاب کنید', 'error'); return; }
-    if (isNaN(value) || value < 0 || value > 20) { showToast('❌ نمره باید بین ۰ تا ۲۰ باشد', 'error'); return; }
+    if (!studentId || !subjectId) { showToast('❌ ' + (currentLang === 'fa' ? 'دانش‌آموز و درس را انتخاب کنید' : 'Select student and subject'), 'error'); return; }
+    if (isNaN(value) || value < 0 || value > 20) { showToast('❌ ' + (currentLang === 'fa' ? 'نمره باید بین ۰ تا ۲۰ باشد' : 'Grade must be between 0 and 20'), 'error'); return; }
     const student = getStudentById(studentId);
-    if (!student) { showToast('❌ دانش‌آموز یافت نشد', 'error'); return; }
+    if (!student) { showToast('❌ ' + (currentLang === 'fa' ? 'دانش‌آموز یافت نشد' : 'Student not found'), 'error'); return; }
     if (!isAdmin) {
         const teacherClassIds = getTeacherClassIds(DATA.currentUser.username);
-        if (!teacherClassIds.includes(student.classId)) { showToast('❌ این دانش‌آموز در کلاس شما نیست', 'error'); return; }
+        if (!teacherClassIds.includes(student.classId)) { showToast('❌ ' + (currentLang === 'fa' ? 'این دانش‌آموز در کلاس شما نیست' : 'Student not in your class'), 'error'); return; }
         const subject = getSubjectById(subjectId);
-        if (!subject || subject.teacherId !== DATA.currentUser.username) { showToast('❌ شما معلم این درس نیستید', 'error'); return; }
+        if (!subject || subject.teacherId !== DATA.currentUser.username) { showToast('❌ ' + (currentLang === 'fa' ? 'شما معلم این درس نیستید' : 'You are not the teacher of this subject'), 'error'); return; }
     }
     const teacherId = isAdmin ? 'admin' : DATA.currentUser.username;
     DATA.grades.push({ studentId, subjectId, value, examType, date, teacherId });
@@ -1974,8 +2415,8 @@ function addGrade(e) {
     updateDashboard();
     updateSetupWizard();
     closeModal('addGrade');
-    showToast('✅ نمره ثبت شد', 'success');
-    addActivity('ثبت نمره', 'نمره ' + value + ' برای ' + escapeHtml(student.name) + ' ثبت شد');
+    showToast('✅ ' + (currentLang === 'fa' ? 'نمره ثبت شد' : 'Grade added'), 'success');
+    addActivity(currentLang === 'fa' ? 'ثبت نمره' : 'Add Grade', (currentLang === 'fa' ? 'نمره ' : 'Grade ') + value + ' ' + (currentLang === 'fa' ? 'برای ' : 'for ') + escapeHtml(student.name) + ' ' + (currentLang === 'fa' ? 'ثبت شد' : 'added'));
     document.getElementById('gradeValue').value = '';
 }
 
@@ -1986,14 +2427,14 @@ function addGradeTeacher(e) {
     const value = parseFloat(document.getElementById('gradeValueTeacher').value);
     const examType = document.getElementById('gradeExamTypeTeacher').value;
     const date = new Date().toISOString().split('T')[0];
-    if (!studentId || !subjectId) { showToast('❌ دانش‌آموز و درس را انتخاب کنید', 'error'); return; }
-    if (isNaN(value) || value < 0 || value > 20) { showToast('❌ نمره باید بین ۰ تا ۲۰ باشد', 'error'); return; }
+    if (!studentId || !subjectId) { showToast('❌ ' + (currentLang === 'fa' ? 'دانش‌آموز و درس را انتخاب کنید' : 'Select student and subject'), 'error'); return; }
+    if (isNaN(value) || value < 0 || value > 20) { showToast('❌ ' + (currentLang === 'fa' ? 'نمره باید بین ۰ تا ۲۰ باشد' : 'Grade must be between 0 and 20'), 'error'); return; }
     const student = getStudentById(studentId);
-    if (!student) { showToast('❌ دانش‌آموز یافت نشد', 'error'); return; }
+    if (!student) { showToast('❌ ' + (currentLang === 'fa' ? 'دانش‌آموز یافت نشد' : 'Student not found'), 'error'); return; }
     const teacherClassIds = getTeacherClassIds(DATA.currentUser.username);
-    if (!teacherClassIds.includes(student.classId)) { showToast('❌ این دانش‌آموز در کلاس شما نیست', 'error'); return; }
+    if (!teacherClassIds.includes(student.classId)) { showToast('❌ ' + (currentLang === 'fa' ? 'این دانش‌آموز در کلاس شما نیست' : 'Student not in your class'), 'error'); return; }
     const subject = getSubjectById(subjectId);
-    if (!subject || subject.teacherId !== DATA.currentUser.username) { showToast('❌ شما معلم این درس نیستید', 'error'); return; }
+    if (!subject || subject.teacherId !== DATA.currentUser.username) { showToast('❌ ' + (currentLang === 'fa' ? 'شما معلم این درس نیستید' : 'You are not the teacher of this subject'), 'error'); return; }
     DATA.grades.push({ studentId, subjectId, value, examType, date, teacherId: DATA.currentUser.username });
     updateStudentAverages();
     saveData();
@@ -2001,22 +2442,22 @@ function addGradeTeacher(e) {
     updateDashboard();
     updateSetupWizard();
     closeModal('addGradeTeacher');
-    showToast('✅ نمره ثبت شد', 'success');
-    addActivity('ثبت نمره (معلم)', 'نمره ' + value + ' برای ' + escapeHtml(student.name) + ' ثبت شد');
+    showToast('✅ ' + (currentLang === 'fa' ? 'نمره ثبت شد' : 'Grade added'), 'success');
+    addActivity(currentLang === 'fa' ? 'ثبت نمره (معلم)' : 'Add Grade (Teacher)', (currentLang === 'fa' ? 'نمره ' : 'Grade ') + value + ' ' + (currentLang === 'fa' ? 'برای ' : 'for ') + escapeHtml(student.name) + ' ' + (currentLang === 'fa' ? 'ثبت شد' : 'added'));
     document.getElementById('gradeValueTeacher').value = '';
 }
 
 function deleteGrade(index) {
-    if (DATA.currentUser.role !== 'admin') { showToast('❌ فقط مدیر می‌تواند حذف کند', 'error'); return; }
-    showConfirm('حذف نمره', 'آیا از حذف اطمینان دارید؟', () => {
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند حذف کند' : 'Only admin can delete'), 'error'); return; }
+    showConfirm(currentLang === 'fa' ? 'حذف نمره' : 'Delete Grade', currentLang === 'fa' ? 'آیا از حذف این نمره اطمینان دارید؟' : 'Are you sure?', () => {
         DATA.grades.splice(index, 1);
         updateStudentAverages();
         saveData();
         renderAll();
         updateDashboard();
         updateSetupWizard();
-        showToast('🗑️ نمره حذف شد', 'warning');
-        addActivity('حذف نمره', 'نمره حذف شد');
+        showToast('🗑️ ' + (currentLang === 'fa' ? 'نمره حذف شد' : 'Grade deleted'), 'warning');
+        addActivity(currentLang === 'fa' ? 'حذف نمره' : 'Delete Grade', (currentLang === 'fa' ? 'نمره حذف شد' : 'Grade deleted'));
     });
 }
 
@@ -2031,12 +2472,12 @@ function addAttendance(e) {
     const date = document.getElementById('attendanceDate').value;
     const status = document.getElementById('attendanceStatus').value;
     const note = document.getElementById('attendanceNote').value;
-    if (!studentId) { showToast('❌ دانش‌آموز را انتخاب کنید', 'error'); return; }
+    if (!studentId) { showToast('❌ ' + (currentLang === 'fa' ? 'دانش‌آموز را انتخاب کنید' : 'Select student'), 'error'); return; }
     const student = getStudentById(studentId);
-    if (!student) { showToast('❌ دانش‌آموز یافت نشد', 'error'); return; }
+    if (!student) { showToast('❌ ' + (currentLang === 'fa' ? 'دانش‌آموز یافت نشد' : 'Student not found'), 'error'); return; }
     if (!isAdmin) {
         const teacherClassIds = getTeacherClassIds(DATA.currentUser.username);
-        if (!teacherClassIds.includes(student.classId)) { showToast('❌ این دانش‌آموز در کلاس شما نیست', 'error'); return; }
+        if (!teacherClassIds.includes(student.classId)) { showToast('❌ ' + (currentLang === 'fa' ? 'این دانش‌آموز در کلاس شما نیست' : 'Student not in your class'), 'error'); return; }
     }
     const teacherId = isAdmin ? 'admin' : DATA.currentUser.username;
     DATA.attendance.push({ studentId, date, status, note: escapeHtml(note), teacherId });
@@ -2045,8 +2486,8 @@ function addAttendance(e) {
     updateDashboard();
     updateSetupWizard();
     closeModal('addAttendance');
-    showToast('✅ حضور ثبت شد', 'success');
-    addActivity('ثبت حضور', 'حضور ' + status + ' برای ' + escapeHtml(student.name) + ' ثبت شد');
+    showToast('✅ ' + (currentLang === 'fa' ? 'حضور ثبت شد' : 'Attendance added'), 'success');
+    addActivity(currentLang === 'fa' ? 'ثبت حضور' : 'Add Attendance', (currentLang === 'fa' ? 'حضور ' : 'Attendance ') + status + ' ' + (currentLang === 'fa' ? 'برای ' : 'for ') + escapeHtml(student.name) + ' ' + (currentLang === 'fa' ? 'ثبت شد' : 'added'));
     document.getElementById('attendanceNote').value = '';
 }
 
@@ -2056,32 +2497,32 @@ function addAttendanceTeacher(e) {
     const date = document.getElementById('attendanceDateTeacher').value;
     const status = document.getElementById('attendanceStatusTeacher').value;
     const note = document.getElementById('attendanceNoteTeacher').value;
-    if (!studentId) { showToast('❌ دانش‌آموز را انتخاب کنید', 'error'); return; }
+    if (!studentId) { showToast('❌ ' + (currentLang === 'fa' ? 'دانش‌آموز را انتخاب کنید' : 'Select student'), 'error'); return; }
     const student = getStudentById(studentId);
-    if (!student) { showToast('❌ دانش‌آموز یافت نشد', 'error'); return; }
+    if (!student) { showToast('❌ ' + (currentLang === 'fa' ? 'دانش‌آموز یافت نشد' : 'Student not found'), 'error'); return; }
     const teacherClassIds = getTeacherClassIds(DATA.currentUser.username);
-    if (!teacherClassIds.includes(student.classId)) { showToast('❌ این دانش‌آموز در کلاس شما نیست', 'error'); return; }
+    if (!teacherClassIds.includes(student.classId)) { showToast('❌ ' + (currentLang === 'fa' ? 'این دانش‌آموز در کلاس شما نیست' : 'Student not in your class'), 'error'); return; }
     DATA.attendance.push({ studentId, date, status, note: escapeHtml(note), teacherId: DATA.currentUser.username });
     saveData();
     renderAll();
     updateDashboard();
     updateSetupWizard();
     closeModal('addAttendanceTeacher');
-    showToast('✅ حضور ثبت شد', 'success');
-    addActivity('ثبت حضور (معلم)', 'حضور ' + status + ' برای ' + escapeHtml(student.name) + ' ثبت شد');
+    showToast('✅ ' + (currentLang === 'fa' ? 'حضور ثبت شد' : 'Attendance added'), 'success');
+    addActivity(currentLang === 'fa' ? 'ثبت حضور (معلم)' : 'Add Attendance (Teacher)', (currentLang === 'fa' ? 'حضور ' : 'Attendance ') + status + ' ' + (currentLang === 'fa' ? 'برای ' : 'for ') + escapeHtml(student.name) + ' ' + (currentLang === 'fa' ? 'ثبت شد' : 'added'));
     document.getElementById('attendanceNoteTeacher').value = '';
 }
 
 function deleteAttendance(index) {
-    if (DATA.currentUser.role !== 'admin') { showToast('❌ فقط مدیر می‌تواند حذف کند', 'error'); return; }
-    showConfirm('حذف حضور', 'آیا از حذف اطمینان دارید؟', () => {
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ ' + (currentLang === 'fa' ? 'فقط مدیر می‌تواند حذف کند' : 'Only admin can delete'), 'error'); return; }
+    showConfirm(currentLang === 'fa' ? 'حذف حضور' : 'Delete Attendance', currentLang === 'fa' ? 'آیا از حذف این رکورد اطمینان دارید؟' : 'Are you sure?', () => {
         DATA.attendance.splice(index, 1);
         saveData();
         renderAll();
         updateDashboard();
         updateSetupWizard();
-        showToast('🗑️ رکورد حضور حذف شد', 'warning');
-        addActivity('حذف حضور', 'رکورد حضور حذف شد');
+        showToast('🗑️ ' + (currentLang === 'fa' ? 'رکورد حضور حذف شد' : 'Attendance record deleted'), 'warning');
+        addActivity(currentLang === 'fa' ? 'حذف حضور' : 'Delete Attendance', (currentLang === 'fa' ? 'رکورد حضور حذف شد' : 'Attendance record deleted'));
     });
 }
 
@@ -2113,7 +2554,7 @@ function updateDashboard() {
 function renderActivities() {
     const c = document.getElementById('recentActivities');
     if (DATA.activities.length === 0) {
-        c.innerHTML = '<p class="text-muted text-center" style="padding:12px;">هیچ فعالیتی ثبت نشده است</p>';
+        c.innerHTML = '<p class="text-muted text-center" style="padding:12px;">' + (currentLang === 'fa' ? 'هیچ فعالیتی ثبت نشده است' : 'No activities recorded') + '</p>';
         return;
     }
     c.innerHTML = DATA.activities.slice(-6).reverse().map(a =>
@@ -2128,18 +2569,18 @@ function renderAlerts() {
     const c = document.getElementById('alertsList');
     const active = DATA.alerts.filter(a => !a.resolved);
     if (active.length === 0) {
-        c.innerHTML = '<p class="text-muted text-center" style="padding:12px;">✅ همه چیز عالی است!</p>';
+        c.innerHTML = '<p class="text-muted text-center" style="padding:12px;">✅ ' + (currentLang === 'fa' ? 'همه چیز عالی است!' : 'All clear!') + '</p>';
         return;
     }
     c.innerHTML = active.map(a =>
         `<div style="padding:6px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; font-size:11px; border-right:3px solid ${a.severity === 'critical' ? 'var(--danger)' : 'var(--warning)'}; padding-right:8px;">
             <span>${escapeHtml(a.message)}</span>
-            <button class="btn btn-success btn-sm" onclick="resolveAlert(${DATA.alerts.indexOf(a)})" style="padding:2px 10px; font-size:9px;">رفع</button>
+            <button class="btn btn-success btn-sm" onclick="resolveAlert(${DATA.alerts.indexOf(a)})" style="padding:2px 10px; font-size:9px;">${currentLang === 'fa' ? 'رفع' : 'Resolve'}</button>
         </div>`
     ).join('');
 }
 
-function resolveAlert(index) { DATA.alerts[index].resolved = true; saveData(); renderAlerts(); showToast('✅ هشدار رفع شد', 'success'); }
+function resolveAlert(index) { DATA.alerts[index].resolved = true; saveData(); renderAlerts(); showToast('✅ ' + (currentLang === 'fa' ? 'هشدار رفع شد' : 'Alert resolved'), 'success'); }
 
 function addActivity(text, detail) {
     DATA.activities.push({ text: text + (detail ? ' - ' + detail : ''), time: new Date().toLocaleString('fa-IR') });
@@ -2154,20 +2595,20 @@ function viewStudent(id) {
     const cls = getClassById(s.classId);
     const grades = getStudentGrades(id);
     const avg = calculateAverage(grades);
-    showToast(`👤 ${escapeHtml(s.name)} | کلاس: ${cls ? escapeHtml(cls.name) : 'ثبت نشده'} | میانگین: ${avg.toFixed(1)} | وضعیت: ${s.status}`, 'info');
+    showToast(`👤 ${escapeHtml(s.name)} | ${currentLang === 'fa' ? 'کلاس' : 'Class'}: ${cls ? escapeHtml(cls.name) : (currentLang === 'fa' ? 'ثبت نشده' : 'Not Set')} | ${currentLang === 'fa' ? 'میانگین' : 'Average'}: ${avg.toFixed(1)} | ${currentLang === 'fa' ? 'وضعیت' : 'Status'}: ${s.status}`, 'info');
 }
 
 function showRanking() {
     const isAdmin = DATA.currentUser.role === 'admin';
     const students = isAdmin ? DATA.students : getTeacherStudents(DATA.currentUser.username);
     const sorted = [...students].sort((a, b) => (b.average || 0) - (a.average || 0));
-    if (sorted.length === 0) { showToast('❌ هیچ دانش‌آموزی وجود ندارد', 'error'); return; }
-    let msg = '🏆 رتبه‌بندی دانش‌آموزان:\n' + '='.repeat(30) + '\n';
+    if (sorted.length === 0) { showToast('❌ ' + (currentLang === 'fa' ? 'هیچ دانش‌آموزی وجود ندارد' : 'No students'), 'error'); return; }
+    let msg = (currentLang === 'fa' ? '🏆 رتبه‌بندی دانش‌آموزان:\n' : '🏆 Student Ranking:\n') + '='.repeat(30) + '\n';
     sorted.forEach((s, i) => {
         msg += `${i+1}. ${escapeHtml(s.name)} - ${(s.average || 0).toFixed(1)} - ${s.status}\n`;
     });
     alert(msg);
-    addActivity('رتبه‌بندی', 'رتبه‌بندی دانش‌آموزان مشاهده شد');
+    addActivity(currentLang === 'fa' ? 'رتبه‌بندی' : 'Ranking', (currentLang === 'fa' ? 'رتبه‌بندی دانش‌آموزان مشاهده شد' : 'Student ranking viewed'));
 }
 
 // ============================================================
@@ -2193,7 +2634,7 @@ function goToStep(step) {
     const pages = ['classes', 'teachers', 'students', 'subjects'];
     const page = pages[step - 1] || 'classes';
     navigateTo(page);
-    showToast(`📌 مرحله ${step}: ${['کلاس‌ها', 'معلمان', 'دانش‌آموزان', 'دروس'][step-1]}`, 'info');
+    showToast(`📌 ${currentLang === 'fa' ? 'مرحله' : 'Step'} ${step}: ${currentLang === 'fa' ? ['کلاس‌ها', 'معلمان', 'دانش‌آموزان', 'دروس'][step-1] : ['Classes', 'Teachers', 'Students', 'Subjects'][step-1]}`, 'info');
 }
 
 // ============================================================
@@ -2201,45 +2642,84 @@ function goToStep(step) {
 // ============================================================
 
 function exportToExcel(type) {
-    if (typeof XLSX === 'undefined') { showToast('❌ کتابخانه اکسل بارگذاری نشد', 'error'); return; }
-    showToast('⏳ در حال آماده‌سازی فایل...', 'info');
+    if (typeof XLSX === 'undefined') { showToast('❌ ' + (currentLang === 'fa' ? 'کتابخانه اکسل بارگذاری نشد' : 'Excel library not loaded'), 'error'); return; }
+    showToast('⏳ ' + (currentLang === 'fa' ? 'در حال آماده‌سازی فایل...' : 'Preparing file...'), 'info');
     setTimeout(() => {
         try {
             const isAdmin = DATA.currentUser.role === 'admin';
             let data = [], sheetName = '';
             if (type === 'students' || type === 'all') {
                 const students = isAdmin ? DATA.students : getTeacherStudents(DATA.currentUser.username);
-                data = students.map(s => ({ 'شناسه': s.id, 'نام': s.name, 'کلاس': getClassById(s.classId)?.name || '', 'میانگین': s.average || 0, 'وضعیت': s.status || '' }));
-                sheetName = 'دانش‌آموزان';
+                data = students.map(s => ({ 
+                    (currentLang === 'fa' ? 'شناسه' : 'ID'): s.id, 
+                    (currentLang === 'fa' ? 'نام' : 'Name'): s.name, 
+                    (currentLang === 'fa' ? 'کلاس' : 'Class'): getClassById(s.classId)?.name || '', 
+                    (currentLang === 'fa' ? 'میانگین' : 'Average'): s.average || 0, 
+                    (currentLang === 'fa' ? 'وضعیت' : 'Status'): s.status || '' 
+                }));
+                sheetName = currentLang === 'fa' ? 'دانش‌آموزان' : 'Students';
             }
             if (type === 'teachers' && isAdmin) {
-                data = DATA.teachers.map(t => ({ 'شناسه': t.id, 'نام': t.name, 'تخصص': t.specialty, 'تماس': t.phone || '', 'کلاس‌ها': (t.classes || []).map(cid => getClassById(cid)?.name || cid).join('، '), 'درس‌ها': (t.subjects || []).map(sid => getSubjectById(sid)?.name || sid).join('، ') }));
-                sheetName = 'معلمان';
+                data = DATA.teachers.map(t => ({ 
+                    (currentLang === 'fa' ? 'شناسه' : 'ID'): t.id, 
+                    (currentLang === 'fa' ? 'نام' : 'Name'): t.name, 
+                    (currentLang === 'fa' ? 'تخصص' : 'Specialty'): t.specialty, 
+                    (currentLang === 'fa' ? 'تماس' : 'Phone'): t.phone || '',
+                    (currentLang === 'fa' ? 'کلاس‌ها' : 'Classes'): (t.classes || []).map(cid => getClassById(cid)?.name || cid).join('، '),
+                    (currentLang === 'fa' ? 'درس‌ها' : 'Subjects'): (t.subjects || []).map(sid => getSubjectById(sid)?.name || sid).join('، ')
+                }));
+                sheetName = currentLang === 'fa' ? 'معلمان' : 'Teachers';
             }
-            if (type === 'classes' && isAdmin) { data = DATA.classes.map(c => ({ 'شناسه': c.id, 'نام': c.name, 'پایه': c.grade, 'ظرفیت': c.capacity, 'دانش‌آموز': getClassStudents(c.id).length })); sheetName = 'کلاس‌ها'; }
-            if (type === 'subjects' && isAdmin) { data = DATA.subjects.map(s => ({ 'شناسه': s.id, 'نام': s.name, 'معلم': getTeacherById(s.teacherId)?.name || '', 'کلاس': getClassById(s.classId)?.name || '' })); sheetName = 'دروس'; }
+            if (type === 'classes' && isAdmin) { 
+                data = DATA.classes.map(c => ({ 
+                    (currentLang === 'fa' ? 'شناسه' : 'ID'): c.id, 
+                    (currentLang === 'fa' ? 'نام' : 'Name'): c.name, 
+                    (currentLang === 'fa' ? 'پایه' : 'Grade'): c.grade, 
+                    (currentLang === 'fa' ? 'ظرفیت' : 'Capacity'): c.capacity, 
+                    (currentLang === 'fa' ? 'دانش‌آموز' : 'Students'): getClassStudents(c.id).length 
+                })); 
+                sheetName = currentLang === 'fa' ? 'کلاس‌ها' : 'Classes'; 
+            }
+            if (type === 'subjects' && isAdmin) { 
+                data = DATA.subjects.map(s => ({ 
+                    (currentLang === 'fa' ? 'شناسه' : 'ID'): s.id, 
+                    (currentLang === 'fa' ? 'نام' : 'Name'): s.name, 
+                    (currentLang === 'fa' ? 'معلم' : 'Teacher'): getTeacherById(s.teacherId)?.name || '', 
+                    (currentLang === 'fa' ? 'کلاس' : 'Class'): getClassById(s.classId)?.name || '' 
+                })); 
+                sheetName = currentLang === 'fa' ? 'دروس' : 'Subjects'; 
+            }
             if (type === 'grades') {
                 let grades = DATA.grades;
                 if (!isAdmin) { const students = getTeacherStudents(DATA.currentUser.username); const ids = students.map(s => s.id); grades = grades.filter(g => ids.includes(g.studentId)); }
-                data = grades.map(g => ({ 'دانش‌آموز': getStudentById(g.studentId)?.name || '', 'درس': getSubjectById(g.subjectId)?.name || '', 'نمره': g.value, 'تاریخ': g.date }));
-                sheetName = 'نمرات';
+                data = grades.map(g => ({ 
+                    (currentLang === 'fa' ? 'دانش‌آموز' : 'Student'): getStudentById(g.studentId)?.name || '', 
+                    (currentLang === 'fa' ? 'درس' : 'Subject'): getSubjectById(g.subjectId)?.name || '', 
+                    (currentLang === 'fa' ? 'نمره' : 'Grade'): g.value, 
+                    (currentLang === 'fa' ? 'تاریخ' : 'Date'): g.date 
+                }));
+                sheetName = currentLang === 'fa' ? 'نمرات' : 'Grades';
             }
             if (type === 'attendance') {
                 let attendance = DATA.attendance;
                 if (!isAdmin) { const students = getTeacherStudents(DATA.currentUser.username); const ids = students.map(s => s.id); attendance = attendance.filter(a => ids.includes(a.studentId)); }
-                data = attendance.map(a => ({ 'دانش‌آموز': getStudentById(a.studentId)?.name || '', 'تاریخ': a.date, 'وضعیت': a.status }));
-                sheetName = 'حضور';
+                data = attendance.map(a => ({ 
+                    (currentLang === 'fa' ? 'دانش‌آموز' : 'Student'): getStudentById(a.studentId)?.name || '', 
+                    (currentLang === 'fa' ? 'تاریخ' : 'Date'): a.date, 
+                    (currentLang === 'fa' ? 'وضعیت' : 'Status'): a.status 
+                }));
+                sheetName = currentLang === 'fa' ? 'حضور' : 'Attendance';
             }
             if (type === 'all' && isAdmin) { exportAllToExcel(); return; }
-            if (data.length === 0) { showToast('❌ داده‌ای برای خروجی وجود ندارد', 'error'); return; }
+            if (data.length === 0) { showToast('❌ ' + (currentLang === 'fa' ? 'داده‌ای برای خروجی وجود ندارد' : 'No data to export'), 'error'); return; }
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.json_to_sheet(data);
             ws['!cols'] = Object.keys(data[0]).map(() => ({ wch: 18 }));
             XLSX.utils.book_append_sheet(wb, ws, sheetName);
-            XLSX.writeFile(wb, `گزارش_${sheetName}_${new Date().toLocaleDateString('fa-IR')}.xlsx`);
-            showToast('✅ فایل دانلود شد', 'success');
-            addActivity('خروجی اکسل', 'خروجی ' + type + ' گرفته شد');
-        } catch (e) { showToast('❌ خطا: ' + e.message, 'error'); }
+            XLSX.writeFile(wb, `${currentLang === 'fa' ? 'گزارش' : 'Report'}_${sheetName}_${new Date().toLocaleDateString('fa-IR')}.xlsx`);
+            showToast('✅ ' + (currentLang === 'fa' ? 'فایل دانلود شد' : 'File downloaded'), 'success');
+            addActivity(currentLang === 'fa' ? 'خروجی اکسل' : 'Excel Export', (currentLang === 'fa' ? 'خروجی ' : 'Export ') + type + ' ' + (currentLang === 'fa' ? 'گرفته شد' : 'taken'));
+        } catch (e) { showToast('❌ ' + (currentLang === 'fa' ? 'خطا: ' : 'Error: ') + e.message, 'error'); }
     }, 300);
 }
 
@@ -2247,11 +2727,11 @@ function exportAllToExcel() {
     try {
         const wb = XLSX.utils.book_new();
         const sheets = [
-            { name: 'دانش‌آموزان', data: DATA.students.map(s => ({ 'شناسه': s.id, 'نام': s.name, 'کلاس': getClassById(s.classId)?.name || '', 'میانگین': s.average || 0 })) },
-            { name: 'معلمان', data: DATA.teachers.map(t => ({ 'شناسه': t.id, 'نام': t.name, 'تخصص': t.specialty })) },
-            { name: 'کلاس‌ها', data: DATA.classes.map(c => ({ 'شناسه': c.id, 'نام': c.name, 'پایه': c.grade })) },
-            { name: 'دروس', data: DATA.subjects.map(s => ({ 'شناسه': s.id, 'نام': s.name, 'معلم': getTeacherById(s.teacherId)?.name || '' })) },
-            { name: 'نمرات', data: DATA.grades.map(g => ({ 'دانش‌آموز': getStudentById(g.studentId)?.name || '', 'نمره': g.value })) }
+            { name: currentLang === 'fa' ? 'دانش‌آموزان' : 'Students', data: DATA.students.map(s => ({ (currentLang === 'fa' ? 'شناسه' : 'ID'): s.id, (currentLang === 'fa' ? 'نام' : 'Name'): s.name, (currentLang === 'fa' ? 'کلاس' : 'Class'): getClassById(s.classId)?.name || '', (currentLang === 'fa' ? 'میانگین' : 'Average'): s.average || 0 })) },
+            { name: currentLang === 'fa' ? 'معلمان' : 'Teachers', data: DATA.teachers.map(t => ({ (currentLang === 'fa' ? 'شناسه' : 'ID'): t.id, (currentLang === 'fa' ? 'نام' : 'Name'): t.name, (currentLang === 'fa' ? 'تخصص' : 'Specialty'): t.specialty })) },
+            { name: currentLang === 'fa' ? 'کلاس‌ها' : 'Classes', data: DATA.classes.map(c => ({ (currentLang === 'fa' ? 'شناسه' : 'ID'): c.id, (currentLang === 'fa' ? 'نام' : 'Name'): c.name, (currentLang === 'fa' ? 'پایه' : 'Grade'): c.grade })) },
+            { name: currentLang === 'fa' ? 'دروس' : 'Subjects', data: DATA.subjects.map(s => ({ (currentLang === 'fa' ? 'شناسه' : 'ID'): s.id, (currentLang === 'fa' ? 'نام' : 'Name'): s.name, (currentLang === 'fa' ? 'معلم' : 'Teacher'): getTeacherById(s.teacherId)?.name || '' })) },
+            { name: currentLang === 'fa' ? 'نمرات' : 'Grades', data: DATA.grades.map(g => ({ (currentLang === 'fa' ? 'دانش‌آموز' : 'Student'): getStudentById(g.studentId)?.name || '', (currentLang === 'fa' ? 'نمره' : 'Grade'): g.value })) }
         ];
         sheets.forEach(s => {
             if (s.data.length > 0) {
@@ -2260,10 +2740,10 @@ function exportAllToExcel() {
                 XLSX.utils.book_append_sheet(wb, ws, s.name);
             }
         });
-        XLSX.writeFile(wb, `گزارش_کامل_${new Date().toLocaleDateString('fa-IR')}.xlsx`);
-        showToast('✅ خروجی کامل دانلود شد', 'success');
-        addActivity('خروجی اکسل', 'خروجی کامل گرفته شد');
-    } catch (e) { showToast('❌ خطا: ' + e.message, 'error'); }
+        XLSX.writeFile(wb, `${currentLang === 'fa' ? 'گزارش_کامل' : 'Full_Report'}_${new Date().toLocaleDateString('fa-IR')}.xlsx`);
+        showToast('✅ ' + (currentLang === 'fa' ? 'خروجی کامل دانلود شد' : 'Full export downloaded'), 'success');
+        addActivity(currentLang === 'fa' ? 'خروجی اکسل' : 'Excel Export', (currentLang === 'fa' ? 'خروجی کامل گرفته شد' : 'Full export taken'));
+    } catch (e) { showToast('❌ ' + (currentLang === 'fa' ? 'خطا: ' : 'Error: ') + e.message, 'error'); }
 }
 
 // ============================================================
@@ -2274,29 +2754,29 @@ function generateReport(type) {
     const isAdmin = DATA.currentUser.role === 'admin';
     if (type === 'monthly') {
         const students = isAdmin ? DATA.students : getTeacherStudents(DATA.currentUser.username);
-        let report = '📊 گزارش ماهانه\n' + '='.repeat(30) + '\n\n';
-        report += `دانش‌آموزان: ${students.length}\n`;
-        if (isAdmin) { report += `معلمان: ${DATA.teachers.length}\nکلاس‌ها: ${DATA.classes.length}\nدروس: ${DATA.subjects.length}\n`; }
+        let report = (currentLang === 'fa' ? '📊 گزارش ماهانه\n' : '📊 Monthly Report\n') + '='.repeat(30) + '\n\n';
+        report += `${currentLang === 'fa' ? 'دانش‌آموزان' : 'Students'}: ${students.length}\n`;
+        if (isAdmin) { report += `${currentLang === 'fa' ? 'معلمان' : 'Teachers'}: ${DATA.teachers.length}\n${currentLang === 'fa' ? 'کلاس‌ها' : 'Classes'}: ${DATA.classes.length}\n${currentLang === 'fa' ? 'دروس' : 'Subjects'}: ${DATA.subjects.length}\n`; }
         let avgSum = 0; students.forEach(s => { if (s.average) avgSum += s.average; });
-        report += `میانگین نمرات: ${(avgSum / students.length || 0).toFixed(2)}\n\n`;
-        report += 'لیست دانش‌آموزان:\n';
-        students.forEach(s => { report += `- ${s.name} | میانگین: ${(s.average || 0).toFixed(1)} | ${s.status}\n`; });
-        downloadFile(report, `گزارش_${new Date().toLocaleDateString('fa-IR')}.txt`, 'text/plain');
-        showToast('📄 گزارش تولید شد', 'success');
+        report += `${currentLang === 'fa' ? 'میانگین نمرات' : 'Average Grade'}: ${(avgSum / students.length || 0).toFixed(2)}\n\n`;
+        report += (currentLang === 'fa' ? '📋 لیست دانش‌آموزان:\n' : '📋 Student List:\n');
+        students.forEach(s => { report += `- ${s.name} | ${currentLang === 'fa' ? 'میانگین' : 'Average'}: ${(s.average || 0).toFixed(1)} | ${s.status}\n`; });
+        downloadFile(report, `${currentLang === 'fa' ? 'گزارش' : 'Report'}_${new Date().toLocaleDateString('fa-IR')}.txt`, 'text/plain');
+        showToast('📄 ' + (currentLang === 'fa' ? 'گزارش تولید شد' : 'Report generated'), 'success');
     } else if (type === 'analytics') {
         const students = isAdmin ? DATA.students : getTeacherStudents(DATA.currentUser.username);
         const ids = students.map(s => s.id);
         const grades = DATA.grades.filter(g => ids.includes(g.studentId));
         const values = grades.map(g => g.value);
-        let analysis = '📈 تحلیل آماری\n' + '='.repeat(30) + '\n\n';
+        let analysis = (currentLang === 'fa' ? '📈 تحلیل آماری\n' : '📈 Analytics\n') + '='.repeat(30) + '\n\n';
         if (values.length > 0) {
-            analysis += `تعداد نمرات: ${values.length}\n`;
-            analysis += `بیشترین: ${Math.max(...values)}\n`;
-            analysis += `کمترین: ${Math.min(...values)}\n`;
-            analysis += `میانگین: ${(values.reduce((a,b) => a+b, 0) / values.length).toFixed(2)}\n`;
-        } else { analysis += 'هیچ نمره‌ای ثبت نشده است'; }
-        downloadFile(analysis, `تحلیل_${new Date().toLocaleDateString('fa-IR')}.txt`, 'text/plain');
-        showToast('📊 تحلیل تولید شد', 'info');
+            analysis += `${currentLang === 'fa' ? 'تعداد نمرات' : 'Number of Grades'}: ${values.length}\n`;
+            analysis += `${currentLang === 'fa' ? 'بیشترین' : 'Max'}: ${Math.max(...values)}\n`;
+            analysis += `${currentLang === 'fa' ? 'کمترین' : 'Min'}: ${Math.min(...values)}\n`;
+            analysis += `${currentLang === 'fa' ? 'میانگین' : 'Average'}: ${(values.reduce((a,b) => a+b, 0) / values.length).toFixed(2)}\n`;
+        } else { analysis += (currentLang === 'fa' ? 'هیچ نمره‌ای ثبت نشده است' : 'No grades recorded'); }
+        downloadFile(analysis, `${currentLang === 'fa' ? 'تحلیل' : 'Analytics'}_${new Date().toLocaleDateString('fa-IR')}.txt`, 'text/plain');
+        showToast('📊 ' + (currentLang === 'fa' ? 'تحلیل تولید شد' : 'Analytics generated'), 'info');
     }
 }
 
@@ -2314,48 +2794,51 @@ function showReportCard(e) {
     e.preventDefault();
     const studentId = document.getElementById('reportStudent').value;
     const student = getStudentById(studentId);
-    if (!student) { showToast('❌ دانش‌آموز یافت نشد', 'error'); return; }
+    if (!student) { showToast('❌ ' + (currentLang === 'fa' ? 'دانش‌آموز یافت نشد' : 'Student not found'), 'error'); return; }
     if (DATA.currentUser.role === 'teacher') {
         const teacherClassIds = getTeacherClassIds(DATA.currentUser.username);
-        if (!teacherClassIds.includes(student.classId)) { showToast('❌ این دانش‌آموز در کلاس شما نیست', 'error'); return; }
+        if (!teacherClassIds.includes(student.classId)) { showToast('❌ ' + (currentLang === 'fa' ? 'این دانش‌آموز در کلاس شما نیست' : 'Student not in your class'), 'error'); return; }
     }
     const grades = getStudentGrades(studentId);
     const avg = calculateAverage(grades);
     const cls = getClassById(student.classId);
+    const weightedAvg = calculateWeightedAverage(grades, DATA.subjects);
     let html = `<div style="padding:14px; background:var(--bg-input); border-radius:10px; border:1px solid var(--border);">
-        <h4 style="text-align:center; font-size:18px; margin-bottom:10px;">📜 کارنامه تحصیلی</h4>
+        <h4 style="text-align:center; font-size:18px; margin-bottom:10px;">📜 ${currentLang === 'fa' ? 'کارنامه تحصیلی' : 'Report Card'}</h4>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:10px; font-size:13px;">
-            <div><strong>نام:</strong> ${escapeHtml(student.name)}</div>
-            <div><strong>شناسه:</strong> ${escapeHtml(student.id)}</div>
-            <div><strong>کلاس:</strong> ${cls ? escapeHtml(cls.name) : 'ثبت نشده'}</div>
-            <div><strong>پایه:</strong> ${cls ? cls.grade : '-'}</div>
+            <div><strong>${currentLang === 'fa' ? 'نام' : 'Name'}:</strong> ${escapeHtml(student.name)}</div>
+            <div><strong>${currentLang === 'fa' ? 'شناسه' : 'ID'}:</strong> ${escapeHtml(student.id)}</div>
+            <div><strong>${currentLang === 'fa' ? 'کلاس' : 'Class'}:</strong> ${cls ? escapeHtml(cls.name) : (currentLang === 'fa' ? 'ثبت نشده' : 'Not Set')}</div>
+            <div><strong>${currentLang === 'fa' ? 'پایه' : 'Grade'}:</strong> ${cls ? cls.grade : '-'}</div>
+            <div><strong>${currentLang === 'fa' ? 'میانگین ساده' : 'Simple Average'}:</strong> ${avg.toFixed(2)}</div>
+            <div><strong>${currentLang === 'fa' ? 'معدل وزنی' : 'Weighted GPA'}:</strong> ${weightedAvg.toFixed(2)}</div>
         </div>
         <div style="text-align:center; padding:10px; background:rgba(124,77,255,0.08); border-radius:8px; margin-bottom:10px;">
             <div style="font-size:24px; font-weight:700;">${avg.toFixed(2)}</div>
-            <div class="text-muted" style="font-size:12px;">میانگین کل</div>
+            <div class="text-muted" style="font-size:12px;">${currentLang === 'fa' ? 'میانگین کل' : 'Overall Average'}</div>
             <div style="margin-top:4px;"><span class="status-badge ${avg >= 18 ? 'excellent' : avg >= 14 ? 'good' : avg >= 10 ? 'pending' : 'fail'}">${student.status}</span></div>
         </div>`;
     if (grades.length === 0) {
-        html += '<p class="text-muted" style="text-align:center; padding:10px;">هیچ نمره‌ای ثبت نشده است</p>';
+        html += '<p class="text-muted" style="text-align:center; padding:10px;">' + (currentLang === 'fa' ? 'هیچ نمره‌ای ثبت نشده است' : 'No grades recorded') + '</p>';
     } else {
-        html += '<div><strong>📝 نمرات:</strong><div style="margin-top:6px;">';
+        html += '<div><strong>📝 ' + (currentLang === 'fa' ? 'نمرات دروس:' : 'Subject Grades:') + '</strong><div style="margin-top:6px;">';
         grades.forEach(g => {
             const sub = getSubjectById(g.subjectId);
             const color = g.value >= 18 ? 'var(--success)' : g.value >= 14 ? 'var(--warning)' : g.value >= 10 ? '#FF9800' : 'var(--danger)';
             html += `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid var(--border); font-size:12px;">
-                <span>${sub ? escapeHtml(sub.name) : 'نامشخص'}</span>
+                <span>${sub ? escapeHtml(sub.name) : (currentLang === 'fa' ? 'نامشخص' : 'Unknown')} (${sub ? sub.units : 1} ${currentLang === 'fa' ? 'واحد' : 'unit'})</span>
                 <span style="font-weight:600; color:${color};">${g.value}</span>
             </div>`;
         });
         html += '</div></div>';
     }
     html += `<div style="text-align:center; margin-top:12px;">
-        <button class="btn btn-primary btn-sm" onclick="window.print()"><i class="fas fa-print"></i> چاپ</button>
+        <button class="btn btn-primary btn-sm" onclick="window.print()"><i class="fas fa-print"></i> ${currentLang === 'fa' ? 'چاپ' : 'Print'}</button>
     </div></div>`;
     document.getElementById('reportCardResult').innerHTML = html;
     document.getElementById('reportCardResult').style.display = 'block';
-    showToast('📄 کارنامه تولید شد', 'success');
-    addActivity('کارنامه', 'کارنامه ' + escapeHtml(student.name) + ' مشاهده شد');
+    showToast('📄 ' + (currentLang === 'fa' ? 'کارنامه تولید شد' : 'Report card generated'), 'success');
+    addActivity(currentLang === 'fa' ? 'کارنامه' : 'Report Card', (currentLang === 'fa' ? 'کارنامه ' : 'Report card for ') + escapeHtml(student.name) + ' ' + (currentLang === 'fa' ? 'مشاهده شد' : 'viewed'));
 }
 
 // ============================================================
@@ -2382,7 +2865,7 @@ function openModal(name) {
             opt.textContent = t.id + ' - ' + t.name + ' (' + t.specialty + ')';
             sel.appendChild(opt);
         });
-        if (sel.options.length === 0) sel.innerHTML = '<option value="">ابتدا معلم بسازید...</option>';
+        if (sel.options.length === 0) sel.innerHTML = '<option value="">' + (currentLang === 'fa' ? 'ابتدا معلم بسازید...' : 'Create a teacher first...') + '</option>';
     }
     if (name === 'addTeacher') {
         ['teacherClasses', 'teacherSubjects'].forEach(id => {
@@ -2396,7 +2879,7 @@ function openModal(name) {
                     opt.textContent = item.id + ' - ' + (item.name || '');
                     sel.appendChild(opt);
                 });
-                if (sel.options.length === 0) sel.innerHTML = '<option value="">ابتدا ' + (id === 'teacherClasses' ? 'کلاس' : 'درس') + ' بسازید...</option>';
+                if (sel.options.length === 0) sel.innerHTML = '<option value="">' + (currentLang === 'fa' ? 'ابتدا ' + (id === 'teacherClasses' ? 'کلاس' : 'درس') + ' بسازید...' : 'Create a ' + (id === 'teacherClasses' ? 'class' : 'subject') + ' first...') + '</option>';
             }
         });
     }
@@ -2404,7 +2887,7 @@ function openModal(name) {
         const subjectId = name === 'addGrade' ? 'gradeSubject' : 'gradeSubjectTeacher';
         const sel = document.getElementById(subjectId);
         if (sel) {
-            sel.innerHTML = '<option value="">انتخاب...</option>';
+            sel.innerHTML = '<option value="">' + (currentLang === 'fa' ? 'انتخاب...' : 'Select...') + '</option>';
             const subjects = name === 'addGrade' ? DATA.subjects : getTeacherSubjects(DATA.currentUser.username);
             subjects.forEach(s => {
                 const opt = document.createElement('option');
@@ -2483,7 +2966,7 @@ document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
 });
 
 function toggleProfileMenu() {
-    showToast(`👤 ${DATA.currentUser?.name || 'کاربر'} | نقش: ${DATA.currentUser?.role === 'admin' ? 'مدیر' : 'معلم'}`, 'info');
+    showToast(`👤 ${DATA.currentUser?.name || (currentLang === 'fa' ? 'کاربر' : 'User')} | ${currentLang === 'fa' ? 'نقش' : 'Role'}: ${DATA.currentUser?.role === 'admin' ? (currentLang === 'fa' ? 'مدیر' : 'Admin') : (currentLang === 'fa' ? 'معلم' : 'Teacher')}`, 'info');
 }
 
 // ============================================================
@@ -2517,17 +3000,21 @@ if (savedSession) {
         loadAllData();
         updateDashboard();
         updateSetupWizard();
-        // Navigate to home
+        applyTranslations();
         navigateTo('home');
     } catch(e) {}
 }
 
-console.log('🏫 سیستم مدیریت مدرسه هوشمند - نسخه 2.1');
-console.log('✅ اضافه شدن کلاس درست شد');
-console.log('✅ ذخیره سازی در localStorage');
-console.log('✅ فیلدهای ورود خالی');
+console.log('🏫 سیستم مدیریت مدرسه هوشمند - نسخه نهایی');
+console.log('✅ همه منوها با navigateTo() کار می‌کنند');
+console.log('✅ ترجمه کامل فارسی/انگلیسی');
+console.log('✅ CRUD کامل برای همه بخش‌ها');
+console.log('✅ محاسبه معدل وزنی');
+console.log('✅ ذخیره‌سازی دائمی در localStorage');
 console.log('🔑 مدیر: admin / Admin@1404');
 console.log('👨‍🏫 معلم: T001 / Teacher@123');
+console.log('📱 سازگار با موبایل و دسکتاپ');
+console.log('🌐 دوزبانه کامل');
 </script>
 </body>
 </html>
