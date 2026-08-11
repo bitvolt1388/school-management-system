@@ -95,8 +95,8 @@
         .login-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(124,77,255,0.3); }
         .login-btn:active { transform: scale(0.96); }
         .login-error { color: var(--danger); font-size: 13px; text-align: center; margin-top: 12px; display: none; }
-        .login-hint { text-align: center; margin-top: 10px; font-size: 11px; color: var(--text-secondary); }
-        .login-hint span { background: var(--bg-input); padding: 4px 12px; border-radius: 6px; }
+        /* HINT HIDDEN - فقط خودت میدونی */
+        .login-hint { display: none !important; }
         
         /* ===== Header ===== */
         .header {
@@ -499,7 +499,8 @@
             <div class="login-error" id="loginError">
                 <i class="fas fa-exclamation-circle"></i> <span id="errorMessage">نام کاربری یا رمز عبور اشتباه است!</span>
             </div>
-            <div class="login-hint" id="loginHintContainer">
+            <!-- HINT HIDDEN - فقط خودت میدونی -->
+            <div class="login-hint" id="loginHintContainer" style="display:none;">
                 <span id="loginHint">💡 مدیر: admin / Admin@1404 | معلم: T001 / Teacher@123</span>
             </div>
         </form>
@@ -548,6 +549,9 @@
                 </button>
                 <button class="header-btn" onclick="toggleLanguage()" title="تغییر زبان" id="langBtn">
                     <span id="langLabel">🇮🇷</span>
+                </button>
+                <button class="header-btn" onclick="testSave()" title="تست ذخیره">
+                    <i class="fas fa-database"></i>
                 </button>
                 <div class="profile" onclick="toggleProfileMenu()">
                     <div class="avatar" id="userAvatar">AD</div>
@@ -1171,66 +1175,54 @@ let currentTheme = 'dark';
 
 const TRANSLATIONS = {
     fa: {
-        // Login
         loginTitle: 'مدیریت هوشمند', loginSub: 'سیستم جامع مدیریت آموزشی',
         lblUsername: 'نام کاربری', lblPassword: 'رمز عبور', lblRole: 'نقش',
         loginText: '🚀 ورود به سیستم', loginHint: '💡 مدیر: admin / Admin@1404 | معلم: T001 / Teacher@123',
-        // Navigation
         navHome: 'داشبورد', navGuide: 'راهنمایی', navStudents: 'دانش‌آموزان',
         navMyStudents: 'دانش‌آموزان من', navTeachers: 'معلمان', navClasses: 'کلاس‌ها',
         navSubjects: 'دروس', navGrades: 'نمرات', navAttendance: 'حضور',
         navReports: 'گزارشات', navMore: 'بیشتر', logoutBtn: 'خروج از سیستم',
-        // Stats
         statStudents: 'دانش‌آموز', statTeachers: 'معلم', statClasses: 'کلاس',
         statSubjects: 'درس', statAverage: 'میانگین', statAttendance: 'حضور',
-        // Buttons
         addBtn: 'افزودن', saveBtn: 'ثبت', editBtn: 'ویرایش', deleteBtn: 'حذف',
         viewBtn: 'مشاهده', downloadBtn: 'دانلود', yesBtn: 'بله', cancelBtn: 'لغو',
         gradeBtn: 'نمره', attendanceBtn: 'حضور', fullExport: 'خروجی کامل',
         saveChanges: 'ذخیره تغییرات', addGradeBtn: 'ثبت نمره', addAttendanceBtn: 'ثبت حضور',
-        // Labels
         idLabel: 'شناسه', nameLabel: 'نام کامل', classLabel: 'کلاس',
         phoneLabel: 'شماره تماس', specialtyLabel: 'تخصص', passwordLabel: 'رمز عبور',
         gradeLabel: 'پایه', capacityLabel: 'ظرفیت', teacherLabel: 'معلم',
         unitLabel: 'واحد', typeLabel: 'نوع', studentLabel: 'دانش‌آموز',
         subjectLabel: 'درس', dateLabel: 'تاریخ', statusLabel: 'وضعیت',
         noteLabel: 'توضیحات', examTypeLabel: 'نوع', gradeValue: 'نمره (۰-۲۰)',
-        // Quick
         quickId: 'شناسه', quickName: 'نام کامل', quickClass: 'کلاس', quickGrade: 'پایه',
-        // Table columns
         colId: 'شناسه', colName: 'نام', colClass: 'کلاس', colAverage: 'میانگین',
         colStatus: 'وضعیت', colActions: 'عملیات', colSpecialty: 'تخصص',
         colClasses: 'کلاس‌ها', colSubjects: 'درس‌ها', colTeacher: 'معلم',
         colUnits: 'واحد', colStudent: 'دانش‌آموز', colSubject: 'درس',
         colGrade: 'نمره', colExamType: 'نوع', colDate: 'تاریخ', colNote: 'توضیحات',
-        // Setup
         setupTitle: 'راه‌اندازی مدرسه', setupSub: 'مراحل به ترتیب',
         step1Title: 'کلاس‌ها', step1Desc: 'ایجاد کلاس‌ها',
         step2Title: 'معلمان', step2Desc: 'ثبت معلمان',
         step3Title: 'دانش‌آموزان', step3Desc: 'ثبت دانش‌آموزان',
         step4Title: 'دروس', step4Desc: 'تعریف دروس',
         stepBtn1: 'کلاس', stepBtn2: 'معلم', stepBtn3: 'دانش‌آموز', stepBtn4: 'درس',
-        // Guide
         guideTitle: 'راهنمای استفاده از سیستم', guideQuickStart: 'شروع سریع',
         guideStep1Title: 'ایجاد کلاس‌ها', guideStep1Desc: 'ابتدا کلاس‌های مدرسه را ایجاد کنید.',
         guideStep2Title: 'ثبت معلمان', guideStep2Desc: 'معلمان را ثبت کنید و به کلاس‌ها اختصاص دهید.',
         guideStep3Title: 'ثبت دانش‌آموزان', guideStep3Desc: 'دانش‌آموزان را در کلاس‌ها ثبت کنید.',
         guideStep4Title: 'تعریف دروس', guideStep4Desc: 'دروس را به کلاس‌ها و معلمان اختصاص دهید.',
         guideGoTo: 'برو به',
-        // Other
         teacherRestricted: 'فقط دانش‌آموزان کلاس‌های خود را می‌بینید',
         activitiesTitle: '📋 فعالیت‌ها', alertsTitle: '🚨 هشدارها',
         noActivities: 'هیچ فعالیتی ثبت نشده است', noAlerts: 'همه چیز عالی است!',
         reportMonthly: 'ماهانه', reportCard: 'کارنامه', reportAnalytics: 'تحلیل',
         reportRanking: 'رتبه‌بندی', footerText: 'ساخته شده توسط',
-        // Modals
         addStudentModal: '➕ افزودن دانش‌آموز', editStudentModal: '✏️ ویرایش دانش‌آموز',
         addTeacherModal: '➕ افزودن معلم', editTeacherModal: '✏️ ویرایش معلم',
         addClassModal: '➕ افزودن کلاس', editClassModal: '✏️ ویرایش کلاس',
         addSubjectModal: '➕ افزودن درس', editSubjectModal: '✏️ ویرایش درس',
         addGradeModal: '⭐ ثبت نمره', addAttendanceModal: '✅ ثبت حضور',
         reportCardModal: '📈 کارنامه',
-        // Titles
         studentsTitle: '👨‍🎓 دانش‌آموزان', myStudentsTitle: '👨‍🎓 دانش‌آموزان من',
         teachersTitle: '👨‍🏫 معلمان', classesTitle: '🏫 کلاس‌ها',
         subjectsTitle: '📚 دروس', gradesTitle: '⭐ نمرات',
@@ -1373,17 +1365,14 @@ let searchTimeout = null;
 // ============================================================
 
 function navigateTo(page) {
-    // Update sidebar
     document.querySelectorAll('.sidebar-menu li a').forEach(l => l.classList.remove('active'));
     const sidebarLink = document.querySelector(`.sidebar-menu li a[data-page="${page}"]`);
     if (sidebarLink) sidebarLink.classList.add('active');
     
-    // Update bottom nav
     document.querySelectorAll('.bottom-nav .nav-item').forEach(i => i.classList.remove('active'));
     const navItem = document.querySelector(`.bottom-nav .nav-item[data-page="${page}"]`);
     if (navItem) navItem.classList.add('active');
     
-    // Update panels
     document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('active'));
     let panelId = 'panel-' + page;
     if (DATA.currentUser && DATA.currentUser.role === 'teacher' && page === 'students') {
@@ -1394,7 +1383,6 @@ function navigateTo(page) {
         panel.classList.add('active');
     }
     
-    // Update header
     const titles = {
         'home': ['🏠 داشبورد', 'خلاصه وضعیت مدرسه'],
         'guide': ['🧭 راهنمایی', 'راهنمای کامل استفاده از سیستم'],
@@ -1411,7 +1399,6 @@ function navigateTo(page) {
     document.getElementById('pageTitle').textContent = title[0];
     document.getElementById('pageSubtitle').textContent = title[1];
     
-    // Close sidebar on mobile
     if (window.innerWidth <= 768) {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
@@ -1670,8 +1657,27 @@ function updateStudentAverages() {
 }
 
 // ============================================================
-// ================ DATA LOAD/SAVE =============================
+// ================ PERSISTENCE (SAVE/LOAD) ===================
 // ============================================================
+
+function saveData() {
+    try {
+        const dataToSave = JSON.stringify(DATA);
+        localStorage.setItem('schoolDataV17', dataToSave);
+        
+        // Verify save
+        const test = localStorage.getItem('schoolDataV17');
+        if (test) {
+            console.log('✅ داده‌ها با موفقیت ذخیره شدند - تعداد کلاس‌ها:', DATA.classes.length);
+            return true;
+        }
+        return false;
+    } catch(e) {
+        console.error('❌ خطا در ذخیره داده:', e);
+        showToast('❌ خطا در ذخیره سازی!', 'error');
+        return false;
+    }
+}
 
 function loadAllData() {
     try {
@@ -1679,14 +1685,40 @@ function loadAllData() {
         if (saved) {
             const parsed = JSON.parse(saved);
             const user = DATA.currentUser;
-            Object.assign(DATA, parsed);
-            DATA.currentUser = user || DATA.currentUser;
+            
+            DATA.students = parsed.students || [];
+            DATA.teachers = parsed.teachers || [];
+            DATA.classes = parsed.classes || [];
+            DATA.subjects = parsed.subjects || [];
+            DATA.grades = parsed.grades || [];
+            DATA.attendance = parsed.attendance || [];
+            DATA.activities = parsed.activities || [];
+            DATA.alerts = parsed.alerts || [];
+            DATA.currentUser = user || parsed.currentUser || null;
+            
+            console.log('✅ داده‌ها بارگذاری شدند:', {
+                students: DATA.students.length,
+                teachers: DATA.teachers.length,
+                classes: DATA.classes.length,
+                subjects: DATA.subjects.length
+            });
+            
             renderAll();
-            return;
+            updateDashboard();
+            updateSetupWizard();
+            return true;
         }
-    } catch(e) { console.warn('خطا در بارگذاری داده:', e); }
+    } catch(e) {
+        console.warn('❌ خطا در بارگذاری داده:', e);
+    }
     
-    // Sample Data
+    if (DATA.classes.length === 0 && DATA.students.length === 0) {
+        loadSampleData();
+    }
+    return false;
+}
+
+function loadSampleData() {
     DATA.classes = [
         { id: 'C001', name: '۱۰-الف', grade: 10, capacity: 30, teachers: ['T001'], students: [] },
         { id: 'C002', name: '۱۰-ب', grade: 10, capacity: 30, teachers: ['T002'], students: [] }
@@ -1718,10 +1750,19 @@ function loadAllData() {
     renderAll();
 }
 
-function saveData() {
-    try {
-        localStorage.setItem('schoolDataV17', JSON.stringify(DATA));
-    } catch(e) { console.warn('خطا در ذخیره داده:', e); }
+function testSave() {
+    const count = DATA.classes.length;
+    const saved = saveData();
+    if (saved) {
+        const stored = localStorage.getItem('schoolDataV17');
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            showToast(`✅ ذخیره شد! ${parsed.classes.length} کلاس`, 'success');
+            console.log('📦 داده‌های ذخیره شده:', parsed);
+        }
+    } else {
+        showToast('❌ خطا در ذخیره!', 'error');
+    }
 }
 
 // ============================================================
@@ -2078,7 +2119,7 @@ function renderSelectOptions() {
             if (sel) {
                 const val = Array.from(sel.selectedOptions).map(o => o.value);
                 sel.innerHTML = '';
-                const list = id === 'gradeSubject' || id === 'gradeSubjectTeacher' ? DATA.subjects : DATA.subjects;
+                const list = DATA.subjects;
                 list.forEach(item => {
                     const opt = document.createElement('option');
                     opt.value = item.id;
@@ -2113,6 +2154,32 @@ function debounceSearch(type) {
 }
 
 // ============================================================
+// ================ QUICK ADD - CLASSES ========================
+// ============================================================
+
+function quickAddClass() {
+    if (DATA.currentUser.role !== 'admin') { showToast('❌ فقط مدیر می‌تواند کلاس اضافه کند', 'error'); return; }
+    const id = document.getElementById('quickClassId').value.trim();
+    const name = document.getElementById('quickClassName').value.trim();
+    const grade = parseInt(document.getElementById('quickClassGrade').value);
+    if (!id || !name || !grade) { showToast('❌ تمام فیلدها را پر کنید', 'error'); return; }
+    if (DATA.classes.find(c => c.id === id)) { showToast('❌ شناسه تکراری است!', 'error'); return; }
+    DATA.classes.push({ id, name, grade, capacity: 30, teachers: [], students: [] });
+    if (saveData()) {
+        renderAll();
+        updateDashboard();
+        updateSetupWizard();
+        document.getElementById('quickClassId').value = '';
+        document.getElementById('quickClassName').value = '';
+        document.getElementById('quickClassGrade').value = '';
+        showToast('✅ کلاس "' + escapeHtml(name) + '" ثبت شد', 'success');
+        addActivity('افزودن کلاس (سریع)', 'کلاس ' + escapeHtml(name) + ' اضافه شد');
+    } else {
+        showToast('❌ خطا در ذخیره سازی!', 'error');
+    }
+}
+
+// ============================================================
 // ================ CRUD - CLASSES =============================
 // ============================================================
 
@@ -2131,17 +2198,18 @@ function addClass(e) {
         const t = getTeacherById(tid);
         if (t && !t.classes.includes(id)) t.classes.push(id);
     });
-    saveData();
-    renderAll();
-    updateDashboard();
-    updateSetupWizard();
-    closeModal('addClass');
-    showToast('✅ کلاس "' + escapeHtml(name) + '" ثبت شد', 'success');
-    addActivity('افزودن کلاس', 'کلاس ' + escapeHtml(name) + ' اضافه شد');
-    document.getElementById('classId').value = '';
-    document.getElementById('className').value = '';
-    document.getElementById('classGrade').value = '';
-    document.getElementById('classCapacity').value = '30';
+    if (saveData()) {
+        renderAll();
+        updateDashboard();
+        updateSetupWizard();
+        closeModal('addClass');
+        showToast('✅ کلاس "' + escapeHtml(name) + '" ثبت شد', 'success');
+        addActivity('افزودن کلاس', 'کلاس ' + escapeHtml(name) + ' اضافه شد');
+        document.getElementById('classId').value = '';
+        document.getElementById('className').value = '';
+        document.getElementById('classGrade').value = '';
+        document.getElementById('classCapacity').value = '30';
+    }
 }
 
 function editClass(e) {
@@ -2155,7 +2223,6 @@ function editClass(e) {
     if (!name || !grade || !capacity) { showToast('❌ تمام فیلدها را پر کنید', 'error'); return; }
     const cls = getClassById(id);
     if (!cls) { showToast('❌ کلاس یافت نشد', 'error'); return; }
-    // Remove old teacher associations
     cls.teachers.forEach(tid => {
         const t = getTeacherById(tid);
         if (t && t.classes) t.classes = t.classes.filter(cid => cid !== id);
@@ -2168,13 +2235,14 @@ function editClass(e) {
         const t = getTeacherById(tid);
         if (t && !t.classes.includes(id)) t.classes.push(id);
     });
-    saveData();
-    renderAll();
-    updateDashboard();
-    updateSetupWizard();
-    closeModal('editClass');
-    showToast('✅ کلاس ویرایش شد', 'success');
-    addActivity('ویرایش کلاس', 'کلاس ' + escapeHtml(name) + ' ویرایش شد');
+    if (saveData()) {
+        renderAll();
+        updateDashboard();
+        updateSetupWizard();
+        closeModal('editClass');
+        showToast('✅ کلاس ویرایش شد', 'success');
+        addActivity('ویرایش کلاس', 'کلاس ' + escapeHtml(name) + ' ویرایش شد');
+    }
 }
 
 function openEditClass(id) {
@@ -2205,12 +2273,13 @@ function deleteClass(id) {
         DATA.subjects = DATA.subjects.filter(s => s.classId !== id);
         DATA.teachers.forEach(t => { if (t.classes) t.classes = t.classes.filter(cid => cid !== id); });
         DATA.students.forEach(s => { if (s.classId === id) s.classId = ''; });
-        saveData();
-        renderAll();
-        updateDashboard();
-        updateSetupWizard();
-        showToast('🗑️ کلاس حذف شد', 'warning');
-        addActivity('حذف کلاس', 'کلاس با شناسه ' + escapeHtml(id) + ' حذف شد');
+        if (saveData()) {
+            renderAll();
+            updateDashboard();
+            updateSetupWizard();
+            showToast('🗑️ کلاس حذف شد', 'warning');
+            addActivity('حذف کلاس', 'کلاس با شناسه ' + escapeHtml(id) + ' حذف شد');
+        }
     });
 }
 
@@ -2229,14 +2298,15 @@ function quickAddStudent() {
     DATA.students.push({ id, name, classId, parentPhone: '', average: 0, status: 'بدون نمره' });
     if (getClassById(classId)) getClassById(classId).students.push(id);
     updateStudentAverages();
-    saveData();
-    renderAll();
-    updateDashboard();
-    updateSetupWizard();
-    document.getElementById('quickStudentId').value = '';
-    document.getElementById('quickStudentName').value = '';
-    showToast('✅ دانش‌آموز ثبت شد', 'success');
-    addActivity('ثبت دانش‌آموز', 'دانش‌آموز ' + escapeHtml(name) + ' ثبت شد');
+    if (saveData()) {
+        renderAll();
+        updateDashboard();
+        updateSetupWizard();
+        document.getElementById('quickStudentId').value = '';
+        document.getElementById('quickStudentName').value = '';
+        showToast('✅ دانش‌آموز ثبت شد', 'success');
+        addActivity('ثبت دانش‌آموز (سریع)', 'دانش‌آموز ' + escapeHtml(name) + ' ثبت شد');
+    }
 }
 
 function addStudent(e) {
@@ -2252,16 +2322,17 @@ function addStudent(e) {
     DATA.students.push({ id, name, classId, parentPhone, average: 0, status: 'بدون نمره' });
     if (getClassById(classId)) getClassById(classId).students.push(id);
     updateStudentAverages();
-    saveData();
-    renderAll();
-    updateDashboard();
-    updateSetupWizard();
-    closeModal('addStudent');
-    showToast('✅ دانش‌آموز ثبت شد', 'success');
-    addActivity('افزودن دانش‌آموز', 'دانش‌آموز ' + escapeHtml(name) + ' اضافه شد');
-    document.getElementById('studentId').value = '';
-    document.getElementById('studentName').value = '';
-    document.getElementById('studentParentPhone').value = '';
+    if (saveData()) {
+        renderAll();
+        updateDashboard();
+        updateSetupWizard();
+        closeModal('addStudent');
+        showToast('✅ دانش‌آموز ثبت شد', 'success');
+        addActivity('افزودن دانش‌آموز', 'دانش‌آموز ' + escapeHtml(name) + ' اضافه شد');
+        document.getElementById('studentId').value = '';
+        document.getElementById('studentName').value = '';
+        document.getElementById('studentParentPhone').value = '';
+    }
 }
 
 function editStudent(e) {
@@ -2274,14 +2345,11 @@ function editStudent(e) {
     if (!name || !classId) { showToast('❌ تمام فیلدها را پر کنید', 'error'); return; }
     const student = getStudentById(id);
     if (!student) { showToast('❌ دانش‌آموز یافت نشد', 'error'); return; }
-    // Update class if changed
     if (student.classId !== classId) {
-        // Remove from old class
         const oldClass = getClassById(student.classId);
         if (oldClass && oldClass.students) {
             oldClass.students = oldClass.students.filter(sid => sid !== id);
         }
-        // Add to new class
         const newClass = getClassById(classId);
         if (newClass) {
             if (!newClass.students) newClass.students = [];
@@ -2291,13 +2359,14 @@ function editStudent(e) {
     student.name = name;
     student.classId = classId;
     student.parentPhone = parentPhone;
-    saveData();
-    renderAll();
-    updateDashboard();
-    updateSetupWizard();
-    closeModal('editStudent');
-    showToast('✅ دانش‌آموز ویرایش شد', 'success');
-    addActivity('ویرایش دانش‌آموز', 'دانش‌آموز ' + escapeHtml(name) + ' ویرایش شد');
+    if (saveData()) {
+        renderAll();
+        updateDashboard();
+        updateSetupWizard();
+        closeModal('editStudent');
+        showToast('✅ دانش‌آموز ویرایش شد', 'success');
+        addActivity('ویرایش دانش‌آموز', 'دانش‌آموز ' + escapeHtml(name) + ' ویرایش شد');
+    }
 }
 
 function openEditStudent(id) {
@@ -2327,12 +2396,13 @@ function deleteStudent(id) {
         DATA.grades = DATA.grades.filter(g => g.studentId !== id);
         DATA.attendance = DATA.attendance.filter(a => a.studentId !== id);
         DATA.classes.forEach(c => { if (c.students) c.students = c.students.filter(s => s !== id); });
-        saveData();
-        renderAll();
-        updateDashboard();
-        updateSetupWizard();
-        showToast('🗑️ دانش‌آموز حذف شد', 'warning');
-        addActivity('حذف دانش‌آموز', 'دانش‌آموز با شناسه ' + escapeHtml(id) + ' حذف شد');
+        if (saveData()) {
+            renderAll();
+            updateDashboard();
+            updateSetupWizard();
+            showToast('🗑️ دانش‌آموز حذف شد', 'warning');
+            addActivity('حذف دانش‌آموز', 'دانش‌آموز با شناسه ' + escapeHtml(id) + ' حذف شد');
+        }
     });
 }
 
@@ -2358,18 +2428,19 @@ function addTeacher(e) {
         const cls = getClassById(cid);
         if (cls && !cls.teachers.includes(id)) cls.teachers.push(id);
     });
-    saveData();
-    renderAll();
-    updateDashboard();
-    updateSetupWizard();
-    closeModal('addTeacher');
-    showToast('✅ معلم ثبت شد', 'success');
-    addActivity('افزودن معلم', 'معلم ' + escapeHtml(name) + ' اضافه شد');
-    document.getElementById('teacherId').value = '';
-    document.getElementById('teacherName').value = '';
-    document.getElementById('teacherSpecialty').value = '';
-    document.getElementById('teacherPhone').value = '';
-    document.getElementById('teacherPassword').value = '';
+    if (saveData()) {
+        renderAll();
+        updateDashboard();
+        updateSetupWizard();
+        closeModal('addTeacher');
+        showToast('✅ معلم ثبت شد', 'success');
+        addActivity('افزودن معلم', 'معلم ' + escapeHtml(name) + ' اضافه شد');
+        document.getElementById('teacherId').value = '';
+        document.getElementById('teacherName').value = '';
+        document.getElementById('teacherSpecialty').value = '';
+        document.getElementById('teacherPhone').value = '';
+        document.getElementById('teacherPassword').value = '';
+    }
 }
 
 function editTeacher(e) {
@@ -2385,7 +2456,6 @@ function editTeacher(e) {
     if (!name || !specialty) { showToast('❌ نام و تخصص را وارد کنید', 'error'); return; }
     const teacher = getTeacherById(id);
     if (!teacher) { showToast('❌ معلم یافت نشد', 'error'); return; }
-    // Remove old associations
     teacher.classes.forEach(cid => {
         const cls = getClassById(cid);
         if (cls && cls.teachers) cls.teachers = cls.teachers.filter(tid => tid !== id);
@@ -2400,13 +2470,14 @@ function editTeacher(e) {
         const cls = getClassById(cid);
         if (cls && !cls.teachers.includes(id)) cls.teachers.push(id);
     });
-    saveData();
-    renderAll();
-    updateDashboard();
-    updateSetupWizard();
-    closeModal('editTeacher');
-    showToast('✅ معلم ویرایش شد', 'success');
-    addActivity('ویرایش معلم', 'معلم ' + escapeHtml(name) + ' ویرایش شد');
+    if (saveData()) {
+        renderAll();
+        updateDashboard();
+        updateSetupWizard();
+        closeModal('editTeacher');
+        showToast('✅ معلم ویرایش شد', 'success');
+        addActivity('ویرایش معلم', 'معلم ' + escapeHtml(name) + ' ویرایش شد');
+    }
 }
 
 function openEditTeacher(id) {
@@ -2443,12 +2514,13 @@ function deleteTeacher(id) {
         DATA.teachers = DATA.teachers.filter(t => t.id !== id);
         DATA.subjects = DATA.subjects.filter(s => s.teacherId !== id);
         DATA.classes.forEach(c => { if (c.teachers) c.teachers = c.teachers.filter(t => t !== id); });
-        saveData();
-        renderAll();
-        updateDashboard();
-        updateSetupWizard();
-        showToast('🗑️ معلم حذف شد', 'warning');
-        addActivity('حذف معلم', 'معلم با شناسه ' + escapeHtml(id) + ' حذف شد');
+        if (saveData()) {
+            renderAll();
+            updateDashboard();
+            updateSetupWizard();
+            showToast('🗑️ معلم حذف شد', 'warning');
+            addActivity('حذف معلم', 'معلم با شناسه ' + escapeHtml(id) + ' حذف شد');
+        }
     });
 }
 
@@ -2470,16 +2542,17 @@ function addSubject(e) {
     DATA.subjects.push({ id, name, teacherId, classId, units, type });
     const teacher = getTeacherById(teacherId);
     if (teacher && !teacher.subjects.includes(id)) teacher.subjects.push(id);
-    saveData();
-    renderAll();
-    updateDashboard();
-    updateSetupWizard();
-    closeModal('addSubject');
-    showToast('✅ درس ثبت شد', 'success');
-    addActivity('افزودن درس', 'درس ' + escapeHtml(name) + ' اضافه شد');
-    document.getElementById('subjectId').value = '';
-    document.getElementById('subjectName').value = '';
-    document.getElementById('subjectUnits').value = '3';
+    if (saveData()) {
+        renderAll();
+        updateDashboard();
+        updateSetupWizard();
+        closeModal('addSubject');
+        showToast('✅ درس ثبت شد', 'success');
+        addActivity('افزودن درس', 'درس ' + escapeHtml(name) + ' اضافه شد');
+        document.getElementById('subjectId').value = '';
+        document.getElementById('subjectName').value = '';
+        document.getElementById('subjectUnits').value = '3';
+    }
 }
 
 function editSubject(e) {
@@ -2494,7 +2567,6 @@ function editSubject(e) {
     if (!name || !teacherId || !classId) { showToast('❌ تمام فیلدها را پر کنید', 'error'); return; }
     const subject = getSubjectById(id);
     if (!subject) { showToast('❌ درس یافت نشد', 'error'); return; }
-    // Remove from old teacher
     const oldTeacher = getTeacherById(subject.teacherId);
     if (oldTeacher && oldTeacher.subjects) {
         oldTeacher.subjects = oldTeacher.subjects.filter(sid => sid !== id);
@@ -2506,13 +2578,14 @@ function editSubject(e) {
     subject.type = type;
     const newTeacher = getTeacherById(teacherId);
     if (newTeacher && !newTeacher.subjects.includes(id)) newTeacher.subjects.push(id);
-    saveData();
-    renderAll();
-    updateDashboard();
-    updateSetupWizard();
-    closeModal('editSubject');
-    showToast('✅ درس ویرایش شد', 'success');
-    addActivity('ویرایش درس', 'درس ' + escapeHtml(name) + ' ویرایش شد');
+    if (saveData()) {
+        renderAll();
+        updateDashboard();
+        updateSetupWizard();
+        closeModal('editSubject');
+        showToast('✅ درس ویرایش شد', 'success');
+        addActivity('ویرایش درس', 'درس ' + escapeHtml(name) + ' ویرایش شد');
+    }
 }
 
 function openEditSubject(id) {
@@ -2548,12 +2621,13 @@ function deleteSubject(id) {
         DATA.subjects = DATA.subjects.filter(s => s.id !== id);
         DATA.grades = DATA.grades.filter(g => g.subjectId !== id);
         DATA.teachers.forEach(t => { if (t.subjects) t.subjects = t.subjects.filter(sid => sid !== id); });
-        saveData();
-        renderAll();
-        updateDashboard();
-        updateSetupWizard();
-        showToast('🗑️ درس حذف شد', 'warning');
-        addActivity('حذف درس', 'درس با شناسه ' + escapeHtml(id) + ' حذف شد');
+        if (saveData()) {
+            renderAll();
+            updateDashboard();
+            updateSetupWizard();
+            showToast('🗑️ درس حذف شد', 'warning');
+            addActivity('حذف درس', 'درس با شناسه ' + escapeHtml(id) + ' حذف شد');
+        }
     });
 }
 
@@ -2582,18 +2656,18 @@ function addGrade(e) {
     const teacherId = isAdmin ? 'admin' : DATA.currentUser.username;
     DATA.grades.push({ studentId, subjectId, value, examType, date, teacherId });
     updateStudentAverages();
-    saveData();
-    renderAll();
-    updateDashboard();
-    updateSetupWizard();
-    closeModal('addGrade');
-    showToast('✅ نمره ثبت شد', 'success');
-    addActivity('ثبت نمره', 'نمره ' + value + ' برای ' + escapeHtml(student.name) + ' ثبت شد');
-    document.getElementById('gradeValue').value = '';
+    if (saveData()) {
+        renderAll();
+        updateDashboard();
+        updateSetupWizard();
+        closeModal('addGrade');
+        showToast('✅ نمره ثبت شد', 'success');
+        addActivity('ثبت نمره', 'نمره ' + value + ' برای ' + escapeHtml(student.name) + ' ثبت شد');
+        document.getElementById('gradeValue').value = '';
+    }
 }
 
 function addGradeTeacher(e) {
-    // Same as addGrade but for teacher panel
     e.preventDefault();
     const studentId = document.getElementById('gradeStudentTeacher').value;
     const subjectId = document.getElementById('gradeSubjectTeacher').value;
@@ -2610,14 +2684,15 @@ function addGradeTeacher(e) {
     if (!subject || subject.teacherId !== DATA.currentUser.username) { showToast('❌ شما معلم این درس نیستید', 'error'); return; }
     DATA.grades.push({ studentId, subjectId, value, examType, date, teacherId: DATA.currentUser.username });
     updateStudentAverages();
-    saveData();
-    renderAll();
-    updateDashboard();
-    updateSetupWizard();
-    closeModal('addGradeTeacher');
-    showToast('✅ نمره ثبت شد', 'success');
-    addActivity('ثبت نمره (معلم)', 'نمره ' + value + ' برای ' + escapeHtml(student.name) + ' ثبت شد');
-    document.getElementById('gradeValueTeacher').value = '';
+    if (saveData()) {
+        renderAll();
+        updateDashboard();
+        updateSetupWizard();
+        closeModal('addGradeTeacher');
+        showToast('✅ نمره ثبت شد', 'success');
+        addActivity('ثبت نمره (معلم)', 'نمره ' + value + ' برای ' + escapeHtml(student.name) + ' ثبت شد');
+        document.getElementById('gradeValueTeacher').value = '';
+    }
 }
 
 function deleteGrade(index) {
@@ -2625,12 +2700,13 @@ function deleteGrade(index) {
     showConfirm('حذف نمره', 'آیا از حذف اطمینان دارید؟', () => {
         DATA.grades.splice(index, 1);
         updateStudentAverages();
-        saveData();
-        renderAll();
-        updateDashboard();
-        updateSetupWizard();
-        showToast('🗑️ نمره حذف شد', 'warning');
-        addActivity('حذف نمره', 'نمره حذف شد');
+        if (saveData()) {
+            renderAll();
+            updateDashboard();
+            updateSetupWizard();
+            showToast('🗑️ نمره حذف شد', 'warning');
+            addActivity('حذف نمره', 'نمره حذف شد');
+        }
     });
 }
 
@@ -2654,14 +2730,15 @@ function addAttendance(e) {
     }
     const teacherId = isAdmin ? 'admin' : DATA.currentUser.username;
     DATA.attendance.push({ studentId, date, status, note: escapeHtml(note), teacherId });
-    saveData();
-    renderAll();
-    updateDashboard();
-    updateSetupWizard();
-    closeModal('addAttendance');
-    showToast('✅ حضور ثبت شد', 'success');
-    addActivity('ثبت حضور', 'حضور ' + status + ' برای ' + escapeHtml(student.name) + ' ثبت شد');
-    document.getElementById('attendanceNote').value = '';
+    if (saveData()) {
+        renderAll();
+        updateDashboard();
+        updateSetupWizard();
+        closeModal('addAttendance');
+        showToast('✅ حضور ثبت شد', 'success');
+        addActivity('ثبت حضور', 'حضور ' + status + ' برای ' + escapeHtml(student.name) + ' ثبت شد');
+        document.getElementById('attendanceNote').value = '';
+    }
 }
 
 function addAttendanceTeacher(e) {
@@ -2676,26 +2753,28 @@ function addAttendanceTeacher(e) {
     const teacherClassIds = getTeacherClassIds(DATA.currentUser.username);
     if (!teacherClassIds.includes(student.classId)) { showToast('❌ این دانش‌آموز در کلاس شما نیست', 'error'); return; }
     DATA.attendance.push({ studentId, date, status, note: escapeHtml(note), teacherId: DATA.currentUser.username });
-    saveData();
-    renderAll();
-    updateDashboard();
-    updateSetupWizard();
-    closeModal('addAttendanceTeacher');
-    showToast('✅ حضور ثبت شد', 'success');
-    addActivity('ثبت حضور (معلم)', 'حضور ' + status + ' برای ' + escapeHtml(student.name) + ' ثبت شد');
-    document.getElementById('attendanceNoteTeacher').value = '';
+    if (saveData()) {
+        renderAll();
+        updateDashboard();
+        updateSetupWizard();
+        closeModal('addAttendanceTeacher');
+        showToast('✅ حضور ثبت شد', 'success');
+        addActivity('ثبت حضور (معلم)', 'حضور ' + status + ' برای ' + escapeHtml(student.name) + ' ثبت شد');
+        document.getElementById('attendanceNoteTeacher').value = '';
+    }
 }
 
 function deleteAttendance(index) {
     if (DATA.currentUser.role !== 'admin') { showToast('❌ فقط مدیر می‌تواند حذف کند', 'error'); return; }
     showConfirm('حذف حضور', 'آیا از حذف اطمینان دارید؟', () => {
         DATA.attendance.splice(index, 1);
-        saveData();
-        renderAll();
-        updateDashboard();
-        updateSetupWizard();
-        showToast('🗑️ رکورد حضور حذف شد', 'warning');
-        addActivity('حذف حضور', 'رکورد حضور حذف شد');
+        if (saveData()) {
+            renderAll();
+            updateDashboard();
+            updateSetupWizard();
+            showToast('🗑️ رکورد حضور حذف شد', 'warning');
+            addActivity('حذف حضور', 'رکورد حضور حذف شد');
+        }
     });
 }
 
@@ -3117,13 +3196,11 @@ window.addEventListener('scroll', function() {
 // ================ INIT =======================================
 // ============================================================
 
-// Load saved theme and language
 const savedTheme = localStorage.getItem('schoolTheme');
 if (savedTheme) { currentTheme = savedTheme; document.documentElement.setAttribute('data-theme', currentTheme); }
 const savedLang = localStorage.getItem('schoolLang');
 if (savedLang) { currentLang = savedLang; }
 
-// Check for existing session
 const savedSession = sessionStorage.getItem('currentUser');
 if (savedSession) {
     try {
@@ -3135,18 +3212,16 @@ if (savedSession) {
         updateDashboard();
         updateSetupWizard();
         applyTranslations();
-        // Navigate to home
         navigateTo('home');
     } catch(e) {}
 }
 
 console.log('🏫 سیستم مدیریت مدرسه هوشمند - نسخه 2.0');
-console.log('✅ همه منوها کار می‌کنند');
-console.log('✅ ترجمه کامل فارسی/انگلیسی');
-console.log('✅ CRUD کامل برای همه بخش‌ها');
-console.log('✅ محاسبه معدل وزنی');
+console.log('✅ ذخیره‌سازی در localStorage فعال است');
+console.log('✅ کلاس‌ها بعد از رفرش هم باقی می‌مانند');
 console.log('🔑 مدیر: admin / Admin@1404');
 console.log('👨‍🏫 معلم: T001 / Teacher@123');
+console.log('📌 دکمه پایگاه داده برای تست ذخیره‌سازی');
 </script>
 </body>
 </html>
