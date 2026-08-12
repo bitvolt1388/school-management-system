@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>چت بین دستگاهی</title>
+    <title>چت جهانی | Firebase</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;900&display=swap" rel="stylesheet" />
     
-    <!-- PeerJS for cross-device communication -->
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     
     <style>
         * {
@@ -33,7 +36,7 @@
             --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
             --radius: 20px;
             --radius-sm: 12px;
-            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.2s ease;
         }
         body {
             font-family: 'Vazirmatn', sans-serif;
@@ -166,19 +169,6 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
         }
-        .auth-box .auth-switch {
-            text-align: center;
-            margin-top: 16px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        .auth-box .auth-switch a {
-            color: var(--accent-blue);
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .auth-box .auth-switch a:hover { text-decoration: underline; }
         .auth-box .error-msg {
             color: #ef4444;
             font-size: 13px;
@@ -231,33 +221,28 @@
             font-size: 14px;
             font-weight: 600;
         }
-        .header .connection-status {
+        .header .online-badge {
             display: flex;
             align-items: center;
             gap: 6px;
             font-size: 13px;
+            color: var(--accent-green);
+            background: rgba(34, 211, 238, 0.1);
             padding: 4px 14px;
             border-radius: 30px;
-            border: 1px solid var(--border-color);
+            border: 1px solid rgba(34, 211, 238, 0.15);
         }
-        .header .connection-status.connected {
-            color: var(--accent-green);
-            border-color: rgba(34, 211, 238, 0.2);
-            background: rgba(34, 211, 238, 0.1);
-        }
-        .header .connection-status.disconnected {
-            color: #ef4444;
-            border-color: rgba(239, 68, 68, 0.2);
-            background: rgba(239, 68, 68, 0.1);
-        }
-        .header .connection-status .dot {
+        .header .online-badge .dot {
             width: 8px;
             height: 8px;
+            background: var(--accent-green);
             border-radius: 50%;
+            animation: pulseDot 1.8s infinite;
         }
-        .header .connection-status.connected .dot { background: var(--accent-green); }
-        .header .connection-status.disconnected .dot { background: #ef4444; }
-        
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.7); }
+        }
         .btn {
             padding: 6px 16px;
             border: none;
@@ -283,16 +268,12 @@
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
             color: white;
         }
-        .btn-success {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-        }
         .btn-sm {
             padding: 4px 12px;
             font-size: 11px;
         }
 
-        /* ===== CHAT AREA ===== */
+        /* ===== CHAT ===== */
         .chat-area {
             display: none;
             flex: 1;
@@ -424,17 +405,16 @@
             max-width: 100%;
             border-radius: 12px;
             margin: 4px 0;
-            cursor: pointer;
         }
         .message .msg-media img {
             max-width: 100%;
-            max-height: 250px;
+            max-height: 300px;
             border-radius: 12px;
             border: 1px solid var(--border-color);
         }
         .message .msg-media video {
             max-width: 100%;
-            max-height: 250px;
+            max-height: 300px;
             border-radius: 12px;
             background: #000;
         }
@@ -563,11 +543,6 @@
             transform: scale(1.05);
             box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
         }
-        .chat-input-area .send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-        }
 
         /* ===== TOAST ===== */
         .toast-container {
@@ -603,51 +578,35 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== DEVICE ID DISPLAY ===== */
-        .device-id-box {
+        /* ===== UPLOAD PROGRESS ===== */
+        .upload-progress {
             display: none;
+            padding: 6px 14px;
             background: var(--bg-input);
-            border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
-            padding: 10px 16px;
-            margin-bottom: 12px;
-            font-size: 13px;
-            color: var(--text-secondary);
-            position: relative;
-            z-index: 1;
+            border: 1px solid var(--border-color);
+            margin: 4px 0;
             align-items: center;
             gap: 12px;
-            flex-wrap: wrap;
         }
-        .device-id-box.active { display: flex; }
-        .device-id-box .id-label {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        .device-id-box .id-value {
-            background: var(--bg-card);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-family: monospace;
-            font-size: 12px;
-            color: var(--accent-yellow);
+        .upload-progress.show { display: flex; }
+        .upload-progress .bar {
             flex: 1;
-            min-width: 100px;
-            word-break: break-all;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
         }
-        .device-id-box .copy-btn {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 4px 12px;
-            border-radius: 20px;
-            cursor: pointer;
+        .upload-progress .bar .fill {
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .upload-progress .label {
             font-size: 12px;
-            transition: var(--transition);
-        }
-        .device-id-box .copy-btn:hover {
-            border-color: var(--accent-blue);
-            color: var(--text-primary);
+            color: var(--text-secondary);
+            white-space: nowrap;
         }
 
         @media (max-width: 600px) {
@@ -660,7 +619,6 @@
             .chat-input-area .wrapper input { font-size: 13px; padding: 7px 4px; }
             .chat-input-area .send-btn { padding: 7px 14px; font-size: 13px; }
             .auth-box { padding: 24px 20px; margin: 10px; }
-            .device-id-box { font-size: 12px; padding: 8px 12px; }
         }
     </style>
 </head>
@@ -671,7 +629,7 @@
         <!-- ===== AUTH ===== -->
         <div class="auth-container active" id="authContainer">
             <div class="auth-box">
-                <div class="logo">📡 چت‌بین‌دستگاهی</div>
+                <div class="logo">🌍 چت جهانی</div>
                 <div class="subtitle">با دوستان خود در هر دستگاهی چت کنید</div>
                 <form id="authForm">
                     <div class="form-group">
@@ -681,20 +639,16 @@
                     <button type="submit" class="btn-full">ورود به چت</button>
                     <div class="error-msg" id="authError"></div>
                 </form>
-                <div class="auth-switch" style="margin-top:12px;font-size:12px;color:var(--text-secondary);">
-                    <i class="fas fa-info-circle"></i>
-                    کافیست یک نام انتخاب کنید و وارد شوید
-                </div>
             </div>
         </div>
 
         <!-- ===== HEADER ===== -->
         <header class="header" id="appHeader">
-            <span class="brand">📡 چت‌بین‌دستگاهی</span>
+            <span class="brand">🌍 چت جهانی</span>
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                <div class="connection-status disconnected" id="connectionStatus">
+                <div class="online-badge">
                     <span class="dot"></span>
-                    <span id="statusText">قطع</span>
+                    <span id="onlineCount">۱</span> آنلاین
                 </div>
                 <div class="user-info">
                     <div class="avatar" id="userAvatar">م</div>
@@ -706,24 +660,14 @@
             </div>
         </header>
 
-        <!-- ===== DEVICE ID ===== -->
-        <div class="device-id-box" id="deviceIdBox">
-            <span class="id-label">🆔 شناسه دستگاه شما:</span>
-            <span class="id-value" id="deviceIdDisplay">در حال اتصال...</span>
-            <button class="copy-btn" id="copyDeviceId">📋 کپی</button>
-            <button class="btn btn-primary btn-sm" id="connectToPeerBtn">
-                <i class="fas fa-link"></i> اتصال به دستگاه
-            </button>
-        </div>
-
         <!-- ===== CHAT ===== -->
         <main class="chat-area" id="chatArea">
             <div class="chat-header">
                 <div class="info">
-                    <div class="icon">🌐</div>
+                    <div class="icon">👥</div>
                     <div>
-                        <div class="title">چت جهانی</div>
-                        <div class="status online" id="chatStatus">🟢 متصل به همه</div>
+                        <div class="title">گروه عمومی</div>
+                        <div class="status online">🟢 همیشه آنلاین</div>
                     </div>
                 </div>
                 <div>
@@ -733,11 +677,17 @@
                 </div>
             </div>
 
+            <!-- Upload Progress -->
+            <div class="upload-progress" id="uploadProgress">
+                <span class="label" id="uploadLabel">در حال آپلود...</span>
+                <div class="bar"><div class="fill" id="uploadFill"></div></div>
+            </div>
+
             <div class="chat-messages" id="chatMessages">
                 <div class="empty">
-                    <i class="fas fa-wifi"></i>
-                    در حال اتصال به شبکه...<br />
-                    <span style="font-size:13px;color:var(--text-secondary);">منتظر بمانید تا ارتباط برقرار شود</span>
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    در حال اتصال به سرور...<br />
+                    <span style="font-size:13px;color:var(--text-secondary);">لطفاً چند ثانیه صبر کنید</span>
                 </div>
             </div>
 
@@ -753,7 +703,7 @@
                     <button class="tool-btn" id="attachBtn">📎</button>
                     <button class="tool-btn record" id="recordBtn">🎤</button>
                     <input type="text" id="chatInput" placeholder="پیام خود را بنویسید..." />
-                    <input type="file" id="fileInput" accept="image/*,video/*" style="display:none;" multiple />
+                    <input type="file" id="fileInput" accept="image/*,video/*,audio/*" style="display:none;" />
                 </div>
                 <button class="send-btn" id="sendBtn">
                     <i class="fas fa-paper-plane"></i>
@@ -767,21 +717,35 @@
     <script>
         // ============================================================
         //  ساخته شده توسط هوشمند
-        //  چت بین دستگاهی با استفاده از PeerJS (WebRTC)
-        //  گوشی + لپ‌تاپ + تبلت = همه با هم!
+        //  چت جهانی با Firebase - بین گوشی و لپ‌تاپ
         // ============================================================
+
+        // ---- 🔑 Firebase Config (جایگزین کنید) ----
+        const firebaseConfig = {
+            apiKey: "AIzaSyDemoKeyPleaseReplace",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project",
+            storageBucket: "your-project.firebasestorage.app",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+
+        // ---- INIT FIREBASE ----
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+        const storage = firebase.storage();
 
         // ---- STATE ----
         const state = {
             currentUser: null,
-            peer: null,
-            connections: [], // لیست اتصالات فعال
-            messages: JSON.parse(localStorage.getItem('crosschat_messages') || '[]'),
+            username: '',
+            messagesRef: null,
+            typingRef: null,
             isRecording: false,
             mediaRecorder: null,
             audioChunks: [],
-            myPeerId: null,
-            isConnected: false,
+            onlineUsers: {},
         };
 
         // ---- DOM REFS ----
@@ -797,12 +761,7 @@
         const sendBtn = $('sendBtn');
         const userName = $('userName');
         const userAvatar = $('userAvatar');
-        const connectionStatus = $('connectionStatus');
-        const statusText = $('statusText');
-        const deviceIdDisplay = $('deviceIdDisplay');
-        const deviceIdBox = $('deviceIdBox');
-        const copyDeviceId = $('copyDeviceId');
-        const connectToPeerBtn = $('connectToPeerBtn');
+        const onlineCount = $('onlineCount');
         const typingIndicator = $('typingIndicator');
         const typingText = $('typingText');
         const fileInput = $('fileInput');
@@ -811,20 +770,18 @@
         const recordBtn = $('recordBtn');
         const logoutBtn = $('logoutBtn');
         const clearChatBtn = $('clearChatBtn');
+        const uploadProgress = $('uploadProgress');
+        const uploadFill = $('uploadFill');
+        const uploadLabel = $('uploadLabel');
         const toastContainer = $('toastContainer');
 
         let typingTimeout = null;
+        let messageListener = null;
 
         // ---- HELPERS ----
         function getTime() {
             const now = new Date();
             return String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-        }
-
-        function formatFileSize(bytes) {
-            if (bytes < 1024) return bytes + ' B';
-            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-            return (bytes / 1048576).toFixed(1) + ' MB';
         }
 
         function showToast(message, type = 'info') {
@@ -836,186 +793,34 @@
             setTimeout(() => { el.remove(); }, 3000);
         }
 
-        function saveMessages() {
-            localStorage.setItem('crosschat_messages', JSON.stringify(state.messages));
-        }
+        // ---- AUTH (ورود ناشناس) ----
+        function signInAnonymously(username) {
+            auth.signInAnonymously()
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    state.currentUser = user;
+                    state.username = username;
+                    
+                    // ذخیره نام کاربری
+                    db.ref('users/' + user.uid).set({
+                        username: username,
+                        online: true,
+                        lastSeen: Date.now()
+                    });
 
-        // ---- PEERJS CONNECTION ----
-        function initPeer() {
-            // ایجاد Peer با ID تصادفی
-            state.peer = new Peer(undefined, {
-                debug: 2,
-                config: {
-                    'iceServers': [
-                        { urls: 'stun:stun.l.google.com:19302' },
-                        { urls: 'stun:stun1.l.google.com:19302' },
-                    ]
-                }
-            });
+                    // به‌روزرسانی وضعیت آنلاین
+                    db.ref('users/' + user.uid + '/online').onDisconnect().set(false);
+                    db.ref('users/' + user.uid + '/lastSeen').onDisconnect().set(Date.now());
 
-            state.peer.on('open', (id) => {
-                state.myPeerId = id;
-                deviceIdDisplay.textContent = id;
-                deviceIdBox.classList.add('active');
-                updateConnectionStatus(true);
-                showToast(`✅ دستگاه متصل شد! ID: ${id.substring(0, 8)}...`, 'success');
-                
-                // ارسال پیام سیستم
-                addSystemMessage(`🟢 شما با ID ${id.substring(0, 8)}... وارد شدید`);
-            });
-
-            // دریافت اتصال از دیگران
-            state.peer.on('connection', (conn) => {
-                setupConnection(conn);
-            });
-
-            state.peer.on('error', (err) => {
-                console.error('Peer error:', err);
-                if (err.type === 'peer-unavailable') {
-                    showToast('❌ دستگاه مورد نظر یافت نشد', 'error');
-                }
-            });
-
-            state.peer.on('disconnected', () => {
-                updateConnectionStatus(false);
-                showToast('❌ اتصال قطع شد! در حال تلاش مجدد...', 'error');
-                // تلاش برای اتصال مجدد
-                setTimeout(() => {
-                    state.peer.reconnect();
-                }, 3000);
-            });
-        }
-
-        // ---- SETUP CONNECTION ----
-        function setupConnection(conn) {
-            const peerId = conn.peer;
-            
-            // اضافه کردن به لیست اتصالات
-            if (!state.connections.find(c => c.peer === peerId)) {
-                state.connections.push(conn);
-            }
-
-            conn.on('open', () => {
-                showToast(`🔗 به ${peerId.substring(0, 8)}... متصل شدید`, 'success');
-                addSystemMessage(`🔗 ${peerId.substring(0, 8)}... به جمع پیوست`);
-                updateConnectionStatus(true);
-            });
-
-            conn.on('data', (data) => {
-                handleIncomingData(data, peerId);
-            });
-
-            conn.on('close', () => {
-                state.connections = state.connections.filter(c => c.peer !== peerId);
-                showToast(`🔌 ${peerId.substring(0, 8)}... disconnected`, 'warning');
-                addSystemMessage(`🔌 ${peerId.substring(0, 8)}... از جمع خارج شد`);
-                if (state.connections.length === 0) {
-                    updateConnectionStatus(false);
-                }
-            });
-
-            conn.on('error', (err) => {
-                console.error('Connection error:', err);
-            });
-        }
-
-        // ---- CONNECT TO PEER ----
-        function connectToPeer(peerId) {
-            if (!state.peer) {
-                showToast('❌ اتصال Peer برقرار نیست', 'error');
-                return;
-            }
-            if (peerId === state.myPeerId) {
-                showToast('❌ نمی‌توانید به خودتان متصل شوید!', 'error');
-                return;
-            }
-            if (state.connections.find(c => c.peer === peerId)) {
-                showToast('ℹ️ قبلاً به این دستگاه متصل هستید', 'info');
-                return;
-            }
-
-            showToast(`🔄 در حال اتصال به ${peerId.substring(0, 8)}...`, 'info');
-            const conn = state.peer.connect(peerId);
-            setupConnection(conn);
-        }
-
-        // ---- HANDLE INCOMING DATA ----
-        function handleIncomingData(data, fromPeerId) {
-            if (data.type === 'message') {
-                // پیام جدید از کاربر دیگر
-                const msg = data.payload;
-                state.messages.push({
-                    username: msg.username || 'ناشناس',
-                    text: msg.text || '',
-                    image: msg.image || null,
-                    video: msg.video || null,
-                    audio: msg.audio || null,
-                    time: msg.time || getTime(),
-                    fromPeer: fromPeerId,
-                    isOwn: false,
+                    showToast(`👋 خوش آمدید ${username}!`, 'success');
+                    startChat();
+                })
+                .catch((error) => {
+                    authError.textContent = '❌ خطا در اتصال: ' + error.message;
+                    authError.classList.add('show');
                 });
-                saveMessages();
-                renderMessages();
-                showToast(`📩 ${msg.username || 'ناشناس'}: ${msg.text || 'رسانه'}`, 'info');
-            }
-            
-            if (data.type === 'typing') {
-                typingIndicator.classList.add('show');
-                typingText.textContent = `${data.username} در حال تایپ...`;
-                clearTimeout(typingTimeout);
-                typingTimeout = setTimeout(() => {
-                    typingIndicator.classList.remove('show');
-                }, 3000);
-            }
-            
-            if (data.type === 'user_joined') {
-                addSystemMessage(`👋 ${data.username} به جمع ما پیوست (از دستگاه دیگر)`);
-                showToast(`👋 ${data.username} به جمع پیوست!`, 'success');
-            }
-            
-            if (data.type === 'user_left') {
-                addSystemMessage(`👋 ${data.username} از جمع خارج شد`);
-            }
-            
-            if (data.type === 'clear_chat') {
-                state.messages = [];
-                saveMessages();
-                renderMessages();
-                showToast('🧹 چت توسط کاربر دیگر پاک شد', 'warning');
-            }
         }
 
-        // ---- SEND DATA TO ALL ----
-        function sendToAll(type, payload) {
-            const data = { type, payload };
-            state.connections.forEach(conn => {
-                try {
-                    conn.send(data);
-                } catch (e) {
-                    console.error('Error sending to peer:', e);
-                }
-            });
-        }
-
-        // ---- UPDATE CONNECTION STATUS ----
-        function updateConnectionStatus(connected) {
-            state.isConnected = connected;
-            if (connected && state.connections.length > 0) {
-                connectionStatus.className = 'connection-status connected';
-                statusText.textContent = `${state.connections.length} متصل`;
-                sendBtn.disabled = false;
-            } else if (connected && state.connections.length === 0) {
-                connectionStatus.className = 'connection-status disconnected';
-                statusText.textContent = 'بدون اتصال';
-                sendBtn.disabled = true;
-            } else {
-                connectionStatus.className = 'connection-status disconnected';
-                statusText.textContent = 'قطع';
-                sendBtn.disabled = true;
-            }
-        }
-
-        // ---- AUTH ----
         authForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const username = authUsername.value.trim();
@@ -1028,232 +833,256 @@
                 return;
             }
 
-            state.currentUser = { username };
-            localStorage.setItem('crosschat_user', username);
-            
+            signInAnonymously(username);
+        });
+
+        // ---- START CHAT ----
+        function startChat() {
             authContainer.classList.remove('active');
             appHeader.classList.add('active');
             chatArea.classList.add('active');
-            deviceIdBox.classList.add('active');
-            
-            userName.textContent = username;
-            userAvatar.textContent = username[0].toUpperCase();
-            userAvatar.style.background = `linear-gradient(135deg, ${['#3b82f6','#8b5cf6','#ec4899','#f97316','#22d3ee','#10b981','#fbbf24','#ef4444'][Math.floor(Math.random()*8)]}, #1a2332)`;
-            
-            showToast(`👋 خوش آمدید ${username}!`, 'success');
-            
-            // راه‌اندازی PeerJS
-            initPeer();
-            renderMessages();
-            
-            // اعلام به دیگران
-            setTimeout(() => {
-                sendToAll('user_joined', { username });
-            }, 1000);
-        });
 
-        // ---- LOGOUT ----
-        logoutBtn.addEventListener('click', () => {
-            const username = state.currentUser?.username;
-            
-            // اطلاع به دیگران
-            sendToAll('user_left', { username });
-            
-            // بستن اتصالات
-            state.connections.forEach(conn => conn.close());
-            state.connections = [];
-            if (state.peer) state.peer.destroy();
-            
-            state.currentUser = null;
-            localStorage.removeItem('crosschat_user');
-            
-            appHeader.classList.remove('active');
-            chatArea.classList.remove('active');
-            deviceIdBox.classList.remove('active');
-            authContainer.classList.add('active');
-            
-            authUsername.value = '';
-            showToast('👋 شما خارج شدید', 'info');
-        });
+            userName.textContent = state.username;
+            userAvatar.textContent = state.username[0].toUpperCase();
+            const colors = ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#22d3ee', '#10b981', '#fbbf24', '#ef4444'];
+            userAvatar.style.background = `linear-gradient(135deg, ${colors[Math.floor(Math.random() * colors.length)]}, #1a2332)`;
 
-        // ---- CONNECT TO PEER (با وارد کردن ID) ----
-        connectToPeerBtn.addEventListener('click', () => {
-            const peerId = prompt('🆔 شناسه دستگاه مقصد را وارد کنید:');
-            if (peerId && peerId.trim()) {
-                connectToPeer(peerId.trim());
+            // گوش دادن به پیام‌ها
+            listenMessages();
+            
+            // گوش دادن به آنلاین‌ها
+            listenOnlineUsers();
+            
+            // گوش دادن به تایپ
+            listenTyping();
+
+            showToast('🌍 به چت جهانی متصل شدید!', 'success');
+            chatInput.focus();
+        }
+
+        // ---- LISTEN MESSAGES ----
+        function listenMessages() {
+            if (messageListener) {
+                db.ref('messages').off();
             }
-        });
-
-        // ---- COPY DEVICE ID ----
-        copyDeviceId.addEventListener('click', () => {
-            const id = deviceIdDisplay.textContent;
-            if (id && id !== 'در حال اتصال...') {
-                navigator.clipboard.writeText(id).then(() => {
-                    showToast('📋 شناسه دستگاه کپی شد!', 'success');
-                }).catch(() => {
-                    // Fallback
-                    const textarea = document.createElement('textarea');
-                    textarea.value = id;
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    textarea.remove();
-                    showToast('📋 شناسه دستگاه کپی شد!', 'success');
-                });
-            }
-        });
-
-        // ---- MESSAGES ----
-        function renderMessages() {
-            chatMessages.innerHTML = '';
             
-            if (state.messages.length === 0) {
+            messageListener = db.ref('messages');
+            messageListener.on('child_added', (snapshot) => {
+                const msg = snapshot.val();
+                if (msg) {
+                    renderMessage(msg);
+                }
+            });
+
+            // برای پاک کردن کل چت
+            db.ref('messages').on('child_removed', () => {
+                chatMessages.innerHTML = '';
                 chatMessages.innerHTML = `
                     <div class="empty">
-                        <i class="fas fa-wifi"></i>
-                        منتظر پیام‌ها باشید...<br />
-                        <span style="font-size:13px;color:var(--text-secondary);">ID دستگاه خود را با دوستان به اشتراک بگذارید</span>
+                        <i class="fas fa-comment-dots"></i>
+                        چت پاک شد<br />
+                        <span style="font-size:13px;color:var(--text-secondary);">پیام جدید بفرستید!</span>
                     </div>
                 `;
-                return;
-            }
+            });
+        }
 
-            state.messages.forEach((msg) => {
-                const div = document.createElement('div');
-                const isOwn = msg.username === state.currentUser?.username;
+        // ---- RENDER MESSAGE ----
+        function renderMessage(msg) {
+            // حذف empty
+            const empty = chatMessages.querySelector('.empty');
+            if (empty) empty.remove();
+
+            const div = document.createElement('div');
+            const isOwn = msg.uid === state.currentUser?.uid;
+
+            if (msg.type === 'system') {
+                div.className = 'message system';
+                div.textContent = msg.text;
+            } else {
+                div.className = `message ${isOwn ? 'own' : 'other'}`;
                 
-                if (msg.username === 'سیستم') {
-                    div.className = 'message system';
-                    div.textContent = msg.text;
-                } else {
-                    div.className = `message ${isOwn ? 'own' : 'other'}`;
-                    
-                    let content = '';
-                    if (!isOwn) {
-                        content += `<span class="msg-user">${msg.username}</span>`;
-                    }
-                    
-                    if (msg.text) content += msg.text;
-                    
-                    if (msg.image) {
-                        content += `<div class="msg-media"><img src="${msg.image}" alt="تصویر" onclick="window.open('${msg.image}','_blank')" /></div>`;
-                    }
-                    if (msg.video) {
-                        content += `<div class="msg-media"><video controls src="${msg.video}"></video></div>`;
-                    }
-                    if (msg.audio) {
-                        content += `<div class="msg-audio"><audio controls src="${msg.audio}"></audio></div>`;
-                    }
-                    
-                    content += ` <span class="msg-time">${msg.time}</span>`;
-                    if (isOwn) content += ` <span class="msg-seen">✓✓</span>`;
-                    
-                    div.innerHTML = content;
+                let content = '';
+                if (!isOwn) {
+                    content += `<span class="msg-user">${msg.username}</span>`;
                 }
                 
-                chatMessages.appendChild(div);
-            });
-            
+                if (msg.text) content += msg.text;
+                
+                if (msg.image) {
+                    content += `<div class="msg-media"><img src="${msg.image}" alt="تصویر" onclick="window.open('${msg.image}','_blank')" /></div>`;
+                }
+                if (msg.video) {
+                    content += `<div class="msg-media"><video controls src="${msg.video}"></video></div>`;
+                }
+                if (msg.audio) {
+                    content += `<div class="msg-audio"><audio controls src="${msg.audio}"></audio></div>`;
+                }
+                
+                content += ` <span class="msg-time">${msg.time}</span>`;
+                if (isOwn) content += ` <span class="msg-seen">✓✓</span>`;
+                
+                div.innerHTML = content;
+            }
+
+            chatMessages.appendChild(div);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        function addMessage(text, type = 'text', mediaData = null) {
+        // ---- SEND MESSAGE ----
+        function sendMessage(text, type = 'text', mediaUrl = null) {
             if (!state.currentUser) return;
-            
+
             const msg = {
-                username: state.currentUser.username,
+                uid: state.currentUser.uid,
+                username: state.username,
                 text: text || '',
                 time: getTime(),
-                isOwn: true,
+                type: type,
             };
 
-            if (type === 'image' && mediaData) msg.image = mediaData;
-            else if (type === 'video' && mediaData) msg.video = mediaData;
-            else if (type === 'audio' && mediaData) msg.audio = mediaData;
+            if (type === 'image' && mediaUrl) msg.image = mediaUrl;
+            else if (type === 'video' && mediaUrl) msg.video = mediaUrl;
+            else if (type === 'audio' && mediaUrl) msg.audio = mediaUrl;
 
-            state.messages.push(msg);
-            saveMessages();
-            renderMessages();
-            
-            // ارسال به همه دستگاه‌های متصل
-            sendToAll('message', msg);
+            // ذخیره در Firebase
+            db.ref('messages').push(msg);
         }
 
-        function addSystemMessage(text) {
-            const msg = {
-                username: 'سیستم',
-                text: text,
-                time: getTime(),
-                isOwn: false,
-            };
-            state.messages.push(msg);
-            saveMessages();
-            renderMessages();
-            sendToAll('message', msg);
-        }
-
-        // ---- SEND ----
-        function sendMessage() {
+        // ---- SEND TEXT ----
+        function sendTextMessage() {
             const text = chatInput.value.trim();
             if (text) {
-                addMessage(text);
+                sendMessage(text);
                 chatInput.value = '';
             }
             typingIndicator.classList.remove('show');
+            // پاک کردن تایپ
+            if (state.currentUser) {
+                db.ref('typing/' + state.currentUser.uid).remove();
+            }
         }
 
-        sendBtn.addEventListener('click', sendMessage);
+        sendBtn.addEventListener('click', sendTextMessage);
         chatInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                sendMessage();
+                sendTextMessage();
             }
         });
 
         // ---- TYPING ----
         chatInput.addEventListener('input', () => {
-            if (chatInput.value.trim()) {
-                sendToAll('typing', { username: state.currentUser?.username });
+            if (state.currentUser && chatInput.value.trim()) {
+                db.ref('typing/' + state.currentUser.uid).set({
+                    username: state.username,
+                    timestamp: Date.now()
+                });
+            } else if (state.currentUser) {
+                db.ref('typing/' + state.currentUser.uid).remove();
             }
         });
 
-        // ---- EMOJI ----
-        const emojis = ['😊', '😂', '❤️', '🔥', '🎯', '👍', '👏', '💪', '🎉', '✨', '🌟', '😍', '🥰', '😘', '🤩', '🙌', '👀', '💯', '⚡', '🎵', '🎶', '💬', '💭'];
-        emojiBtn.addEventListener('click', () => {
-            chatInput.value += emojis[Math.floor(Math.random() * emojis.length)];
-            chatInput.focus();
-        });
-
-        // ---- ATTACH ----
-        attachBtn.addEventListener('click', () => fileInput.click());
-
-        fileInput.addEventListener('change', (e) => {
-            const files = e.target.files;
-            if (!files.length) return;
-
-            for (const file of files) {
-                if (file.size > 20 * 1024 * 1024) {
-                    showToast('❌ حجم فایل نباید بیشتر از ۲۰ مگابایت باشد', 'error');
-                    continue;
+        function listenTyping() {
+            db.ref('typing').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) {
+                    typingIndicator.classList.remove('show');
+                    return;
                 }
 
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const data = event.target.result;
-                    if (file.type.startsWith('image/')) {
-                        addMessage('📷 تصویر', 'image', data);
-                        showToast('📷 تصویر ارسال شد', 'success');
-                    } else if (file.type.startsWith('video/')) {
-                        addMessage('🎬 ویدیو', 'video', data);
-                        showToast('🎬 ویدیو ارسال شد', 'success');
+                // پیدا کردن کاربران در حال تایپ (غیر از خودمان)
+                const typingUsers = [];
+                for (const [uid, val] of Object.entries(data)) {
+                    if (uid !== state.currentUser?.uid && val.username) {
+                        // بررسی اینکه تایپ قدیمی نباشد (حداکثر 5 ثانیه)
+                        if (Date.now() - val.timestamp < 5000) {
+                            typingUsers.push(val.username);
+                        }
                     }
-                };
-                reader.readAsDataURL(file);
+                }
+
+                if (typingUsers.length > 0) {
+                    typingIndicator.classList.add('show');
+                    typingText.textContent = typingUsers.join('، ') + ' در حال تایپ...';
+                } else {
+                    typingIndicator.classList.remove('show');
+                }
+            });
+        }
+
+        // ---- ONLINE USERS ----
+        function listenOnlineUsers() {
+            db.ref('users').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+
+                let count = 0;
+                for (const [uid, user] of Object.entries(data)) {
+                    if (user.online === true && uid !== state.currentUser?.uid) {
+                        count++;
+                    }
+                }
+                onlineCount.textContent = count + 1; // +1 برای خودمان
+            });
+        }
+
+        // ---- ATTACH FILE ----
+        attachBtn.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (file.size > 20 * 1024 * 1024) {
+                showToast('❌ حجم فایل نباید بیشتر از ۲۰ مگابایت باشد', 'error');
+                fileInput.value = '';
+                return;
             }
+
+            // نمایش progress
+            uploadProgress.classList.add('show');
+            uploadFill.style.width = '0%';
+            uploadLabel.textContent = 'در حال آپلود...';
+
+            try {
+                const storageRef = storage.ref('chat_files/' + Date.now() + '_' + file.name);
+                const uploadTask = storageRef.put(file);
+
+                uploadTask.on('state_changed', (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    uploadFill.style.width = progress + '%';
+                    uploadLabel.textContent = `آپلود ${Math.round(progress)}%`;
+                });
+
+                await uploadTask;
+                const downloadURL = await storageRef.getDownloadURL();
+
+                uploadProgress.classList.remove('show');
+
+                if (file.type.startsWith('image/')) {
+                    sendMessage('📷 تصویر', 'image', downloadURL);
+                    showToast('📷 تصویر ارسال شد', 'success');
+                } else if (file.type.startsWith('video/')) {
+                    sendMessage('🎬 ویدیو', 'video', downloadURL);
+                    showToast('🎬 ویدیو ارسال شد', 'success');
+                } else if (file.type.startsWith('audio/')) {
+                    sendMessage('🎵 فایل صوتی', 'audio', downloadURL);
+                    showToast('🎵 فایل صوتی ارسال شد', 'success');
+                } else {
+                    showToast('❌ فرمت فایل پشتیبانی نمی‌شود', 'error');
+                }
+
+            } catch (error) {
+                uploadProgress.classList.remove('show');
+                showToast('❌ خطا در آپلود فایل', 'error');
+                console.error(error);
+            }
+
             fileInput.value = '';
         });
 
-        // ---- VOICE ----
+        // ---- VOICE RECORDING ----
         recordBtn.addEventListener('click', async () => {
             if (state.isRecording) {
                 if (state.mediaRecorder && state.mediaRecorder.state === 'recording') {
@@ -1268,21 +1097,44 @@
 
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                state.mediaRecorder = new MediaRecorder(stream);
+                state.mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
                 state.audioChunks = [];
 
                 state.mediaRecorder.ondataavailable = (event) => {
                     state.audioChunks.push(event.data);
                 };
 
-                state.mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(state.audioChunks, { type: 'audio/wav' });
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        addMessage('🎤 ویسی مسیج', 'audio', reader.result);
+                state.mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
+                    
+                    // آپلود به Firebase Storage
+                    const filename = 'voice_' + Date.now() + '.webm';
+                    const storageRef = storage.ref('chat_files/' + filename);
+                    
+                    uploadProgress.classList.add('show');
+                    uploadFill.style.width = '0%';
+                    uploadLabel.textContent = 'در حال آپلود ویس...';
+
+                    try {
+                        const uploadTask = storageRef.put(audioBlob);
+                        uploadTask.on('state_changed', (snapshot) => {
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            uploadFill.style.width = progress + '%';
+                            uploadLabel.textContent = `آپلود ${Math.round(progress)}%`;
+                        });
+
+                        await uploadTask;
+                        const downloadURL = await storageRef.getDownloadURL();
+                        uploadProgress.classList.remove('show');
+
+                        sendMessage('🎤 ویسی مسیج', 'audio', downloadURL);
                         showToast('🎤 ویسی مسیج ارسال شد', 'success');
-                    };
-                    reader.readAsDataURL(audioBlob);
+                    } catch (error) {
+                        uploadProgress.classList.remove('show');
+                        showToast('❌ خطا در آپلود ویس', 'error');
+                        console.error(error);
+                    }
+
                     stream.getTracks().forEach(track => track.stop());
                 };
 
@@ -1297,25 +1149,46 @@
             }
         });
 
+        // ---- EMOJI ----
+        const emojis = ['😊', '😂', '❤️', '🔥', '🎯', '👍', '👏', '💪', '🎉', '✨', '🌟', '😍', '🥰', '😘', '🤩', '🙌', '👀', '💯', '⚡', '🎵', '🎶', '💬', '💭'];
+        emojiBtn.addEventListener('click', () => {
+            chatInput.value += emojis[Math.floor(Math.random() * emojis.length)];
+            chatInput.focus();
+        });
+
         // ---- CLEAR CHAT ----
         clearChatBtn.addEventListener('click', () => {
             if (confirm('آیا مطمئن هستید؟ تمام پیام‌ها پاک می‌شوند.')) {
-                state.messages = [];
-                saveMessages();
-                renderMessages();
-                sendToAll('clear_chat', {});
-                showToast('🧹 چت پاک شد', 'warning');
+                db.ref('messages').remove().then(() => {
+                    showToast('🧹 چت پاک شد', 'warning');
+                });
             }
         });
 
-        // ---- INIT ----
-        function init() {
-            const savedUser = localStorage.getItem('crosschat_user');
-            if (savedUser) {
-                authUsername.value = savedUser;
-                authForm.dispatchEvent(new Event('submit'));
+        // ---- LOGOUT ----
+        logoutBtn.addEventListener('click', () => {
+            if (state.currentUser) {
+                // به‌روزرسانی وضعیت آفلاین
+                db.ref('users/' + state.currentUser.uid + '/online').set(false);
+                db.ref('users/' + state.currentUser.uid + '/lastSeen').set(Date.now());
             }
-        }
+
+            // قطع اتصال
+            if (messageListener) {
+                db.ref('messages').off();
+            }
+            db.ref('typing').off();
+            db.ref('users').off();
+
+            auth.signOut().then(() => {
+                state.currentUser = null;
+                appHeader.classList.remove('active');
+                chatArea.classList.remove('active');
+                authContainer.classList.add('active');
+                authUsername.value = '';
+                showToast('👋 شما خارج شدید', 'info');
+            });
+        });
 
         // ---- DRAG & DROP ----
         document.addEventListener('dragover', (e) => e.preventDefault());
@@ -1328,10 +1201,11 @@
             }
         });
 
-        init();
+        // ---- INIT ----
         console.log('✅ ساخته شده توسط هوشمند');
-        console.log('📡 چت بین دستگاهی با WebRTC (PeerJS)');
-        console.log('💡 گوشی + لپ‌تاپ + تبلت = همه با هم!');
+        console.log('🌍 چت جهانی با Firebase');
+        console.log('📱 گوشی + لپ‌تاپ + تبلت = همه با هم!');
+        console.log('🔑 لطفاً firebaseConfig را جایگزین کنید');
     </script>
 </body>
 </html>
