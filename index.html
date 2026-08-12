@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>چت جهانی | Firebase</title>
+    <title>چت جهانی | نسخه نهایی</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;900&display=swap" rel="stylesheet" />
     
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
     
     <style>
+        /* ===== RESET & VARIABLES ===== */
         * {
             margin: 0;
             padding: 0;
@@ -169,6 +169,10 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
         }
+        .auth-box .btn-full:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         .auth-box .error-msg {
             color: #ef4444;
             font-size: 13px;
@@ -272,6 +276,11 @@
             padding: 4px 12px;
             font-size: 11px;
         }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
 
         /* ===== CHAT ===== */
         .chat-area {
@@ -374,6 +383,17 @@
             background: rgba(251, 191, 36, 0.1);
             border: 1px solid rgba(251, 191, 36, 0.2);
             color: var(--accent-yellow);
+            align-self: center;
+            max-width: 90%;
+            text-align: center;
+            font-size: 13px;
+            padding: 6px 20px;
+            border-radius: 30px;
+        }
+        .message.error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
             align-self: center;
             max-width: 90%;
             text-align: center;
@@ -543,6 +563,42 @@
             transform: scale(1.05);
             box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
         }
+        .chat-input-area .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ===== UPLOAD PROGRESS ===== */
+        .upload-progress {
+            display: none;
+            padding: 6px 14px;
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            margin: 0 12px 4px 12px;
+            align-items: center;
+            gap: 12px;
+        }
+        .upload-progress.show { display: flex; }
+        .upload-progress .bar {
+            flex: 1;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .upload-progress .bar .fill {
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .upload-progress .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
 
         /* ===== TOAST ===== */
         .toast-container {
@@ -578,37 +634,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== UPLOAD PROGRESS ===== */
-        .upload-progress {
-            display: none;
-            padding: 6px 14px;
-            background: var(--bg-input);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
-            margin: 4px 0;
-            align-items: center;
-            gap: 12px;
-        }
-        .upload-progress.show { display: flex; }
-        .upload-progress .bar {
-            flex: 1;
-            height: 4px;
-            background: var(--border-color);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .upload-progress .bar .fill {
-            height: 100%;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        .upload-progress .label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-        }
-
         @media (max-width: 600px) {
             .app { padding: 10px; height: calc(100vh - 20px); max-height: none; }
             .header { padding: 6px 12px; }
@@ -634,11 +659,14 @@
                 <form id="authForm">
                     <div class="form-group">
                         <label>نام کاربری</label>
-                        <input type="text" id="authUsername" placeholder="نام خود را وارد کنید..." required />
+                        <input type="text" id="authUsername" placeholder="نام خود را وارد کنید..." maxlength="20" required />
                     </div>
-                    <button type="submit" class="btn-full">ورود به چت</button>
+                    <button type="submit" class="btn-full" id="authBtn">ورود به چت</button>
                     <div class="error-msg" id="authError"></div>
                 </form>
+                <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-secondary);">
+                    <i class="fas fa-shield-alt"></i> امن و رایگان
+                </div>
             </div>
         </div>
 
@@ -648,7 +676,7 @@
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
                 <div class="online-badge">
                     <span class="dot"></span>
-                    <span id="onlineCount">۱</span> آنلاین
+                    <span id="onlineCount">۰</span> آنلاین
                 </div>
                 <div class="user-info">
                     <div class="avatar" id="userAvatar">م</div>
@@ -699,11 +727,11 @@
 
             <div class="chat-input-area">
                 <div class="wrapper">
-                    <button class="tool-btn" id="emojiBtn">😊</button>
-                    <button class="tool-btn" id="attachBtn">📎</button>
-                    <button class="tool-btn record" id="recordBtn">🎤</button>
-                    <input type="text" id="chatInput" placeholder="پیام خود را بنویسید..." />
-                    <input type="file" id="fileInput" accept="image/*,video/*,audio/*" style="display:none;" />
+                    <button class="tool-btn" id="emojiBtn" title="ایموجی">😊</button>
+                    <button class="tool-btn" id="attachBtn" title="آپلود فایل">📎</button>
+                    <button class="tool-btn record" id="recordBtn" title="ضبط صدا">🎤</button>
+                    <input type="text" id="chatInput" placeholder="پیام خود را بنویسید..." maxlength="500" />
+                    <input type="file" id="fileInput" accept="image/*,video/*,audio/*" style="display:none;" multiple />
                 </div>
                 <button class="send-btn" id="sendBtn">
                     <i class="fas fa-paper-plane"></i>
@@ -716,11 +744,8 @@
 
     <script>
         // ============================================================
-        //  ساخته شده توسط هوشمند
-        //  چت جهانی با Firebase - بین گوشی و لپ‌تاپ
+        //  🔑 FIREBASE CONFIG - جایگزین کنید
         // ============================================================
-
-        // ---- 🔑 Firebase Config (جایگزین کنید) ----
         const firebaseConfig = {
             apiKey: "AIzaSyDemoKeyPleaseReplace",
             authDomain: "your-project.firebaseapp.com",
@@ -729,6 +754,11 @@
             messagingSenderId: "123456789",
             appId: "1:123456789:web:abcdef"
         };
+
+        // ============================================================
+        //  ساخته شده توسط هوشمند
+        //  نسخه نهایی - تمام مشکلات رفع شده
+        // ============================================================
 
         // ---- INIT FIREBASE ----
         firebase.initializeApp(firebaseConfig);
@@ -746,6 +776,8 @@
             mediaRecorder: null,
             audioChunks: [],
             onlineUsers: {},
+            messageIds: new Set(), // جلوگیری از تکرار
+            isInitialLoad: true,
         };
 
         // ---- DOM REFS ----
@@ -753,6 +785,7 @@
         const authContainer = $('authContainer');
         const authForm = $('authForm');
         const authUsername = $('authUsername');
+        const authBtn = $('authBtn');
         const authError = $('authError');
         const appHeader = $('appHeader');
         const chatArea = $('chatArea');
@@ -784,40 +817,67 @@
             return String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
         }
 
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         function showToast(message, type = 'info') {
             const el = document.createElement('div');
             el.className = `toast ${type}`;
             const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
-            el.innerHTML = `${icons[type] || 'ℹ️'} ${message}`;
+            el.innerHTML = `${icons[type] || 'ℹ️'} ${escapeHtml(message)}`;
             toastContainer.appendChild(el);
             setTimeout(() => { el.remove(); }, 3000);
         }
 
-        // ---- AUTH (ورود ناشناس) ----
+        function showError(message) {
+            const div = document.createElement('div');
+            div.className = 'message error';
+            div.textContent = '❌ ' + message;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            setTimeout(() => { div.remove(); }, 5000);
+        }
+
+        // ---- AUTH ----
         function signInAnonymously(username) {
+            authBtn.disabled = true;
+            authBtn.textContent = '⏳ در حال اتصال...';
+            authError.classList.remove('show');
+
             auth.signInAnonymously()
                 .then((userCredential) => {
                     const user = userCredential.user;
                     state.currentUser = user;
-                    state.username = username;
-                    
+                    state.username = username.trim();
+
                     // ذخیره نام کاربری
-                    db.ref('users/' + user.uid).set({
-                        username: username,
+                    return db.ref('users/' + user.uid).set({
+                        username: state.username,
                         online: true,
-                        lastSeen: Date.now()
+                        lastSeen: firebase.database.ServerValue.TIMESTAMP
+                    }).then(() => {
+                        // onDisconnect
+                        db.ref('users/' + user.uid + '/online').onDisconnect().set(false);
+                        db.ref('users/' + user.uid + '/lastSeen').onDisconnect().set(firebase.database.ServerValue
+                        .TIMESTAMP);
                     });
-
-                    // به‌روزرسانی وضعیت آنلاین
-                    db.ref('users/' + user.uid + '/online').onDisconnect().set(false);
-                    db.ref('users/' + user.uid + '/lastSeen').onDisconnect().set(Date.now());
-
-                    showToast(`👋 خوش آمدید ${username}!`, 'success');
+                })
+                .then(() => {
+                    showToast(`👋 خوش آمدید ${state.username}!`, 'success');
                     startChat();
                 })
                 .catch((error) => {
-                    authError.textContent = '❌ خطا در اتصال: ' + error.message;
+                    authError.textContent = '❌ خطا: ' + error.message;
                     authError.classList.add('show');
+                    showToast('❌ خطا در اتصال به سرور', 'error');
+                })
+                .finally(() => {
+                    authBtn.disabled = false;
+                    authBtn.textContent = 'ورود به چت';
                 });
         }
 
@@ -825,10 +885,14 @@
             e.preventDefault();
             const username = authUsername.value.trim();
             authError.classList.remove('show');
-            authError.textContent = '';
 
             if (!username) {
                 authError.textContent = '❌ لطفاً یک نام وارد کنید';
+                authError.classList.add('show');
+                return;
+            }
+            if (username.length > 20) {
+                authError.textContent = '❌ نام کاربری نباید بیشتر از ۲۰ کاراکتر باشد';
                 authError.classList.add('show');
                 return;
             }
@@ -847,7 +911,7 @@
             const colors = ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#22d3ee', '#10b981', '#fbbf24', '#ef4444'];
             userAvatar.style.background = `linear-gradient(135deg, ${colors[Math.floor(Math.random() * colors.length)]}, #1a2332)`;
 
-            // گوش دادن به پیام‌ها
+            // گوش دادن به پیام‌ها (آخرین ۱۰۰ پیام)
             listenMessages();
             
             // گوش دادن به آنلاین‌ها
@@ -860,34 +924,50 @@
             chatInput.focus();
         }
 
-        // ---- LISTEN MESSAGES ----
+        // ---- LISTEN MESSAGES (با محدودیت ۱۰۰ پیام) ----
         function listenMessages() {
             if (messageListener) {
                 db.ref('messages').off();
             }
             
-            messageListener = db.ref('messages');
+            // فقط آخرین ۱۰۰ پیام
+            messageListener = db.ref('messages').limitToLast(100);
+            
             messageListener.on('child_added', (snapshot) => {
                 const msg = snapshot.val();
+                const msgId = snapshot.key;
+                
+                // جلوگیری از تکرار
+                if (state.messageIds.has(msgId)) return;
+                state.messageIds.add(msgId);
+                
                 if (msg) {
                     renderMessage(msg);
                 }
             });
 
-            // برای پاک کردن کل چت
-            db.ref('messages').on('child_removed', () => {
-                chatMessages.innerHTML = '';
-                chatMessages.innerHTML = `
-                    <div class="empty">
-                        <i class="fas fa-comment-dots"></i>
-                        چت پاک شد<br />
-                        <span style="font-size:13px;color:var(--text-secondary);">پیام جدید بفرستید!</span>
-                    </div>
-                `;
+            // حذف پیام‌ها
+            messageListener.on('child_removed', (snapshot) => {
+                const msgId = snapshot.key;
+                // حذف از DOM
+                const elements = chatMessages.querySelectorAll(`[data-msg-id="${msgId}"]`);
+                elements.forEach(el => el.remove());
+                state.messageIds.delete(msgId);
+                
+                // اگر هیچ پیامی نبود
+                if (chatMessages.children.length === 0) {
+                    chatMessages.innerHTML = `
+                        <div class="empty">
+                            <i class="fas fa-comment-dots"></i>
+                            چت پاک شد<br />
+                            <span style="font-size:13px;color:var(--text-secondary);">پیام جدید بفرستید!</span>
+                        </div>
+                    `;
+                }
             });
         }
 
-        // ---- RENDER MESSAGE ----
+        // ---- RENDER MESSAGE (امن) ----
         function renderMessage(msg) {
             // حذف empty
             const empty = chatMessages.querySelector('.empty');
@@ -902,27 +982,79 @@
             } else {
                 div.className = `message ${isOwn ? 'own' : 'other'}`;
                 
+                // ساخت محتوا به صورت امن
                 let content = '';
-                if (!isOwn) {
-                    content += `<span class="msg-user">${msg.username}</span>`;
+                
+                // نام کاربر (امن)
+                if (!isOwn && msg.username) {
+                    const userSpan = document.createElement('span');
+                    userSpan.className = 'msg-user';
+                    userSpan.textContent = msg.username;
+                    div.appendChild(userSpan);
                 }
                 
-                if (msg.text) content += msg.text;
+                // متن پیام (امن)
+                if (msg.text) {
+                    const textSpan = document.createElement('span');
+                    textSpan.textContent = msg.text;
+                    div.appendChild(textSpan);
+                }
                 
+                // تصویر
                 if (msg.image) {
-                    content += `<div class="msg-media"><img src="${msg.image}" alt="تصویر" onclick="window.open('${msg.image}','_blank')" /></div>`;
+                    const mediaDiv = document.createElement('div');
+                    mediaDiv.className = 'msg-media';
+                    const img = document.createElement('img');
+                    img.src = msg.image;
+                    img.alt = 'تصویر';
+                    img.loading = 'lazy';
+                    img.addEventListener('click', () => window.open(msg.image, '_blank'));
+                    mediaDiv.appendChild(img);
+                    div.appendChild(mediaDiv);
                 }
+                
+                // ویدیو
                 if (msg.video) {
-                    content += `<div class="msg-media"><video controls src="${msg.video}"></video></div>`;
+                    const mediaDiv = document.createElement('div');
+                    mediaDiv.className = 'msg-media';
+                    const video = document.createElement('video');
+                    video.src = msg.video;
+                    video.controls = true;
+                    video.preload = 'metadata';
+                    mediaDiv.appendChild(video);
+                    div.appendChild(mediaDiv);
                 }
+                
+                // صدا
                 if (msg.audio) {
-                    content += `<div class="msg-audio"><audio controls src="${msg.audio}"></audio></div>`;
+                    const audioDiv = document.createElement('div');
+                    audioDiv.className = 'msg-audio';
+                    const audio = document.createElement('audio');
+                    audio.src = msg.audio;
+                    audio.controls = true;
+                    audio.preload = 'metadata';
+                    audioDiv.appendChild(audio);
+                    div.appendChild(audioDiv);
                 }
                 
-                content += ` <span class="msg-time">${msg.time}</span>`;
-                if (isOwn) content += ` <span class="msg-seen">✓✓</span>`;
+                // زمان
+                const timeSpan = document.createElement('span');
+                timeSpan.className = 'msg-time';
+                timeSpan.textContent = msg.time || '';
+                div.appendChild(timeSpan);
                 
-                div.innerHTML = content;
+                // تیک خوانده شده
+                if (isOwn) {
+                    const seenSpan = document.createElement('span');
+                    seenSpan.className = 'msg-seen';
+                    seenSpan.textContent = '✓✓';
+                    div.appendChild(seenSpan);
+                }
+            }
+
+            // ذخیره ID برای حذف
+            if (msg.id) {
+                div.dataset.msgId = msg.id;
             }
 
             chatMessages.appendChild(div);
@@ -939,28 +1071,43 @@
                 text: text || '',
                 time: getTime(),
                 type: type,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
             };
 
             if (type === 'image' && mediaUrl) msg.image = mediaUrl;
             else if (type === 'video' && mediaUrl) msg.video = mediaUrl;
             else if (type === 'audio' && mediaUrl) msg.audio = mediaUrl;
 
-            // ذخیره در Firebase
-            db.ref('messages').push(msg);
+            // ارسال با مدیریت خطا
+            return db.ref('messages').push(msg)
+                .then(() => {
+                    // موفق
+                })
+                .catch((error) => {
+                    showError('خطا در ارسال پیام: ' + error.message);
+                    showToast('❌ ارسال پیام شکست خورد!', 'error');
+                    console.error('Send error:', error);
+                });
         }
 
         // ---- SEND TEXT ----
         function sendTextMessage() {
             const text = chatInput.value.trim();
-            if (text) {
-                sendMessage(text);
-                chatInput.value = '';
-            }
-            typingIndicator.classList.remove('show');
-            // پاک کردن تایپ
-            if (state.currentUser) {
-                db.ref('typing/' + state.currentUser.uid).remove();
-            }
+            if (!text) return;
+            
+            sendBtn.disabled = true;
+            
+            sendMessage(text)
+                .finally(() => {
+                    chatInput.value = '';
+                    sendBtn.disabled = false;
+                    typingIndicator.classList.remove('show');
+                    // پاک کردن تایپ
+                    if (state.currentUser) {
+                        db.ref('typing/' + state.currentUser.uid).remove();
+                    }
+                    chatInput.focus();
+                });
         }
 
         sendBtn.addEventListener('click', sendTextMessage);
@@ -976,7 +1123,7 @@
             if (state.currentUser && chatInput.value.trim()) {
                 db.ref('typing/' + state.currentUser.uid).set({
                     username: state.username,
-                    timestamp: Date.now()
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
                 });
             } else if (state.currentUser) {
                 db.ref('typing/' + state.currentUser.uid).remove();
@@ -991,13 +1138,17 @@
                     return;
                 }
 
-                // پیدا کردن کاربران در حال تایپ (غیر از خودمان)
                 const typingUsers = [];
+                const now = Date.now();
+                
                 for (const [uid, val] of Object.entries(data)) {
                     if (uid !== state.currentUser?.uid && val.username) {
-                        // بررسی اینکه تایپ قدیمی نباشد (حداکثر 5 ثانیه)
-                        if (Date.now() - val.timestamp < 5000) {
+                        // بررسی تایپ قدیمی (حداکثر ۵ ثانیه)
+                        if (val.timestamp && (now - val.timestamp) < 5000) {
                             typingUsers.push(val.username);
+                        } else {
+                            // پاک کردن رکورد قدیمی
+                            db.ref('typing/' + uid).remove();
                         }
                     }
                 }
@@ -1018,12 +1169,18 @@
                 if (!data) return;
 
                 let count = 0;
+                let onlineNames = [];
+                
                 for (const [uid, user] of Object.entries(data)) {
-                    if (user.online === true && uid !== state.currentUser?.uid) {
+                    if (user.online === true) {
                         count++;
+                        if (uid !== state.currentUser?.uid && user.username) {
+                            onlineNames.push(user.username);
+                        }
                     }
                 }
-                onlineCount.textContent = count + 1; // +1 برای خودمان
+                
+                onlineCount.textContent = count;
             });
         }
 
@@ -1031,52 +1188,55 @@
         attachBtn.addEventListener('click', () => fileInput.click());
 
         fileInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+            const files = e.target.files;
+            if (!files.length) return;
 
-            if (file.size > 20 * 1024 * 1024) {
-                showToast('❌ حجم فایل نباید بیشتر از ۲۰ مگابایت باشد', 'error');
-                fileInput.value = '';
-                return;
-            }
-
-            // نمایش progress
-            uploadProgress.classList.add('show');
-            uploadFill.style.width = '0%';
-            uploadLabel.textContent = 'در حال آپلود...';
-
-            try {
-                const storageRef = storage.ref('chat_files/' + Date.now() + '_' + file.name);
-                const uploadTask = storageRef.put(file);
-
-                uploadTask.on('state_changed', (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    uploadFill.style.width = progress + '%';
-                    uploadLabel.textContent = `آپلود ${Math.round(progress)}%`;
-                });
-
-                await uploadTask;
-                const downloadURL = await storageRef.getDownloadURL();
-
-                uploadProgress.classList.remove('show');
-
-                if (file.type.startsWith('image/')) {
-                    sendMessage('📷 تصویر', 'image', downloadURL);
-                    showToast('📷 تصویر ارسال شد', 'success');
-                } else if (file.type.startsWith('video/')) {
-                    sendMessage('🎬 ویدیو', 'video', downloadURL);
-                    showToast('🎬 ویدیو ارسال شد', 'success');
-                } else if (file.type.startsWith('audio/')) {
-                    sendMessage('🎵 فایل صوتی', 'audio', downloadURL);
-                    showToast('🎵 فایل صوتی ارسال شد', 'success');
-                } else {
-                    showToast('❌ فرمت فایل پشتیبانی نمی‌شود', 'error');
+            for (const file of files) {
+                if (file.size > 20 * 1024 * 1024) {
+                    showToast('❌ حجم فایل نباید بیشتر از ۲۰ مگابایت باشد', 'error');
+                    continue;
                 }
 
-            } catch (error) {
-                uploadProgress.classList.remove('show');
-                showToast('❌ خطا در آپلود فایل', 'error');
-                console.error(error);
+                // نمایش progress
+                uploadProgress.classList.add('show');
+                uploadFill.style.width = '0%';
+                uploadLabel.textContent = 'در حال آپلود...';
+
+                try {
+                    // مسیر با UID
+                    const path = 'chat_files/' + state.currentUser.uid + '/' + Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+                    const storageRef = storage.ref(path);
+                    const uploadTask = storageRef.put(file);
+
+                    await new Promise((resolve, reject) => {
+                        uploadTask.on('state_changed', (snapshot) => {
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            uploadFill.style.width = progress + '%';
+                            uploadLabel.textContent = `آپلود ${Math.round(progress)}%`;
+                        }, reject, resolve);
+                    });
+
+                    const downloadURL = await storageRef.getDownloadURL();
+                    uploadProgress.classList.remove('show');
+
+                    if (file.type.startsWith('image/')) {
+                        await sendMessage('📷 تصویر', 'image', downloadURL);
+                        showToast('📷 تصویر ارسال شد', 'success');
+                    } else if (file.type.startsWith('video/')) {
+                        await sendMessage('🎬 ویدیو', 'video', downloadURL);
+                        showToast('🎬 ویدیو ارسال شد', 'success');
+                    } else if (file.type.startsWith('audio/')) {
+                        await sendMessage('🎵 فایل صوتی', 'audio', downloadURL);
+                        showToast('🎵 فایل صوتی ارسال شد', 'success');
+                    } else {
+                        showToast('❌ فرمت فایل پشتیبانی نمی‌شود', 'error');
+                    }
+
+                } catch (error) {
+                    uploadProgress.classList.remove('show');
+                    showToast('❌ خطا در آپلود فایل: ' + error.message, 'error');
+                    console.error('Upload error:', error);
+                }
             }
 
             fileInput.value = '';
@@ -1097,42 +1257,55 @@
 
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                state.mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+                
+                // انتخاب MIME مناسب
+                let mimeType = 'audio/webm';
+                if (!MediaRecorder.isTypeSupported(mimeType)) {
+                    mimeType = 'audio/mp4';
+                }
+                if (!MediaRecorder.isTypeSupported(mimeType)) {
+                    mimeType = 'audio/ogg';
+                }
+                
+                state.mediaRecorder = new MediaRecorder(stream, { mimeType });
                 state.audioChunks = [];
 
                 state.mediaRecorder.ondataavailable = (event) => {
-                    state.audioChunks.push(event.data);
+                    if (event.data.size > 0) {
+                        state.audioChunks.push(event.data);
+                    }
                 };
 
                 state.mediaRecorder.onstop = async () => {
-                    const audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
-                    
-                    // آپلود به Firebase Storage
-                    const filename = 'voice_' + Date.now() + '.webm';
-                    const storageRef = storage.ref('chat_files/' + filename);
+                    const audioBlob = new Blob(state.audioChunks, { type: mimeType });
+                    const ext = mimeType.split('/')[1] || 'webm';
                     
                     uploadProgress.classList.add('show');
                     uploadFill.style.width = '0%';
                     uploadLabel.textContent = 'در حال آپلود ویس...';
 
                     try {
+                        const path = 'chat_files/' + state.currentUser.uid + '/voice_' + Date.now() + '.' + ext;
+                        const storageRef = storage.ref(path);
                         const uploadTask = storageRef.put(audioBlob);
-                        uploadTask.on('state_changed', (snapshot) => {
-                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            uploadFill.style.width = progress + '%';
-                            uploadLabel.textContent = `آپلود ${Math.round(progress)}%`;
+
+                        await new Promise((resolve, reject) => {
+                            uploadTask.on('state_changed', (snapshot) => {
+                                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                uploadFill.style.width = progress + '%';
+                                uploadLabel.textContent = `آپلود ${Math.round(progress)}%`;
+                            }, reject, resolve);
                         });
 
-                        await uploadTask;
                         const downloadURL = await storageRef.getDownloadURL();
                         uploadProgress.classList.remove('show');
 
-                        sendMessage('🎤 ویسی مسیج', 'audio', downloadURL);
+                        await sendMessage('🎤 ویسی مسیج', 'audio', downloadURL);
                         showToast('🎤 ویسی مسیج ارسال شد', 'success');
                     } catch (error) {
                         uploadProgress.classList.remove('show');
-                        showToast('❌ خطا در آپلود ویس', 'error');
-                        console.error(error);
+                        showToast('❌ خطا در آپلود ویس: ' + error.message, 'error');
+                        console.error('Voice upload error:', error);
                     }
 
                     stream.getTracks().forEach(track => track.stop());
@@ -1145,7 +1318,7 @@
                 showToast('🎤 در حال ضبط... کلیک کنید تا متوقف شود', 'warning');
             } catch (err) {
                 showToast('❌ دسترسی به میکروفون امکان‌پذیر نیست', 'error');
-                console.error(err);
+                console.error('Microphone error:', err);
             }
         });
 
@@ -1156,24 +1329,37 @@
             chatInput.focus();
         });
 
-        // ---- CLEAR CHAT ----
+        // ---- CLEAR CHAT (فقط پیام‌های خود کاربر) ----
         clearChatBtn.addEventListener('click', () => {
-            if (confirm('آیا مطمئن هستید؟ تمام پیام‌ها پاک می‌شوند.')) {
-                db.ref('messages').remove().then(() => {
-                    showToast('🧹 چت پاک شد', 'warning');
-                });
+            if (!state.currentUser) return;
+            
+            if (confirm('⚠️ آیا مطمئن هستید؟ فقط پیام‌های خودتان حذف می‌شوند.')) {
+                // حذف فقط پیام‌های خود کاربر
+                db.ref('messages').orderByChild('uid').equalTo(state.currentUser.uid)
+                    .once('value')
+                    .then((snapshot) => {
+                        const updates = {};
+                        snapshot.forEach((child) => {
+                            updates[child.key] = null;
+                        });
+                        return db.ref('messages').update(updates);
+                    })
+                    .then(() => {
+                        showToast('🧹 پیام‌های شما پاک شد', 'success');
+                    })
+                    .catch((error) => {
+                        showToast('❌ خطا در پاک کردن پیام‌ها: ' + error.message, 'error');
+                    });
             }
         });
 
         // ---- LOGOUT ----
         logoutBtn.addEventListener('click', () => {
             if (state.currentUser) {
-                // به‌روزرسانی وضعیت آفلاین
                 db.ref('users/' + state.currentUser.uid + '/online').set(false);
-                db.ref('users/' + state.currentUser.uid + '/lastSeen').set(Date.now());
+                db.ref('users/' + state.currentUser.uid + '/lastSeen').set(firebase.database.ServerValue.TIMESTAMP);
             }
 
-            // قطع اتصال
             if (messageListener) {
                 db.ref('messages').off();
             }
@@ -1182,6 +1368,7 @@
 
             auth.signOut().then(() => {
                 state.currentUser = null;
+                state.messageIds.clear();
                 appHeader.classList.remove('active');
                 chatArea.classList.remove('active');
                 authContainer.classList.add('active');
@@ -1203,7 +1390,7 @@
 
         // ---- INIT ----
         console.log('✅ ساخته شده توسط هوشمند');
-        console.log('🌍 چت جهانی با Firebase');
+        console.log('🌍 چت جهانی - نسخه نهایی');
         console.log('📱 گوشی + لپ‌تاپ + تبلت = همه با هم!');
         console.log('🔑 لطفاً firebaseConfig را جایگزین کنید');
     </script>
