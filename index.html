@@ -6,85 +6,161 @@
     <title>💎 BITVOLT Messenger</title>
     <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
     <style>
-        /* ===== RESET ===== */
+        /* ====================================== */
+        /* RESET & BASE */
+        /* ====================================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        :root {
+            --bg-primary: #0f0c29;
+            --bg-secondary: #1a1a3e;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --gold: #f7971e;
+            --gold-gradient: linear-gradient(135deg, #f7971e, #ffd200);
+            --shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            --radius: 20px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: #0f0c29;
-            color: #fff;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             height: 100vh;
             overflow: hidden;
+            transition: var(--transition);
+        }
+        body.light-mode {
+            --bg-primary: #f0f0f5;
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(0, 0, 0, 0.05);
+            --text-primary: #1a1a2e;
+            --text-secondary: rgba(0, 0, 0, 0.6);
+            --shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
         }
 
-        /* ===== LOGIN PAGE ===== */
+        /* ====================================== */
+        /* LOGIN PAGE */
+        /* ====================================== */
         #loginPage {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background: radial-gradient(ellipse at center, #1a1a3e, #0f0c29);
+            position: relative;
+            overflow: hidden;
+        }
+        #loginPage::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(247, 151, 30, 0.1), transparent 70%);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
         }
         .login-box {
-            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+            z-index: 1;
+            background: var(--bg-card);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 30px;
             padding: 50px 40px;
-            width: 400px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            width: 420px;
+            box-shadow: var(--shadow);
             animation: fadeIn 0.8s ease;
         }
         .login-box .logo {
             text-align: center;
-            font-size: 36px;
+            font-size: 42px;
             font-weight: 900;
-            color: #fff;
             margin-bottom: 5px;
         }
         .login-box .logo span {
-            color: #f7971e;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .login-box .sub {
             text-align: center;
-            color: rgba(255, 255, 255, 0.4);
+            color: var(--text-secondary);
             font-size: 14px;
             margin-bottom: 30px;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
         }
         .login-box input {
             width: 100%;
             padding: 14px 18px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.08);
             border-radius: 15px;
             background: rgba(255, 255, 255, 0.05);
-            color: #fff;
+            color: var(--text-primary);
             font-size: 15px;
             outline: none;
-            transition: all 0.3s;
+            transition: var(--transition);
         }
         .login-box input:focus {
-            border-color: #f7971e;
-            box-shadow: 0 0 20px rgba(247, 151, 30, 0.1);
+            border-color: var(--gold);
+            box-shadow: 0 0 25px rgba(247, 151, 30, 0.15);
         }
         .login-box input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
+            color: var(--text-secondary);
         }
         .login-box .btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #f7971e, #ffd200);
+            background: var(--gold-gradient);
             border: none;
             border-radius: 15px;
             color: #1a1a2e;
             font-size: 18px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
         }
         .login-box .btn:hover {
             transform: scale(1.02);
@@ -92,12 +168,12 @@
         }
         .login-box .link {
             text-align: center;
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--text-secondary);
             margin-top: 15px;
             font-size: 14px;
         }
         .login-box .link a {
-            color: #f7971e;
+            color: var(--gold);
             text-decoration: none;
             font-weight: 600;
             cursor: pointer;
@@ -113,26 +189,50 @@
             letter-spacing: 1px;
         }
         .login-box .footer span {
-            color: #f7971e;
+            color: var(--gold);
+        }
+        .login-box .avatar-preview {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .login-box .avatar-preview img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--gold);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .login-box .avatar-preview img:hover {
+            transform: scale(1.05);
+        }
+        .login-box .avatar-upload {
+            display: none;
         }
 
-        /* ===== APP ===== */
+        /* ====================================== */
+        /* APP */
+        /* ====================================== */
         #appPage {
             display: none;
             flex-direction: column;
             height: 100vh;
-            max-width: 820px;
+            max-width: 860px;
             margin: 0 auto;
-            background: linear-gradient(180deg, #1a1a3e 0%, #0f0c29 100%);
+            background: var(--bg-secondary);
+            position: relative;
         }
 
-        /* ===== HEADER ===== */
+        /* ====================================== */
+        /* HEADER */
+        /* ====================================== */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.03);
+            padding: 10px 20px;
+            background: var(--bg-card);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             flex-shrink: 0;
             flex-wrap: wrap;
@@ -141,15 +241,33 @@
         .logo-small {
             font-size: 20px;
             font-weight: 900;
-            color: #fff;
         }
         .logo-small span {
-            color: #f7971e;
+            color: var(--gold);
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header-left .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--gold);
+            cursor: pointer;
         }
         .header-user {
-            color: #f7971e;
+            color: var(--gold);
             font-weight: 600;
             font-size: 14px;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
         }
         .header-balance {
             background: rgba(247, 151, 30, 0.15);
@@ -157,6 +275,35 @@
             border-radius: 20px;
             font-size: 13px;
             color: #ffd700;
+            font-weight: 600;
+        }
+        .header-online {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .header-online .dot {
+            width: 8px;
+            height: 8px;
+            background: #4caf50;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+        .btn-icon {
+            background: var(--bg-card);
+            border: none;
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        .btn-icon:hover {
+            background: rgba(247, 151, 30, 0.2);
         }
         .btn-logout {
             background: rgba(255, 0, 0, 0.12);
@@ -166,40 +313,61 @@
             border-radius: 20px;
             cursor: pointer;
             font-size: 13px;
-            transition: all 0.3s;
+            transition: var(--transition);
         }
         .btn-logout:hover {
             background: rgba(255, 0, 0, 0.25);
         }
 
-        /* ===== TABS ===== */
+        /* ====================================== */
+        /* TABS */
+        /* ====================================== */
         .tabs {
             display: flex;
-            background: rgba(255, 255, 255, 0.02);
+            background: var(--bg-card);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             flex-shrink: 0;
+            padding: 0 10px;
         }
         .tab {
             flex: 1;
-            padding: 12px;
+            padding: 12px 16px;
             background: transparent;
             border: none;
-            color: rgba(255, 255, 255, 0.4);
+            color: var(--text-secondary);
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
             border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
         .tab:hover {
-            color: #fff;
+            color: var(--text-primary);
         }
         .tab.active {
-            color: #f7971e;
-            border-bottom-color: #f7971e;
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+        .tab .badge {
+            background: var(--gold);
+            color: #1a1a2e;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
         }
 
-        /* ===== TAB CONTENT ===== */
+        /* ====================================== */
+        /* TAB CONTENT */
+        /* ====================================== */
         .tab-content {
             display: none;
             flex: 1;
@@ -210,7 +378,9 @@
             flex-direction: column;
         }
 
-        /* ===== CHAT ===== */
+        /* ====================================== */
+        /* CHAT */
+        /* ====================================== */
         .chat-container {
             display: flex;
             flex-direction: column;
@@ -221,7 +391,7 @@
             display: flex;
             justify-content: space-between;
             padding: 6px 10px;
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--text-secondary);
             font-size: 13px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             margin-bottom: 8px;
@@ -235,93 +405,97 @@
             flex-direction: column;
             gap: 5px;
         }
-        .messages::-webkit-scrollbar {
-            width: 4px;
-        }
-        .messages::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.03);
-        }
-        .messages::-webkit-scrollbar-thumb {
-            background: #f7971e;
-            border-radius: 10px;
-        }
         .msg {
             max-width: 78%;
-            padding: 8px 14px;
-            border-radius: 15px;
+            padding: 10px 16px;
+            border-radius: 18px;
             font-size: 14px;
             word-wrap: break-word;
             animation: fadeIn 0.3s ease;
+            position: relative;
         }
         .msg.me {
             align-self: flex-end;
-            background: linear-gradient(135deg, #f7971e, #ffd200);
+            background: var(--gold-gradient);
             color: #1a1a2e;
             border-bottom-right-radius: 4px;
         }
         .msg.other {
             align-self: flex-start;
-            background: rgba(255, 255, 255, 0.07);
-            color: #fff;
+            background: var(--bg-card);
+            color: var(--text-primary);
             border-bottom-left-radius: 4px;
         }
         .msg .msg-name {
             font-size: 11px;
             opacity: 0.7;
             display: block;
+            margin-bottom: 2px;
         }
         .msg .msg-time {
-            font-size: 10px;
-            opacity: 0.5;
+            font-size: 9px;
+            opacity: 0.4;
             margin-right: 6px;
+        }
+        .msg .msg-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 6px;
+            vertical-align: middle;
         }
         .system-msg {
             text-align: center;
-            color: rgba(255, 255, 255, 0.2);
+            color: var(--text-secondary);
             font-size: 13px;
             padding: 10px;
+            opacity: 0.5;
         }
         .chat-input {
             display: flex;
             gap: 10px;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 15px;
+            background: var(--bg-card);
+            border-radius: 16px;
             margin-top: 5px;
             flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         .chat-input input {
             flex: 1;
             padding: 11px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: none;
             border-radius: 12px;
             background: rgba(255, 255, 255, 0.05);
-            color: #fff;
+            color: var(--text-primary);
             font-size: 14px;
             outline: none;
-            transition: all 0.3s;
+            transition: var(--transition);
         }
         .chat-input input:focus {
-            border-color: #f7971e;
+            background: rgba(255, 255, 255, 0.08);
         }
         .chat-input input::placeholder {
-            color: rgba(255, 255, 255, 0.25);
+            color: var(--text-secondary);
         }
         .chat-input button {
-            padding: 11px 22px;
-            background: linear-gradient(135deg, #f7971e, #ffd200);
+            padding: 11px 24px;
+            background: var(--gold-gradient);
             border: none;
             border-radius: 12px;
             color: #1a1a2e;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
         }
         .chat-input button:hover {
             transform: scale(1.03);
         }
 
-        /* ===== GAME ===== */
+        /* ====================================== */
+        /* GAME */
+        /* ====================================== */
         .game-container {
             padding: 15px 20px;
             flex: 1;
@@ -332,42 +506,55 @@
             margin-bottom: 18px;
         }
         .game-header h2 {
-            font-size: 26px;
-            background: linear-gradient(135deg, #f7971e, #ffd200);
+            font-size: 28px;
+            background: var(--gold-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .game-header p {
-            color: rgba(255, 255, 255, 0.4);
+            color: var(--text-secondary);
             font-size: 14px;
         }
         .game-stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             margin-bottom: 18px;
         }
         .stat-box {
-            background: rgba(255, 255, 255, 0.04);
+            background: var(--bg-card);
             padding: 12px;
             border-radius: 15px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+        .stat-box:hover {
+            transform: translateY(-2px);
         }
         .stat-box span {
             display: block;
             font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
+            color: var(--text-secondary);
         }
         .stat-box strong {
             font-size: 20px;
             color: #ffd700;
         }
+        .stat-box .icon {
+            font-size: 24px;
+        }
         .bet-area {
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--bg-card);
             padding: 18px;
             border-radius: 18px;
             border: 1px solid rgba(255, 255, 255, 0.05);
             margin-bottom: 15px;
+        }
+        .bet-area .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
         .bet-input-group {
             margin-bottom: 12px;
@@ -375,65 +562,86 @@
         .bet-input-group label {
             display: block;
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--text-secondary);
             margin-bottom: 4px;
         }
-        .bet-input-group input {
+        .bet-input-group input,
+        .bet-input-group select {
             width: 100%;
             padding: 11px 16px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             background: rgba(255, 255, 255, 0.05);
-            color: #fff;
+            color: var(--text-primary);
             font-size: 15px;
             outline: none;
+            transition: var(--transition);
         }
-        .bet-input-group input:focus {
-            border-color: #f7971e;
+        .bet-input-group input:focus,
+        .bet-input-group select:focus {
+            border-color: var(--gold);
+        }
+        .bet-input-group select option {
+            background: #1a1a2e;
         }
         .btn-bet {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #f7971e, #ffd200);
+            background: var(--gold-gradient);
             border: none;
             border-radius: 14px;
             color: #1a1a2e;
-            font-size: 17px;
+            font-size: 18px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
+            margin-top: 5px;
         }
         .btn-bet:hover {
             transform: scale(1.02);
             box-shadow: 0 8px 25px rgba(247, 151, 30, 0.25);
+        }
+        .btn-bet:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
         .game-result {
             padding: 14px;
             border-radius: 14px;
             text-align: center;
             margin-bottom: 15px;
-            font-size: 17px;
-            min-height: 50px;
+            font-size: 18px;
+            min-height: 55px;
+            font-weight: 600;
+            animation: fadeIn 0.3s ease;
         }
         .game-result.win {
-            background: rgba(0, 255, 0, 0.08);
-            border: 1px solid rgba(0, 255, 0, 0.15);
+            background: rgba(76, 175, 80, 0.15);
+            border: 1px solid rgba(76, 175, 80, 0.3);
             color: #4caf50;
         }
         .game-result.lose {
-            background: rgba(255, 0, 0, 0.08);
-            border: 1px solid rgba(255, 0, 0, 0.15);
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.2);
             color: #ff6b6b;
         }
+        .game-result.jackpot {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #ffd700;
+            animation: pulse 0.5s ease 3;
+        }
         .game-history {
-            background: rgba(255, 255, 255, 0.02);
+            background: var(--bg-card);
             padding: 12px 15px;
             border-radius: 14px;
-            max-height: 130px;
+            max-height: 140px;
             overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         .game-history h4 {
-            color: rgba(255, 255, 255, 0.4);
+            color: var(--text-secondary);
             margin-bottom: 8px;
             font-size: 13px;
         }
@@ -450,8 +658,14 @@
         .history-item.lose {
             color: #ff6b6b;
         }
+        .history-item.jackpot {
+            color: #ffd700;
+            font-weight: 700;
+        }
 
-        /* ===== LEADERBOARD ===== */
+        /* ====================================== */
+        /* LEADERBOARD */
+        /* ====================================== */
         .leaderboard-container {
             padding: 15px 20px;
             flex: 1;
@@ -461,7 +675,7 @@
             text-align: center;
             margin-bottom: 18px;
             font-size: 24px;
-            background: linear-gradient(135deg, #f7971e, #ffd200);
+            background: var(--gold-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -470,16 +684,27 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 14px;
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--bg-card);
             border-radius: 12px;
             margin-bottom: 6px;
             border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: var(--transition);
+        }
+        .leaderboard-item:hover {
+            transform: translateX(4px);
         }
         .leaderboard-item .rank {
             font-weight: 700;
-            color: #f7971e;
+            color: var(--gold);
             width: 30px;
             font-size: 14px;
+        }
+        .leaderboard-item .avatar-mini {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 10px;
         }
         .leaderboard-item .name {
             flex: 1;
@@ -491,56 +716,57 @@
             font-weight: 700;
             font-size: 14px;
         }
+        .leaderboard-item .wins {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
         .leaderboard-item.top1 {
             border-color: #ffd700;
-            background: rgba(255, 215, 0, 0.06);
+            background: rgba(255, 215, 0, 0.08);
         }
         .leaderboard-item.top2 {
             border-color: #c0c0c0;
-            background: rgba(192, 192, 192, 0.05);
+            background: rgba(192, 192, 192, 0.06);
         }
         .leaderboard-item.top3 {
             border-color: #cd7f32;
-            background: rgba(205, 127, 50, 0.05);
+            background: rgba(205, 127, 50, 0.06);
         }
 
-        /* ===== FOOTER ===== */
+        /* ====================================== */
+        /* FOOTER */
+        /* ====================================== */
         .app-footer {
             text-align: center;
-            padding: 10px;
-            color: rgba(255, 255, 255, 0.1);
-            font-size: 11px;
+            padding: 8px;
+            color: var(--text-secondary);
+            font-size: 10px;
             border-top: 1px solid rgba(255, 255, 255, 0.02);
             letter-spacing: 1px;
             flex-shrink: 0;
+            opacity: 0.4;
         }
         .app-footer span {
-            color: #f7971e;
+            color: var(--gold);
         }
 
-        /* ===== ANIMATIONS ===== */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 500px) {
+        /* ====================================== */
+        /* RESPONSIVE */
+        /* ====================================== */
+        @media (max-width: 550px) {
             .login-box {
                 width: 95%;
                 padding: 30px 20px;
             }
             .header {
                 justify-content: center;
+                padding: 8px 12px;
             }
             .game-stats {
                 grid-template-columns: 1fr 1fr;
+            }
+            .bet-area .row {
+                grid-template-columns: 1fr;
             }
             .logo-small {
                 font-size: 16px;
@@ -549,18 +775,82 @@
                 font-size: 11px;
                 padding: 4px 10px;
             }
+            .tab {
+                font-size: 12px;
+                padding: 10px 8px;
+            }
+            .tab .badge {
+                width: 16px;
+                height: 16px;
+                font-size: 8px;
+            }
+        }
+        @media (max-width: 400px) {
+            .header-right .btn-icon {
+                padding: 4px 8px;
+                font-size: 14px;
+            }
+            .header-user {
+                font-size: 12px;
+            }
+            .header-left .avatar {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        /* ====================================== */
+        /* TOAST NOTIFICATION */
+        /* ====================================== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 14px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+            font-size: 14px;
+            display: none;
+        }
+        .toast.show {
+            display: block;
+        }
+        .toast.success {
+            border-color: #4caf50;
+        }
+        .toast.error {
+            border-color: #ff6b6b;
+        }
+        .toast.info {
+            border-color: var(--gold);
         }
     </style>
 </head>
 <body>
 
     <!-- ========================================== -->
-    <!-- صفحه ورود -->
+    <!-- TOAST -->
+    <!-- ========================================== -->
+    <div id="toast" class="toast"></div>
+
+    <!-- ========================================== -->
+    <!-- LOGIN PAGE -->
     <!-- ========================================== -->
     <div id="loginPage">
         <div class="login-box">
             <div class="logo">💎 BIT<span>VOLT</span></div>
             <div class="sub">پیام‌رسان فوق‌لوکس</div>
+
+            <div class="avatar-preview">
+                <img id="avatarPreview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='40' fill='%23333'/%3E%3Ctext x='40' y='48' text-anchor='middle' font-size='32' fill='%23fff' font-family='Arial'%3E👤%3C/text%3E%3C/svg%3E" alt="آواتار" onclick="document.getElementById('avatarInput').click()">
+                <input type="file" id="avatarInput" class="avatar-upload" accept="image/*" onchange="previewAvatar(event)">
+            </div>
 
             <input type="text" id="loginUser" placeholder="👤 نام کاربری">
             <input type="password" id="loginPass" placeholder="🔑 رمز عبور">
@@ -577,36 +867,42 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- صفحه اصلی اپلیکیشن -->
+    <!-- APP -->
     <!-- ========================================== -->
     <div id="appPage">
 
-        <!-- هدر -->
+        <!-- HEADER -->
         <header class="header">
-            <div class="logo-small">💎 BIT<span>VOLT</span></div>
+            <div class="header-left">
+                <img id="headerAvatar" class="avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='40' fill='%23333'/%3E%3Ctext x='40' y='48' text-anchor='middle' font-size='32' fill='%23fff' font-family='Arial'%3E👤%3C/text%3E%3C/svg%3E" alt="آواتار" onclick="document.getElementById('avatarInput2').click()">
+                <input type="file" id="avatarInput2" class="avatar-upload" accept="image/*" onchange="previewAvatar2(event)">
+                <span class="logo-small">💎 BIT<span>VOLT</span></span>
+            </div>
             <span class="header-user" id="userDisplay">کاربر</span>
-            <div>
+            <div class="header-right">
                 <span class="header-balance" id="balanceDisplay">💰 ۰ تومان</span>
+                <span class="header-online"><span class="dot"></span> <span id="onlineCount">۰</span></span>
+                <button class="btn-icon" onclick="toggleTheme()" title="تغییر تم">🌓</button>
                 <button class="btn-logout" onclick="logout()">🚪 خروج</button>
             </div>
         </header>
 
-        <!-- تب‌ها -->
+        <!-- TABS -->
         <div class="tabs">
             <button class="tab active" onclick="switchTab('chat')">💬 چت</button>
             <button class="tab" onclick="switchTab('game')">🎰 شرط‌بندی</button>
             <button class="tab" onclick="switchTab('leaderboard')">🏆 جدول</button>
         </div>
 
-        <!-- ===== تب چت ===== -->
+        <!-- ===== CHAT TAB ===== -->
         <div id="chatTab" class="tab-content active">
             <div class="chat-container">
                 <div class="chat-header">
-                    <span>👥 گفتگوی لحظه‌ای</span>
-                    <span id="onlineCount">🟢 در حال اتصال...</span>
+                    <span>👥 گفتگوی گروهی</span>
+                    <span id="chatStatus">🔌 در حال اتصال...</span>
                 </div>
                 <div class="messages" id="messages">
-                    <div class="system-msg">🔌 در حال اتصال به سرور...</div>
+                    <div class="system-msg">💬 به BITVOLT خوش آمدی!</div>
                 </div>
                 <div class="chat-input">
                     <input type="text" id="msgInput" placeholder="پیامت رو بنویس..." onkeydown="if(event.key==='Enter') sendMessage()">
@@ -615,51 +911,70 @@
             </div>
         </div>
 
-        <!-- ===== تب بازی ===== -->
+        <!-- ===== GAME TAB ===== -->
         <div id="gameTab" class="tab-content">
             <div class="game-container">
                 <div class="game-header">
-                    <h2>🎰 شرط‌بندی سریع</h2>
-                    <p>حدس بزن عدد ۱ تا ۱۰ رو!</p>
+                    <h2>🎰 شرط‌بندی پیشرفته</h2>
+                    <p>حدس بزن و پولدار شو!</p>
                 </div>
 
                 <div class="game-stats">
                     <div class="stat-box">
-                        <span>💰 موجودی</span>
+                        <div class="icon">💰</div>
+                        <span>موجودی</span>
                         <strong id="gameBalance">۰ تومان</strong>
                     </div>
                     <div class="stat-box">
-                        <span>🎯 بردها</span>
+                        <div class="icon">🏆</div>
+                        <span>بردها</span>
                         <strong id="winsCount">۰</strong>
                     </div>
                     <div class="stat-box">
-                        <span>📊 بازی‌ها</span>
+                        <div class="icon">📊</div>
+                        <span>بازی‌ها</span>
                         <strong id="gamesCount">۰</strong>
+                    </div>
+                    <div class="stat-box">
+                        <div class="icon">💎</div>
+                        <span>بزرگترین برد</span>
+                        <strong id="biggestWin">۰</strong>
                     </div>
                 </div>
 
                 <div class="bet-area">
-                    <div class="bet-input-group">
-                        <label>💰 مبلغ شرط (تومان):</label>
-                        <input type="number" id="betAmount" value="1000" min="100">
+                    <div class="row">
+                        <div class="bet-input-group">
+                            <label>💰 مبلغ شرط (تومان):</label>
+                            <input type="number" id="betAmount" value="10000" min="100" step="1000">
+                        </div>
+                        <div class="bet-input-group">
+                            <label>🎯 نوع بازی:</label>
+                            <select id="gameType">
+                                <option value="normal">ساده (ضریب ۲)</option>
+                                <option value="medium">متوسط (ضریب ۵)</option>
+                                <option value="hard">سخت (ضریب ۱۰)</option>
+                                <option value="jackpot">جکپات (ضریب ۵۰)</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="bet-input-group">
-                        <label>🎯 حدس عدد (۱ تا ۱۰):</label>
+                        <label>🎯 حدس عدد (۱ تا ${document.getElementById('gameType')?.value === 'jackpot' ? '100' : '10'}):</label>
                         <input type="number" id="guessNumber" min="1" max="10" value="5">
                     </div>
-                    <button class="btn-bet" onclick="playGame()">🎲 شرط ببند</button>
+                    <button class="btn-bet" id="betBtn" onclick="playGame()">🎲 شرط ببند</button>
                 </div>
 
                 <div id="gameResult" class="game-result"></div>
 
                 <div class="game-history">
-                    <h4>📜 تاریخچه</h4>
+                    <h4>📜 تاریخچه بازی‌ها</h4>
                     <div id="historyList"></div>
                 </div>
             </div>
         </div>
 
-        <!-- ===== تب جدول امتیازات ===== -->
+        <!-- ===== LEADERBOARD TAB ===== -->
         <div id="leaderboardTab" class="tab-content">
             <div class="leaderboard-container">
                 <h2>🏆 جدول بهترین‌ها</h2>
@@ -667,18 +982,18 @@
             </div>
         </div>
 
-        <!-- فوتر -->
+        <!-- FOOTER -->
         <div class="app-footer">
             ساخته شده توسط <span>BITVOLT.MTV</span> | تمامی حقوق محفوظ است © ۲۰۲۶
         </div>
     </div>
 
     <!-- ========================================== -->
-    <!-- جاوااسکریپت کامل با Ably -->
+    <!-- JAVASCRIPT -->
     <!-- ========================================== -->
     <script>
         // ==========================================
-        // 🔑 کلید Ably - اینجا کلید خودت رو بذار
+        // 🔑 کلید Ably - کلید خودت رو اینجا بذار
         // ==========================================
         const ABLY_API_KEY = 'YOUR_ABLY_API_KEY'; // <-- کلیدت رو اینجا بذار!
 
@@ -703,22 +1018,28 @@
             let password = document.getElementById('loginPass').value.trim();
 
             if (!username || !password) {
-                alert('❌ نام کاربری و رمز عبور را وارد کن!');
+                showToast('❌ نام کاربری و رمز عبور را وارد کن!', 'error');
                 return;
             }
             if (users[username]) {
-                alert('❌ این نام کاربری قبلاً ثبت شده!');
+                showToast('❌ این نام کاربری قبلاً ثبت شده!', 'error');
                 return;
             }
 
+            // گرفتن آواتار
+            let avatar = document.getElementById('avatarPreview').src;
+
             users[username] = {
                 password: password,
-                balance: 100000,
+                balance: 1000000, // ۱ میلیون تومان
                 gamesPlayed: 0,
-                gamesWon: 0
+                gamesWon: 0,
+                biggestWin: 0,
+                avatar: avatar,
+                joinDate: new Date().toISOString()
             };
             localStorage.setItem('bitvolt_users', JSON.stringify(users));
-            alert('✅ ثبت‌نام موفق! حالا وارد شو.');
+            showToast('✅ ثبت‌نام موفق! حالا وارد شو.', 'success');
         }
 
         function handleLogin() {
@@ -726,15 +1047,15 @@
             let password = document.getElementById('loginPass').value.trim();
 
             if (!username || !password) {
-                alert('❌ نام کاربری و رمز عبور را وارد کن!');
+                showToast('❌ نام کاربری و رمز عبور را وارد کن!', 'error');
                 return;
             }
             if (!users[username]) {
-                alert('❌ کاربری با این نام وجود نداره! ثبت‌نام کن.');
+                showToast('❌ کاربری با این نام وجود نداره! ثبت‌نام کن.', 'error');
                 return;
             }
             if (users[username].password !== password) {
-                alert('❌ رمز عبور اشتباهه!');
+                showToast('❌ رمز عبور اشتباهه!', 'error');
                 return;
             }
 
@@ -753,6 +1074,36 @@
         });
 
         // ==========================================
+        // آواتار
+        // ==========================================
+        function previewAvatar(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('avatarPreview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function previewAvatar2(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('headerAvatar').src = e.target.result;
+                    // به‌روزرسانی در دیتابیس
+                    if (currentUser && users[currentUser]) {
+                        users[currentUser].avatar = e.target.result;
+                        localStorage.setItem('bitvolt_users', JSON.stringify(users));
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // ==========================================
         // اتصال به Ably
         // ==========================================
         let ably = null;
@@ -764,7 +1115,7 @@
                 if (ABLY_API_KEY === 'YOUR_ABLY_API_KEY') {
                     document.getElementById('messages').innerHTML = '';
                     addSystemMessage('⚠️ لطفاً کلید Ably را در کد تنظیم کن!');
-                    document.getElementById('onlineCount').textContent = '⚠️ بدون کلید';
+                    document.getElementById('chatStatus').textContent = '⚠️ بدون کلید';
                     return;
                 }
 
@@ -773,10 +1124,9 @@
 
                 channel.subscribe('message', (msg) => {
                     const data = msg.data;
-                    addMessage(data.name, data.text, data.time, data.name === currentUser);
+                    addMessage(data.name, data.text, data.time, data.avatar, data.name === currentUser);
                 });
 
-                // دریافت پیام‌های بازی
                 channel.subscribe('game', (msg) => {
                     const data = msg.data;
                     if (data.type === 'update') {
@@ -791,9 +1141,9 @@
                     isConnected = true;
                     document.getElementById('messages').innerHTML = '';
                     addSystemMessage('✅ به سرور BITVOLT متصل شدی!');
-                    document.getElementById('onlineCount').textContent = '🟢 آنلاین';
-                    
-                    // ارسال پیام خوش‌آمدگویی
+                    document.getElementById('chatStatus').textContent = '🟢 آنلاین';
+                    updateOnlineCount();
+
                     setTimeout(() => {
                         addSystemMessage(`👋 ${currentUser} عزیز به BITVOLT خوش آمدی!`);
                     }, 500);
@@ -802,19 +1152,19 @@
                 ably.connection.on('disconnected', () => {
                     isConnected = false;
                     addSystemMessage('❌ ارتباط با سرور قطع شد!');
-                    document.getElementById('onlineCount').textContent = '🔴 قطع';
+                    document.getElementById('chatStatus').textContent = '🔴 قطع';
                 });
 
                 ably.connection.on('failed', () => {
                     isConnected = false;
                     addSystemMessage('❌ اتصال به سرور ناموفق! کلید را بررسی کن.');
-                    document.getElementById('onlineCount').textContent = '⚠️ خطا';
+                    document.getElementById('chatStatus').textContent = '⚠️ خطا';
                 });
 
             } catch (error) {
-                addSystemMessage('⚠️ خطا در اتصال به سرور! لطفاً کلید Ably را بررسی کن.');
+                addSystemMessage('⚠️ خطا در اتصال به سرور!');
                 console.error('Ably Error:', error);
-                document.getElementById('onlineCount').textContent = '⚠️ خطا';
+                document.getElementById('chatStatus').textContent = '⚠️ خطا';
             }
         }
 
@@ -823,16 +1173,37 @@
         // ==========================================
         let messages = JSON.parse(localStorage.getItem('bitvolt_messages')) || [];
         let gameHistory = JSON.parse(localStorage.getItem('bitvolt_gameHistory')) || [];
+        let onlineUsers = new Set();
 
         // ==========================================
         // راه‌اندازی اولیه
         // ==========================================
         function initApp() {
+            // تنظیم آواتار
+            if (users[currentUser]?.avatar) {
+                document.getElementById('headerAvatar').src = users[currentUser].avatar;
+            }
             updateUI();
             displayMessages();
             updateHistory();
             updateLeaderboard();
             connectAbly();
+            updateOnlineCount();
+
+            // تنظیم max برای guessNumber بر اساس نوع بازی
+            document.getElementById('gameType').addEventListener('change', function() {
+                const guessInput = document.getElementById('guessNumber');
+                if (this.value === 'jackpot') {
+                    guessInput.max = 100;
+                    guessInput.placeholder = '۱ تا ۱۰۰';
+                } else {
+                    guessInput.max = 10;
+                    guessInput.placeholder = '۱ تا ۱۰';
+                }
+                if (parseInt(guessInput.value) > parseInt(guessInput.max)) {
+                    guessInput.value = guessInput.max;
+                }
+            });
         }
 
         // ==========================================
@@ -847,20 +1218,18 @@
                 return;
             }
 
+            let avatar = users[currentUser]?.avatar || '';
             let msg = {
                 name: currentUser,
                 text: text,
                 time: new Date().toLocaleTimeString('fa-IR'),
+                avatar: avatar,
                 id: Date.now()
             };
 
-            // ذخیره محلی
             messages.push(msg);
             localStorage.setItem('bitvolt_messages', JSON.stringify(messages));
-
-            // ارسال به سرور Ably
             channel.publish('message', msg);
-
             input.value = '';
             displayMessages();
         }
@@ -875,7 +1244,9 @@
             messages.forEach(msg => {
                 let div = document.createElement('div');
                 div.className = `msg ${msg.name === currentUser ? 'me' : 'other'}`;
+                let avatarHtml = msg.avatar ? `<img class="msg-avatar" src="${msg.avatar}" alt="">` : '';
                 div.innerHTML = `
+                    ${avatarHtml}
                     <span class="msg-name">${msg.name}</span>
                     ${msg.text}
                     <span class="msg-time">${msg.time}</span>
@@ -885,15 +1256,16 @@
             container.scrollTop = container.scrollHeight;
         }
 
-        function addMessage(name, text, time, isMe) {
+        function addMessage(name, text, time, avatar, isMe) {
             let container = document.getElementById('messages');
-            // حذف پیام سیستمی
             if (container.children.length === 1 && container.children[0].classList.contains('system-msg')) {
                 container.innerHTML = '';
             }
             let div = document.createElement('div');
             div.className = `msg ${isMe ? 'me' : 'other'}`;
+            let avatarHtml = avatar ? `<img class="msg-avatar" src="${avatar}" alt="">` : '';
             div.innerHTML = `
+                ${avatarHtml}
                 <span class="msg-name">${name}</span>
                 ${text}
                 <span class="msg-time">${time}</span>
@@ -901,8 +1273,7 @@
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
 
-            // ذخیره در localStorage
-            let msg = { name, text, time, id: Date.now() };
+            let msg = { name, text, time, avatar, id: Date.now() };
             let exists = messages.some(m => m.id === msg.id);
             if (!exists) {
                 messages.push(msg);
@@ -925,16 +1296,29 @@
         function playGame() {
             let betAmount = parseInt(document.getElementById('betAmount').value);
             let guess = parseInt(document.getElementById('guessNumber').value);
+            let gameType = document.getElementById('gameType').value;
             let resultDiv = document.getElementById('gameResult');
+            let betBtn = document.getElementById('betBtn');
+
+            // ضریب‌ها
+            const multipliers = {
+                normal: { multiplier: 2, max: 10 },
+                medium: { multiplier: 5, max: 10 },
+                hard: { multiplier: 10, max: 10 },
+                jackpot: { multiplier: 50, max: 100 }
+            };
+
+            const currentGame = multipliers[gameType];
+            const maxNum = currentGame.max;
 
             if (isNaN(betAmount) || betAmount < 100) {
                 resultDiv.className = 'game-result lose';
                 resultDiv.innerHTML = '❌ حداقل شرط ۱۰۰ تومان است!';
                 return;
             }
-            if (isNaN(guess) || guess < 1 || guess > 10) {
+            if (isNaN(guess) || guess < 1 || guess > maxNum) {
                 resultDiv.className = 'game-result lose';
-                resultDiv.innerHTML = '❌ عدد را بین ۱ تا ۱۰ انتخاب کن!';
+                resultDiv.innerHTML = `❌ عدد را بین ۱ تا ${maxNum} انتخاب کن!`;
                 return;
             }
 
@@ -945,45 +1329,64 @@
                 return;
             }
 
-            let randomNum = Math.floor(Math.random() * 10) + 1;
-            let win = (guess === randomNum);
-            let winAmount = win ? betAmount * 10 : 0;
+            betBtn.disabled = true;
+            betBtn.textContent = '⏳ در حال پردازش...';
 
-            if (win) {
-                user.balance += winAmount;
-                user.gamesWon += 1;
-                resultDiv.className = 'game-result win';
-                resultDiv.innerHTML = `🎉 برد! عدد ${randomNum} بود! ${winAmount.toLocaleString()} تومان بردی!`;
-            } else {
-                user.balance -= betAmount;
-                resultDiv.className = 'game-result lose';
-                resultDiv.innerHTML = `😢 باختی! عدد ${randomNum} بود. ${betAmount.toLocaleString()} تومان از دست دادی!`;
-            }
+            setTimeout(() => {
+                let randomNum = Math.floor(Math.random() * maxNum) + 1;
+                let win = (guess === randomNum);
+                let winAmount = win ? Math.floor(betAmount * currentGame.multiplier) : 0;
+                let isJackpot = win && gameType === 'jackpot';
 
-            user.gamesPlayed += 1;
-            users[currentUser] = user;
-            localStorage.setItem('bitvolt_users', JSON.stringify(users));
+                if (win) {
+                    user.balance += winAmount;
+                    user.gamesWon += 1;
+                    if (winAmount > user.biggestWin) {
+                        user.biggestWin = winAmount;
+                    }
 
-            gameHistory.unshift({
-                user: currentUser,
-                bet: betAmount,
-                guess: guess,
-                result: randomNum,
-                win: win,
-                amount: winAmount,
-                time: new Date().toLocaleTimeString('fa-IR')
-            });
-            if (gameHistory.length > 50) gameHistory.pop();
-            localStorage.setItem('bitvolt_gameHistory', JSON.stringify(gameHistory));
+                    if (isJackpot) {
+                        resultDiv.className = 'game-result jackpot';
+                        resultDiv.innerHTML = `🎉🎉 جکپات! عدد ${randomNum} بود! ${winAmount.toLocaleString()} تومان بردی! 🎉🎉`;
+                        showToast(`🎉 جکپات! ${winAmount.toLocaleString()} تومان بردی!`, 'success');
+                    } else {
+                        resultDiv.className = 'game-result win';
+                        resultDiv.innerHTML = `🎉 برد! عدد ${randomNum} بود! ${winAmount.toLocaleString()} تومان بردی! (ضریب ${currentGame.multiplier}x)`;
+                    }
+                } else {
+                    user.balance -= betAmount;
+                    resultDiv.className = 'game-result lose';
+                    resultDiv.innerHTML = `😢 باختی! عدد ${randomNum} بود. ${betAmount.toLocaleString()} تومان از دست دادی!`;
+                }
 
-            // ارسال به سرور برای همگام‌سازی
-            if (isConnected && channel) {
-                channel.publish('game', { type: 'update', history: gameHistory });
-            }
+                user.gamesPlayed += 1;
+                users[currentUser] = user;
+                localStorage.setItem('bitvolt_users', JSON.stringify(users));
 
-            updateUI();
-            updateHistory();
-            updateLeaderboard();
+                gameHistory.unshift({
+                    user: currentUser,
+                    bet: betAmount,
+                    guess: guess,
+                    result: randomNum,
+                    win: win,
+                    amount: winAmount,
+                    gameType: gameType,
+                    multiplier: currentGame.multiplier,
+                    time: new Date().toLocaleTimeString('fa-IR')
+                });
+                if (gameHistory.length > 50) gameHistory.pop();
+                localStorage.setItem('bitvolt_gameHistory', JSON.stringify(gameHistory));
+
+                if (isConnected && channel) {
+                    channel.publish('game', { type: 'update', history: gameHistory });
+                }
+
+                updateUI();
+                updateHistory();
+                updateLeaderboard();
+                betBtn.disabled = false;
+                betBtn.textContent = '🎲 شرط ببند';
+            }, 800);
         }
 
         function updateHistory() {
@@ -991,9 +1394,15 @@
             container.innerHTML = '';
             gameHistory.slice(0, 20).forEach(item => {
                 let div = document.createElement('div');
-                div.className = `history-item ${item.win ? 'win' : 'lose'}`;
+                let className = 'history-item';
+                if (item.win && item.gameType === 'jackpot') className += ' jackpot';
+                else if (item.win) className += ' win';
+                else className += ' lose';
+                div.className = className;
+                let emoji = item.win ? '🎉' : '😢';
+                if (item.gameType === 'jackpot' && item.win) emoji = '💎';
                 div.innerHTML = `
-                    <span>${item.user}: ${item.win ? '🎉 برد' : '😢 باخت'} (حدس: ${item.guess} | عدد: ${item.result})</span>
+                    <span>${emoji} ${item.user}: ${item.win ? 'برد' : 'باخت'} (حدس: ${item.guess} | عدد: ${item.result})</span>
                     <span>${item.win ? '+' : '-'}${item.win ? item.amount : item.bet} تومان</span>
                 `;
                 container.appendChild(div);
@@ -1009,7 +1418,9 @@
                 name: key,
                 balance: users[key].balance,
                 wins: users[key].gamesWon || 0,
-                games: users[key].gamesPlayed || 0
+                games: users[key].gamesPlayed || 0,
+                biggestWin: users[key].biggestWin || 0,
+                avatar: users[key].avatar || ''
             })).sort((a, b) => b.balance - a.balance);
 
             container.innerHTML = '';
@@ -1021,14 +1432,37 @@
                 else if (index === 2) rankClass = 'top3';
 
                 div.className = `leaderboard-item ${rankClass}`;
+                let avatarHtml = user.avatar ? `<img class="avatar-mini" src="${user.avatar}" alt="">` :
+                    `<span style="margin-left:10px;">👤</span>`;
                 div.innerHTML = `
                     <span class="rank">#${index + 1}</span>
+                    ${avatarHtml}
                     <span class="name">${user.name} ${index === 0 ? '👑' : ''}</span>
                     <span class="score">💰 ${user.balance.toLocaleString()} تومان</span>
+                    <span class="wins">🏆 ${user.wins} برد</span>
                 `;
                 container.appendChild(div);
             });
         }
+
+        // ==========================================
+        // تعداد آنلاین‌ها
+        // ==========================================
+        function updateOnlineCount() {
+            onlineUsers.add(currentUser);
+            // شبیه‌سازی کاربران دیگر
+            const fakeUsers = ['Ali_Reza', 'Sara_2024', 'Milad_Pro', 'Nazanin_Art', 'Hossein_Dev', 'Maryam_Star', 'Amir_Dev',
+                'Zahra_Code'
+            ];
+            fakeUsers.forEach(u => {
+                if (users[u] && u !== currentUser && Math.random() < 0.3) {
+                    onlineUsers.add(u);
+                }
+            });
+            document.getElementById('onlineCount').textContent = onlineUsers.size;
+        }
+
+        setInterval(updateOnlineCount, 15000);
 
         // ==========================================
         // توابع UI
@@ -1040,6 +1474,7 @@
             document.getElementById('gameBalance').textContent = `${user.balance.toLocaleString()} تومان`;
             document.getElementById('winsCount').textContent = user.gamesWon || 0;
             document.getElementById('gamesCount').textContent = user.gamesPlayed || 0;
+            document.getElementById('biggestWin').textContent = (user.biggestWin || 0).toLocaleString();
         }
 
         function switchTab(tab) {
@@ -1053,15 +1488,45 @@
             if (tab === 'game') updateHistory();
         }
 
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            showToast(document.body.classList.contains('light-mode') ? '☀️ حالت روشن' : '🌙 حالت تاریک', 'info');
+        }
+
         function logout() {
             localStorage.removeItem('bitvolt_currentUser');
             location.reload();
         }
 
-        console.log('💎 BITVOLT.MTV - پیام‌رسان فوق‌لوکس با Ably');
+        // ==========================================
+        // Toast
+        // ==========================================
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast show ${type}`;
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ==========================================
+        // همگام‌سازی پیام‌ها
+        // ==========================================
+        setInterval(() => {
+            let saved = JSON.parse(localStorage.getItem('bitvolt_messages')) || [];
+            if (saved.length !== messages.length) {
+                messages = saved;
+                displayMessages();
+            }
+        }, 3000);
+
+        console.log('💎 BITVOLT.MTV -با مدیریت علیخا');
         console.log('👤 کاربر فعلی:', currentUser);
         console.log('💰 موجودی:', users[currentUser]?.balance || 0);
         console.log('🔑 کلید Ably:', ABLY_API_KEY !== 'ZzBHQA.1SMLhA:AOCFng9tCNYHmiOQD3GqnaE_DxW2lizdaJUnZcQpj-E' ? '✅ تنظیم شده' : '❌ تنظیم نشده');
+        console.log('🎮 ۴ نوع بازی: ساده(۲x) | متوسط(۵x) | سخت(۱۰x) | جکپات(۵۰x)');
     </script>
 
 </body>
