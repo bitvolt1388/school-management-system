@@ -183,17 +183,6 @@
         .login-box .btn-secondary:hover {
             border-color: var(--gold);
         }
-        .login-box .link {
-            text-align: center;
-            color: var(--text-secondary);
-            margin-top: 15px;
-            font-size: 13px;
-        }
-        .login-box .link a {
-            color: var(--gold);
-            cursor: pointer;
-            font-weight: 600;
-        }
         .login-box .footer {
             text-align: center;
             color: rgba(255, 255, 255, 0.06);
@@ -763,6 +752,7 @@
             font-family: inherit;
             resize: vertical;
             min-height: 50px;
+            max-height: 120px;
         }
         .profile-card .profile-edit textarea:focus {
             border-color: var(--gold);
@@ -1018,8 +1008,8 @@
                 <input type="file" id="avatarInput" class="avatar-upload" accept="image/*" onchange="previewAvatar(event)">
             </div>
 
-            <input type="text" id="loginUser" placeholder="👤 نام کاربری">
-            <input type="password" id="loginPass" placeholder="🔑 رمز عبور">
+            <input type="text" id="loginUser" placeholder="👤 نام کاربری" maxlength="20">
+            <input type="password" id="loginPass" placeholder="🔑 رمز عبور (حداقل ۴ کاراکتر)" minlength="4">
 
             <button class="btn" onclick="handleLogin()">🚀 ورود</button>
             <button class="btn btn-secondary" onclick="handleRegister()">📝 ثبت‌نام</button>
@@ -1135,7 +1125,7 @@
                         <div class="stat"><div class="num" id="profileGames">۰</div><div class="label">بازی</div></div>
                     </div>
                     <div class="profile-edit">
-                        <textarea id="editBio" placeholder="بیوگرافی جدید..."></textarea>
+                        <textarea id="editBio" placeholder="بیوگرافی جدید..." maxlength="200"></textarea>
                         <button class="btn-save" onclick="saveBio()">💾 ذخیره بیوگرافی</button>
                     </div>
                 </div>
@@ -1169,16 +1159,44 @@
     <!-- ========================================== -->
     <script>
         // ==========================================
-        // 🔑 کلید Ably (برای چت)
+        // 🔑 کلید Ably (تنظیم شده با کلید شما)
         // ==========================================
         const ABLY_API_KEY = 'ZzBHQA.1SMLhA:AOCFng9tCNYHmiOQD3GqnaE_DxW2lizdaJUnZcQpj-E';
 
         // ==========================================
-        // مدیریت کاربران (در LocalStorage)
+        // مدیریت کاربران (با هش ساده رمز)
         // ==========================================
         let users = JSON.parse(localStorage.getItem('bitvolt_users')) || {};
         let currentUser = localStorage.getItem('bitvolt_currentUser');
         let userData = null;
+
+        // ==========================================
+        // توابع امنیتی
+        // ==========================================
+        function sanitizeText(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function hashPassword(password) {
+            let hash = 0;
+            for (let i = 0; i < password.length; i++) {
+                const char = password.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return 'hashed_' + hash.toString(36);
+        }
+
+        function validateUsername(username) {
+            const regex = /^[a-zA-Z0-9_\u0600-\u06FF]{3,20}$/;
+            return regex.test(username);
+        }
+
+        function validatePassword(password) {
+            return password.length >= 4;
+        }
 
         // ==========================================
         // Ably
@@ -1186,30 +1204,35 @@
         let ably = null;
         let channel = null;
         let isConnected = false;
+        let reconnectAttempts = 0;
+        const MAX_RECONNECT_ATTEMPTS = 5;
 
         // ==========================================
         // متغیرهای اصلی
         // ==========================================
         let messages = JSON.parse(localStorage.getItem('bitvolt_messages')) || [];
         let gameHistory = JSON.parse(localStorage.getItem('bitvolt_gameHistory')) || [];
+        let messageIds = new Set(messages.map(m => m.id));
 
         // ==========================================
         // لاگین
         // ==========================================
         function previewAvatar(event) {
             const file = event.target.files[0];
-            if (file) {
+            if (file && file.size <= 2 * 1024 * 1024) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('avatarPreview').src = e.target.result;
                 };
                 reader.readAsDataURL(file);
+            } else {
+                showToast('❌ حجم عکس باید کمتر از ۲ مگابایت باشد!', 'error');
             }
         }
 
         function previewAvatar2(event) {
             const file = event.target.files[0];
-            if (file && currentUser) {
+            if (file && file.size <= 2 * 1024 * 1024 && currentUser) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('headerAvatar').src = e.target.result;
@@ -1220,12 +1243,14 @@
                     }
                 };
                 reader.readAsDataURL(file);
+            } else {
+                showToast('❌ حجم عکس باید کمتر از ۲ مگابایت باشد!', 'error');
             }
         }
 
         function previewAvatar3(event) {
             const file = event.target.files[0];
-            if (file && currentUser) {
+            if (file && file.size <= 2 * 1024 * 1024 && currentUser) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('profileAvatar').src = e.target.result;
@@ -1236,6 +1261,8 @@
                     }
                 };
                 reader.readAsDataURL(file);
+            } else {
+                showToast('❌ حجم عکس باید کمتر از ۲ مگابایت باشد!', 'error');
             }
         }
 
@@ -1243,8 +1270,12 @@
             let username = document.getElementById('loginUser').value.trim();
             let password = document.getElementById('loginPass').value.trim();
 
-            if (!username || !password) {
-                showToast('❌ نام و رمز را وارد کن!', 'error');
+            if (!validateUsername(username)) {
+                showToast('❌ نام کاربری باید ۳ تا ۲۰ کاراکتر و شامل حروف یا اعداد باشد!', 'error');
+                return;
+            }
+            if (!validatePassword(password)) {
+                showToast('❌ رمز عبور باید حداقل ۴ کاراکتر باشد!', 'error');
                 return;
             }
             if (users[username]) {
@@ -1253,9 +1284,10 @@
             }
 
             let avatar = document.getElementById('avatarPreview').src;
+            const hashedPass = hashPassword(password);
 
             users[username] = {
-                password: password,
+                password: hashedPass,
                 balance: 1000000,
                 gamesPlayed: 0,
                 gamesWon: 0,
@@ -1272,15 +1304,17 @@
             let username = document.getElementById('loginUser').value.trim();
             let password = document.getElementById('loginPass').value.trim();
 
-            if (!username || !password) {
-                showToast('❌ نام و رمز را وارد کن!', 'error');
+            if (!validateUsername(username)) {
+                showToast('❌ نام کاربری معتبر نیست!', 'error');
                 return;
             }
             if (!users[username]) {
                 showToast('❌ کاربری با این نام وجود نداره! ثبت‌نام کن.', 'error');
                 return;
             }
-            if (users[username].password !== password) {
+
+            const hashedPass = hashPassword(password);
+            if (users[username].password !== hashedPass) {
                 showToast('❌ رمز عبور اشتباهه!', 'error');
                 return;
             }
@@ -1290,6 +1324,12 @@
             userData = users[username];
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('appPage').style.display = 'flex';
+
+            const savedTheme = localStorage.getItem('bitvolt_theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+            }
+
             initApp();
         }
 
@@ -1300,50 +1340,74 @@
         });
 
         // ==========================================
-        // اتصال به Ably
+        // اتصال به Ably با reconnect
         // ==========================================
         function connectAbly() {
             try {
-                ably = new Ably.Realtime(ABLY_API_KEY);
+                ably = new Ably.Realtime({
+                    key: ABLY_API_KEY,
+                    clientId: currentUser || 'anonymous'
+                });
+
                 channel = ably.channels.get('bitvolt-chat');
 
                 channel.subscribe('message', (msg) => {
                     const data = msg.data;
-                    addMessage(data.name, data.text, data.time, data.avatar, data.type, data.media, data.name ===
-                        currentUser);
-                    if (users[data.name]) {
-                        if (!users[data.name].messages) users[data.name].messages = [];
-                        users[data.name].messages.push(data);
-                        localStorage.setItem('bitvolt_users', JSON.stringify(users));
+                    if (!messageIds.has(data.id)) {
+                        messageIds.add(data.id);
+                        addMessage(data.name, data.text, data.time, data.avatar, data.type, data.media, data.name ===
+                            currentUser);
+                        if (users[data.name]) {
+                            if (!users[data.name].messages) users[data.name].messages = [];
+                            if (users[data.name].messages.length < 200) {
+                                users[data.name].messages.push(data);
+                                localStorage.setItem('bitvolt_users', JSON.stringify(users));
+                            }
+                        }
                     }
                 });
 
                 ably.connection.on('connected', () => {
                     isConnected = true;
+                    reconnectAttempts = 0;
                     document.getElementById('messages').innerHTML = '';
                     addSystemMessage('✅ به سرور BITVOLT متصل شدی!');
                     document.getElementById('chatStatus').textContent = '🟢 آنلاین';
                     loadUserMessages();
                     setTimeout(() => {
-                        addSystemMessage(`👋 ${currentUser} عزیز به BITVOLT خوش آمدی!`);
+                        addSystemMessage(`👋 ${sanitizeText(currentUser)} عزیز به BITVOLT خوش آمدی!`);
                     }, 500);
                 });
 
                 ably.connection.on('disconnected', () => {
                     isConnected = false;
-                    addSystemMessage('❌ ارتباط با سرور قطع شد!');
+                    addSystemMessage('❌ ارتباط با سرور قطع شد! در حال تلاش مجدد...');
                     document.getElementById('chatStatus').textContent = '🔴 قطع';
+                    handleReconnect();
                 });
 
                 ably.connection.on('failed', () => {
                     isConnected = false;
                     addSystemMessage('❌ اتصال به سرور ناموفق!');
                     document.getElementById('chatStatus').textContent = '⚠️ خطا';
+                    handleReconnect();
                 });
 
             } catch (error) {
                 addSystemMessage('⚠️ خطا در اتصال به سرور!');
                 document.getElementById('chatStatus').textContent = '⚠️ خطا';
+                console.error('Ably Error:', error);
+            }
+        }
+
+        function handleReconnect() {
+            if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+                reconnectAttempts++;
+                setTimeout(() => {
+                    if (!isConnected) {
+                        connectAbly();
+                    }
+                }, 3000 * reconnectAttempts);
             }
         }
 
@@ -1362,19 +1426,24 @@
             connectAbly();
             updateProfile();
             loadUserMessages();
+            updateOnlineCount();
         }
 
         function loadUserMessages() {
             if (users[currentUser]?.messages) {
-                users[currentUser].messages.forEach(msg => {
-                    addMessage(msg.name, msg.text, msg.time, msg.avatar, msg.type, msg.media, msg.name ===
-                        currentUser);
+                const userMessages = users[currentUser].messages;
+                userMessages.forEach(msg => {
+                    if (!messageIds.has(msg.id)) {
+                        messageIds.add(msg.id);
+                        addMessage(msg.name, msg.text, msg.time, msg.avatar, msg.type, msg.media, msg.name ===
+                            currentUser);
+                    }
                 });
             }
         }
 
         // ==========================================
-        // چت
+        // چت با XSS Protection
         // ==========================================
         function sendMessage() {
             let input = document.getElementById('msgInput');
@@ -1392,10 +1461,15 @@
                 time: new Date().toLocaleTimeString('fa-IR'),
                 avatar: avatar,
                 type: 'text',
-                id: Date.now()
+                id: Date.now() + '_' + Math.random().toString(36).substr(2, 5)
             };
 
             messages.push(msg);
+            messageIds.add(msg.id);
+            if (messages.length > 500) {
+                const removed = messages.shift();
+                messageIds.delete(removed.id);
+            }
             localStorage.setItem('bitvolt_messages', JSON.stringify(messages));
             channel.publish('message', msg);
             input.value = '';
@@ -1405,6 +1479,12 @@
         function sendImage(event) {
             const file = event.target.files[0];
             if (!file || !isConnected) return;
+
+            if (file.size > 2 * 1024 * 1024) {
+                showToast('❌ حجم عکس باید کمتر از ۲ مگابایت باشد!', 'error');
+                event.target.value = '';
+                return;
+            }
 
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -1416,9 +1496,14 @@
                     avatar: avatar,
                     type: 'image',
                     media: e.target.result,
-                    id: Date.now()
+                    id: Date.now() + '_' + Math.random().toString(36).substr(2, 5)
                 };
                 messages.push(msg);
+                messageIds.add(msg.id);
+                if (messages.length > 500) {
+                    const removed = messages.shift();
+                    messageIds.delete(removed.id);
+                }
                 localStorage.setItem('bitvolt_messages', JSON.stringify(messages));
                 channel.publish('message', msg);
                 displayMessages();
@@ -1449,6 +1534,10 @@
                     mediaRecorder.ondataavailable = e => chunks.push(e.data);
                     mediaRecorder.onstop = function() {
                         const blob = new Blob(chunks, { type: 'audio/webm' });
+                        if (blob.size > 2 * 1024 * 1024) {
+                            showToast('❌ حجم ویس باید کمتر از ۲ مگابایت باشد!', 'error');
+                            return;
+                        }
                         const reader = new FileReader();
                         reader.onload = function(e) {
                             let avatar = userData?.avatar || '';
@@ -1459,9 +1548,14 @@
                                 avatar: avatar,
                                 type: 'audio',
                                 media: e.target.result,
-                                id: Date.now()
+                                id: Date.now() + '_' + Math.random().toString(36).substr(2, 5)
                             };
                             messages.push(msg);
+                            messageIds.add(msg.id);
+                            if (messages.length > 500) {
+                                const removed = messages.shift();
+                                messageIds.delete(removed.id);
+                            }
                             localStorage.setItem('bitvolt_messages', JSON.stringify(messages));
                             channel.publish('message', msg);
                             displayMessages();
@@ -1487,9 +1581,9 @@
                 return;
             }
             messages.forEach(msg => {
-                let div = document.createElement('div');
+                const div = document.createElement('div');
                 div.className = `msg ${msg.name === currentUser ? 'me' : 'other'}`;
-                let avatarHtml = msg.avatar ? `<img class="msg-avatar" src="${msg.avatar}" alt="">` : '';
+                const avatarHtml = msg.avatar ? `<img class="msg-avatar" src="${msg.avatar}" alt="">` : '';
                 let mediaHtml = '';
                 if (msg.type === 'image' && msg.media) {
                     mediaHtml = `<img class="msg-media" src="${msg.media}" alt="عکس">`;
@@ -1498,10 +1592,10 @@
                 }
                 div.innerHTML = `
                     ${avatarHtml}
-                    <span class="msg-name">${msg.name}</span>
-                    ${msg.text}
+                    <span class="msg-name">${sanitizeText(msg.name)}</span>
+                    ${sanitizeText(msg.text)}
                     ${mediaHtml}
-                    <span class="msg-time">${msg.time}</span>
+                    <span class="msg-time">${sanitizeText(msg.time)}</span>
                 `;
                 container.appendChild(div);
             });
@@ -1513,9 +1607,9 @@
             if (container.children.length === 1 && container.children[0].classList.contains('system-msg')) {
                 container.innerHTML = '';
             }
-            let div = document.createElement('div');
+            const div = document.createElement('div');
             div.className = `msg ${isMe ? 'me' : 'other'}`;
-            let avatarHtml = avatar ? `<img class="msg-avatar" src="${avatar}" alt="">` : '';
+            const avatarHtml = avatar ? `<img class="msg-avatar" src="${avatar}" alt="">` : '';
             let mediaHtml = '';
             if (type === 'image' && media) {
                 mediaHtml = `<img class="msg-media" src="${media}" alt="عکس">`;
@@ -1524,10 +1618,10 @@
             }
             div.innerHTML = `
                 ${avatarHtml}
-                <span class="msg-name">${name}</span>
-                ${text}
+                <span class="msg-name">${sanitizeText(name)}</span>
+                ${sanitizeText(text)}
                 ${mediaHtml}
-                <span class="msg-time">${time}</span>
+                <span class="msg-time">${sanitizeText(time)}</span>
             `;
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
@@ -1535,7 +1629,7 @@
 
         function addSystemMessage(text) {
             let container = document.getElementById('messages');
-            let div = document.createElement('div');
+            const div = document.createElement('div');
             div.className = 'system-msg';
             div.textContent = text;
             container.appendChild(div);
@@ -1564,19 +1658,19 @@
 
             if (isNaN(betAmount) || betAmount < 100) {
                 resultDiv.className = 'game-result lose';
-                resultDiv.innerHTML = '❌ حداقل شرط ۱۰۰ تومان است!';
+                resultDiv.textContent = '❌ حداقل شرط ۱۰۰ تومان است!';
                 return;
             }
             if (isNaN(guess) || guess < 1 || guess > maxNum) {
                 resultDiv.className = 'game-result lose';
-                resultDiv.innerHTML = `❌ عدد را بین ۱ تا ${maxNum} انتخاب کن!`;
+                resultDiv.textContent = `❌ عدد را بین ۱ تا ${maxNum} انتخاب کن!`;
                 return;
             }
 
             let user = users[currentUser];
             if (betAmount > user.balance) {
                 resultDiv.className = 'game-result lose';
-                resultDiv.innerHTML = '❌ موجودی کافی نیست!';
+                resultDiv.textContent = '❌ موجودی کافی نیست!';
                 return;
             }
 
@@ -1597,18 +1691,18 @@
                     }
                     if (isJackpot) {
                         resultDiv.className = 'game-result jackpot';
-                        resultDiv.innerHTML =
+                        resultDiv.textContent =
                             `🎉🎉 جکپات! عدد ${randomNum} بود! ${winAmount.toLocaleString()} تومان بردی! 🎉🎉`;
                         showToast(`🎉 جکپات! ${winAmount.toLocaleString()} تومان بردی!`, 'success');
                     } else {
                         resultDiv.className = 'game-result win';
-                        resultDiv.innerHTML =
+                        resultDiv.textContent =
                             `🎉 برد! عدد ${randomNum} بود! ${winAmount.toLocaleString()} تومان بردی! (ضریب ${currentGame.multiplier}x)`;
                     }
                 } else {
                     user.balance -= betAmount;
                     resultDiv.className = 'game-result lose';
-                    resultDiv.innerHTML =
+                    resultDiv.textContent =
                         `😢 باختی! عدد ${randomNum} بود. ${betAmount.toLocaleString()} تومان از دست دادی!`;
                 }
 
@@ -1643,16 +1737,16 @@
             let container = document.getElementById('historyList');
             container.innerHTML = '';
             gameHistory.slice(0, 20).forEach(item => {
-                let div = document.createElement('div');
+                const div = document.createElement('div');
                 let className = 'history-item';
                 if (item.win && item.gameType === 'expert') className += ' jackpot';
                 else if (item.win) className += ' win';
                 else className += ' lose';
                 div.className = className;
-                let emoji = item.win ? '🎉' : '😢';
+                const emoji = item.win ? '🎉' : '😢';
                 if (item.gameType === 'expert' && item.win) emoji = '💎';
                 div.innerHTML = `
-                    <span>${emoji} ${item.user}: ${item.win ? 'برد' : 'باخت'} (حدس: ${item.guess} | عدد: ${item.result})</span>
+                    <span>${emoji} ${sanitizeText(item.user)}: ${item.win ? 'برد' : 'باخت'} (حدس: ${item.guess} | عدد: ${item.result})</span>
                     <span>${item.win ? '+' : '-'}${item.win ? item.amount : item.bet} تومان</span>
                 `;
                 container.appendChild(div);
@@ -1665,7 +1759,7 @@
         function updateProfile() {
             let user = users[currentUser];
             if (!user) return;
-            document.getElementById('profileName').innerHTML = `👤 <span>${currentUser}</span>`;
+            document.getElementById('profileName').innerHTML = `👤 <span>${sanitizeText(currentUser)}</span>`;
             document.getElementById('profileBio').textContent = user.bio || '💬 بیوگرافی خود را اینجا بنویس...';
             document.getElementById('profileBalance').textContent = user.balance.toLocaleString();
             document.getElementById('profileWins').textContent = user.gamesWon || 0;
@@ -1707,18 +1801,18 @@
 
             container.innerHTML = '';
             sorted.forEach((user, index) => {
-                let div = document.createElement('div');
+                const div = document.createElement('div');
                 let rankClass = '';
                 if (index === 0) rankClass = 'top1';
                 else if (index === 1) rankClass = 'top2';
                 else if (index === 2) rankClass = 'top3';
                 div.className = `leaderboard-item ${rankClass}`;
-                let avatarHtml = user.avatar ? `<img class="avatar-mini" src="${user.avatar}" alt="">` :
+                const avatarHtml = user.avatar ? `<img class="avatar-mini" src="${user.avatar}" alt="">` :
                     `<span style="margin-left:8px;">👤</span>`;
                 div.innerHTML = `
                     <span class="rank">#${index + 1}</span>
                     ${avatarHtml}
-                    <span class="name">${user.name} ${index === 0 ? '👑' : ''}</span>
+                    <span class="name">${sanitizeText(user.name)} ${index === 0 ? '👑' : ''}</span>
                     <span class="score">💰 ${user.balance.toLocaleString()} تومان</span>
                     <span class="wins">🏆 ${user.wins} برد</span>
                 `;
@@ -1744,7 +1838,7 @@
         function updateUI() {
             let user = users[currentUser];
             if (!user) return;
-            document.getElementById('userDisplay').textContent = `👤 ${currentUser}`;
+            document.getElementById('userDisplay').textContent = `👤 ${sanitizeText(currentUser)}`;
             document.getElementById('balanceDisplay').textContent = `💰 ${user.balance.toLocaleString()} تومان`;
             document.getElementById('gameBalance').textContent = `${user.balance.toLocaleString()} تومان`;
             document.getElementById('winsCount').textContent = user.gamesWon || 0;
@@ -1766,13 +1860,28 @@
 
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
-            showToast(document.body.classList.contains('light-mode') ? '☀️ حالت روشن' : '🌙 حالت تاریک', 'info');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('bitvolt_theme', isLight ? 'light' : 'dark');
+            showToast(isLight ? '☀️ حالت روشن' : '🌙 حالت تاریک', 'info');
         }
 
         function logout() {
+            if (ably) {
+                ably.close();
+            }
             localStorage.removeItem('bitvolt_currentUser');
             location.reload();
         }
+
+        // ==========================================
+        // Online Count
+        // ==========================================
+        function updateOnlineCount() {
+            const count = Math.floor(Math.random() * 15) + 1;
+            document.getElementById('onlineCount').textContent = count;
+        }
+
+        setInterval(updateOnlineCount, 15000);
 
         // ==========================================
         // Toast
@@ -1788,27 +1897,23 @@
         }
 
         // ==========================================
-        // آنلاین
-        // ==========================================
-        setInterval(() => {
-            document.getElementById('onlineCount').textContent = Math.floor(Math.random() * 5) + 1;
-        }, 10000);
-
-        // ==========================================
         // همگام‌سازی
         // ==========================================
         setInterval(() => {
             let saved = JSON.parse(localStorage.getItem('bitvolt_messages')) || [];
             if (saved.length !== messages.length) {
                 messages = saved;
+                messageIds = new Set(messages.map(m => m.id));
                 displayMessages();
             }
-        }, 3000);
+        }, 5000);
 
         // ==========================================
         // کنسول
         // ==========================================
         console.log('💎 BITVOLT.MTV - با مدیریت عیلیخا');
+        console.log('🔑 کلید Ably: ✅ تنظیم شده');
+        console.log('🔒 امنیت: XSS Protection + هش رمز');
         console.log('🎯 ۴ سطح بازی: آسان(۲x) | متوسط(۵x) | سخت(۱۰x) | حرفه‌ای(۲۵x)');
         console.log('💬 برای چت با دوستان، فایل رو به اشتراک بذار!');
     </script>
