@@ -959,7 +959,7 @@
                         </div>
                     </div>
                     <div class="bet-input-group">
-                        <label>🎯 حدس عدد (۱ تا ${document.getElementById('gameType')?.value === 'jackpot' ? '100' : '10'}):</label>
+                        <label>🎯 حدس عدد (۱ تا ۱۰):</label>
                         <input type="number" id="guessNumber" min="1" max="10" value="5">
                     </div>
                     <button class="btn-bet" id="betBtn" onclick="playGame()">🎲 شرط ببند</button>
@@ -995,7 +995,7 @@
         // ==========================================
         // 🔑 کلید Ably - کلید خودت رو اینجا بذار
         // ==========================================
-        const ABLY_API_KEY = 'YOUR_ABLY_API_KEY'; // <-- کلیدت رو اینجا بذار!
+        const ABLY_API_KEY = 'ZzBHQA.1SMLhA:AOCFng9tCNYHmiOQD3GqnaE_DxW2lizdaJUnZcQpj-E';
 
         // ==========================================
         // مدیریت کاربران
@@ -1347,16 +1347,19 @@
 
                     if (isJackpot) {
                         resultDiv.className = 'game-result jackpot';
-                        resultDiv.innerHTML = `🎉🎉 جکپات! عدد ${randomNum} بود! ${winAmount.toLocaleString()} تومان بردی! 🎉🎉`;
+                        resultDiv.innerHTML =
+                        `🎉🎉 جکپات! عدد ${randomNum} بود! ${winAmount.toLocaleString()} تومان بردی! 🎉🎉`;
                         showToast(`🎉 جکپات! ${winAmount.toLocaleString()} تومان بردی!`, 'success');
                     } else {
                         resultDiv.className = 'game-result win';
-                        resultDiv.innerHTML = `🎉 برد! عدد ${randomNum} بود! ${winAmount.toLocaleString()} تومان بردی! (ضریب ${currentGame.multiplier}x)`;
+                        resultDiv.innerHTML =
+                            `🎉 برد! عدد ${randomNum} بود! ${winAmount.toLocaleString()} تومان بردی! (ضریب ${currentGame.multiplier}x)`;
                     }
                 } else {
                     user.balance -= betAmount;
                     resultDiv.className = 'game-result lose';
-                    resultDiv.innerHTML = `😢 باختی! عدد ${randomNum} بود. ${betAmount.toLocaleString()} تومان از دست دادی!`;
+                    resultDiv.innerHTML =
+                        `😢 باختی! عدد ${randomNum} بود. ${betAmount.toLocaleString()} تومان از دست دادی!`;
                 }
 
                 user.gamesPlayed += 1;
@@ -1522,10 +1525,10 @@
             }
         }, 3000);
 
-        console.log('💎 BITVOLT.MTV -با مدیریت علیخا');
+        console.log('💎 BITVOLT.MTV - با مدیریت علیخا');
         console.log('👤 کاربر فعلی:', currentUser);
         console.log('💰 موجودی:', users[currentUser]?.balance || 0);
-        console.log('🔑 کلید Ably:', ABLY_API_KEY !== 'ZzBHQA.1SMLhA:AOCFng9tCNYHmiOQD3GqnaE_DxW2lizdaJUnZcQpj-E' ? '✅ تنظیم شده' : '❌ تنظیم نشده');
+        console.log('🔑 کلید Ably: ✅ تنظیم شده');
         console.log('🎮 ۴ نوع بازی: ساده(۲x) | متوسط(۵x) | سخت(۱۰x) | جکپات(۵۰x)');
     </script>
 
