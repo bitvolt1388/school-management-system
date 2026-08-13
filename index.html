@@ -71,6 +71,15 @@
                 transform: scale(1.05);
             }
         }
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
         @keyframes shimmer {
             0% {
                 background-position: -200% 0;
@@ -79,45 +88,74 @@
                 background-position: 200% 0;
             }
         }
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 20px rgba(247, 151, 30, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 60px rgba(247, 151, 30, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 20px rgba(247, 151, 30, 0.2);
+            }
+        }
 
         /* ====================================== */
-        /* LOGIN PAGE */
+        /* LOGIN PAGE - حرفه‌ای */
         /* ====================================== */
         #loginPage {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: radial-gradient(ellipse at center, #1a1a3e, #0f0c29);
+            background: radial-gradient(ellipse at 30% 50%, #1a1a3e, #0f0c29);
             position: relative;
             overflow: hidden;
         }
         #loginPage::before {
             content: '';
             position: absolute;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(247, 151, 30, 0.08), transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            top: -200px;
+            right: -200px;
+        }
+        #loginPage::after {
+            content: '';
+            position: absolute;
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, rgba(247, 151, 30, 0.1), transparent 70%);
+            background: radial-gradient(circle, rgba(247, 151, 30, 0.05), transparent 70%);
             border-radius: 50%;
-            animation: pulse 4s ease-in-out infinite;
+            animation: float 8s ease-in-out infinite reverse;
+            bottom: -150px;
+            left: -150px;
         }
         .login-box {
             position: relative;
             z-index: 1;
             background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 30px;
-            padding: 50px 40px;
-            width: 420px;
-            box-shadow: var(--shadow);
+            padding: 40px 35px;
+            width: 430px;
+            box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
             animation: fadeIn 0.8s ease;
+            transition: var(--transition);
+        }
+        .login-box:hover {
+            border-color: rgba(247, 151, 30, 0.2);
         }
         .login-box .logo {
             text-align: center;
-            font-size: 42px;
+            font-size: 44px;
             font-weight: 900;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
+            letter-spacing: -1px;
         }
         .login-box .logo span {
             background: var(--gold-gradient);
@@ -127,17 +165,60 @@
         .login-box .sub {
             text-align: center;
             color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 30px;
-            letter-spacing: 3px;
+            font-size: 13px;
+            margin-bottom: 25px;
+            letter-spacing: 4px;
+            font-weight: 300;
+        }
+        .login-box .sub span {
+            color: var(--gold);
+            -webkit-text-fill-color: var(--gold);
+        }
+        .login-box .avatar-preview {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        .login-box .avatar-preview img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--gold);
+            cursor: pointer;
+            transition: var(--transition);
+            animation: glow 3s infinite;
+        }
+        .login-box .avatar-preview img:hover {
+            transform: scale(1.08);
+        }
+        .login-box .avatar-preview .upload-hint {
+            display: block;
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+            opacity: 0.6;
+        }
+        .login-box .avatar-upload {
+            display: none;
+        }
+        .login-box .input-group {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        .login-box .input-group .icon {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            opacity: 0.4;
         }
         .login-box input {
             width: 100%;
-            padding: 14px 18px;
-            margin-bottom: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.08);
-            border-radius: 15px;
-            background: rgba(255, 255, 255, 0.05);
+            padding: 14px 18px 14px 45px;
+            border: 2px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
             color: var(--text-primary);
             font-size: 15px;
             outline: none;
@@ -145,26 +226,73 @@
         }
         .login-box input:focus {
             border-color: var(--gold);
-            box-shadow: 0 0 25px rgba(247, 151, 30, 0.15);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 30px rgba(247, 151, 30, 0.05);
         }
         .login-box input::placeholder {
             color: var(--text-secondary);
+            opacity: 0.5;
         }
         .login-box .btn {
             width: 100%;
             padding: 16px;
             background: var(--gold-gradient);
             border: none;
-            border-radius: 15px;
+            border-radius: 14px;
             color: #1a1a2e;
             font-size: 18px;
             font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
+            margin-top: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        .login-box .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+        .login-box .btn:hover::after {
+            left: 100%;
         }
         .login-box .btn:hover {
             transform: scale(1.02);
-            box-shadow: 0 10px 30px rgba(247, 151, 30, 0.3);
+            box-shadow: 0 10px 35px rgba(247, 151, 30, 0.3);
+        }
+        .login-box .btn-secondary {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            margin-top: 8px;
+        }
+        .login-box .btn-secondary:hover {
+            border-color: var(--gold);
+            box-shadow: none;
+        }
+        .login-box .divider {
+            display: flex;
+            align-items: center;
+            margin: 18px 0;
+            gap: 15px;
+        }
+        .login-box .divider::before,
+        .login-box .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .login-box .divider span {
+            color: var(--text-secondary);
+            font-size: 12px;
+            opacity: 0.5;
         }
         .login-box .link {
             text-align: center;
@@ -177,38 +305,41 @@
             text-decoration: none;
             font-weight: 600;
             cursor: pointer;
+            transition: var(--transition);
         }
         .login-box .link a:hover {
-            text-decoration: underline;
+            text-shadow: 0 0 20px rgba(247, 151, 30, 0.3);
         }
         .login-box .footer {
             text-align: center;
-            color: rgba(255, 255, 255, 0.1);
-            font-size: 12px;
-            margin-top: 25px;
-            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.06);
+            font-size: 11px;
+            margin-top: 20px;
+            letter-spacing: 2px;
         }
         .login-box .footer span {
             color: var(--gold);
+            opacity: 0.5;
         }
-        .login-box .avatar-preview {
-            text-align: center;
-            margin-bottom: 15px;
+        .login-box .social-login {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 10px 0;
         }
-        .login-box .avatar-preview img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--gold);
+        .login-box .social-login button {
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-secondary);
             cursor: pointer;
             transition: var(--transition);
+            font-size: 13px;
         }
-        .login-box .avatar-preview img:hover {
-            transform: scale(1.05);
-        }
-        .login-box .avatar-upload {
-            display: none;
+        .login-box .social-login button:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--gold);
         }
 
         /* ====================================== */
@@ -218,28 +349,41 @@
             display: none;
             flex-direction: column;
             height: 100vh;
-            max-width: 860px;
+            max-width: 900px;
             margin: 0 auto;
             background: var(--bg-secondary);
             position: relative;
         }
 
         /* ====================================== */
-        /* HEADER */
+        /* HEADER با مدیریت عیلیخا */
         /* ====================================== */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
+            padding: 8px 20px;
             background: var(--bg-card);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             flex-shrink: 0;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
+            position: relative;
+        }
+        .header::after {
+            content: 'با مدیریت عیلیخا';
+            position: absolute;
+            bottom: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.08);
+            letter-spacing: 3px;
+            font-weight: 300;
+            white-space: nowrap;
         }
         .logo-small {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 900;
         }
         .logo-small span {
@@ -248,11 +392,11 @@
         .header-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
         .header-left .avatar {
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--gold);
@@ -261,32 +405,37 @@
         .header-user {
             color: var(--gold);
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
         }
         .header-right {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
         .header-balance {
-            background: rgba(247, 151, 30, 0.15);
-            padding: 5px 14px;
+            background: rgba(247, 151, 30, 0.12);
+            padding: 4px 12px;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 12px;
             color: #ffd700;
             font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .header-balance:hover {
+            background: rgba(247, 151, 30, 0.2);
         }
         .header-online {
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-size: 12px;
+            gap: 4px;
+            font-size: 11px;
             color: var(--text-secondary);
         }
         .header-online .dot {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             background: #4caf50;
             border-radius: 50%;
             display: inline-block;
@@ -296,27 +445,27 @@
             background: var(--bg-card);
             border: none;
             color: var(--text-primary);
-            padding: 8px 12px;
-            border-radius: 12px;
+            padding: 6px 10px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             transition: var(--transition);
         }
         .btn-icon:hover {
-            background: rgba(247, 151, 30, 0.2);
+            background: rgba(247, 151, 30, 0.15);
         }
         .btn-logout {
-            background: rgba(255, 0, 0, 0.12);
+            background: rgba(255, 0, 0, 0.08);
             border: none;
             color: #ff6b6b;
-            padding: 6px 14px;
-            border-radius: 20px;
+            padding: 5px 12px;
+            border-radius: 18px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
             transition: var(--transition);
         }
         .btn-logout:hover {
-            background: rgba(255, 0, 0, 0.25);
+            background: rgba(255, 0, 0, 0.2);
         }
 
         /* ====================================== */
@@ -325,17 +474,18 @@
         .tabs {
             display: flex;
             background: var(--bg-card);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             flex-shrink: 0;
-            padding: 0 10px;
+            padding: 0 8px;
+            margin-top: 4px;
         }
         .tab {
             flex: 1;
-            padding: 12px 16px;
+            padding: 10px 14px;
             background: transparent;
             border: none;
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
@@ -343,7 +493,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 5px;
         }
         .tab:hover {
             color: var(--text-primary);
@@ -356,9 +506,9 @@
             background: var(--gold);
             color: #1a1a2e;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            font-size: 9px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -385,31 +535,31 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-            padding: 10px 15px;
+            padding: 8px 12px;
         }
         .chat-header {
             display: flex;
             justify-content: space-between;
-            padding: 6px 10px;
+            padding: 4px 8px;
             color: var(--text-secondary);
-            font-size: 13px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            margin-bottom: 8px;
+            font-size: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            margin-bottom: 6px;
             flex-shrink: 0;
         }
         .messages {
             flex: 1;
             overflow-y: auto;
-            padding: 8px 5px;
+            padding: 6px 4px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
         }
         .msg {
             max-width: 78%;
-            padding: 10px 16px;
-            border-radius: 18px;
-            font-size: 14px;
+            padding: 8px 14px;
+            border-radius: 16px;
+            font-size: 13px;
             word-wrap: break-word;
             animation: fadeIn 0.3s ease;
             position: relative;
@@ -418,115 +568,146 @@
             align-self: flex-end;
             background: var(--gold-gradient);
             color: #1a1a2e;
-            border-bottom-right-radius: 4px;
+            border-bottom-right-radius: 3px;
         }
         .msg.other {
             align-self: flex-start;
             background: var(--bg-card);
             color: var(--text-primary);
-            border-bottom-left-radius: 4px;
+            border-bottom-left-radius: 3px;
         }
         .msg .msg-name {
-            font-size: 11px;
-            opacity: 0.7;
+            font-size: 10px;
+            opacity: 0.6;
             display: block;
             margin-bottom: 2px;
         }
         .msg .msg-time {
-            font-size: 9px;
-            opacity: 0.4;
-            margin-right: 6px;
+            font-size: 8px;
+            opacity: 0.3;
+            margin-right: 4px;
         }
         .msg .msg-avatar {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             object-fit: cover;
-            margin-left: 6px;
+            margin-left: 5px;
             vertical-align: middle;
+        }
+        .msg .msg-media {
+            max-width: 200px;
+            border-radius: 10px;
+            margin-top: 4px;
+            display: block;
+        }
+        .msg .msg-audio {
+            width: 150px;
+            height: 30px;
+            border-radius: 20px;
+            margin-top: 4px;
         }
         .system-msg {
             text-align: center;
             color: var(--text-secondary);
-            font-size: 13px;
-            padding: 10px;
-            opacity: 0.5;
+            font-size: 12px;
+            padding: 8px;
+            opacity: 0.4;
         }
         .chat-input {
             display: flex;
-            gap: 10px;
-            padding: 10px;
+            gap: 6px;
+            padding: 8px;
             background: var(--bg-card);
-            border-radius: 16px;
-            margin-top: 5px;
+            border-radius: 14px;
+            margin-top: 4px;
             flex-shrink: 0;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            flex-wrap: wrap;
         }
         .chat-input input {
             flex: 1;
-            padding: 11px 16px;
+            padding: 9px 14px;
             border: none;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
             transition: var(--transition);
+            min-width: 100px;
         }
         .chat-input input:focus {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.07);
         }
         .chat-input input::placeholder {
             color: var(--text-secondary);
+            opacity: 0.4;
         }
-        .chat-input button {
-            padding: 11px 24px;
+        .chat-input .btn-send {
+            padding: 9px 18px;
             background: var(--gold-gradient);
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             color: #1a1a2e;
             font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
         }
-        .chat-input button:hover {
+        .chat-input .btn-send:hover {
             transform: scale(1.03);
+        }
+        .chat-input .btn-media {
+            padding: 9px 12px;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 16px;
+        }
+        .chat-input .btn-media:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .chat-input .media-upload {
+            display: none;
         }
 
         /* ====================================== */
-        /* GAME */
+        /* GAME - حکم */
         /* ====================================== */
         .game-container {
-            padding: 15px 20px;
+            padding: 12px 16px;
             flex: 1;
             overflow-y: auto;
         }
         .game-header {
             text-align: center;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
         }
         .game-header h2 {
-            font-size: 28px;
+            font-size: 26px;
             background: var(--gold-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .game-header p {
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: 13px;
         }
         .game-stats {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 18px;
+            gap: 8px;
+            margin-bottom: 14px;
         }
         .stat-box {
             background: var(--bg-card);
-            padding: 12px;
-            border-radius: 15px;
+            padding: 10px;
+            border-radius: 12px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             transition: var(--transition);
         }
         .stat-box:hover {
@@ -534,46 +715,46 @@
         }
         .stat-box span {
             display: block;
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-secondary);
         }
         .stat-box strong {
-            font-size: 20px;
+            font-size: 18px;
             color: #ffd700;
         }
         .stat-box .icon {
-            font-size: 24px;
+            font-size: 20px;
         }
         .bet-area {
             background: var(--bg-card);
-            padding: 18px;
-            border-radius: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            margin-bottom: 15px;
+            padding: 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            margin-bottom: 12px;
         }
         .bet-area .row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
         }
         .bet-input-group {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
         .bet-input-group label {
             display: block;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
         .bet-input-group input,
         .bet-input-group select {
             width: 100%;
-            padding: 11px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
+            padding: 9px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
             color: var(--text-primary);
-            font-size: 15px;
+            font-size: 14px;
             outline: none;
             transition: var(--transition);
         }
@@ -586,20 +767,20 @@
         }
         .btn-bet {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: var(--gold-gradient);
             border: none;
-            border-radius: 14px;
+            border-radius: 12px;
             color: #1a1a2e;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
-            margin-top: 5px;
+            margin-top: 4px;
         }
         .btn-bet:hover {
             transform: scale(1.02);
-            box-shadow: 0 8px 25px rgba(247, 151, 30, 0.25);
+            box-shadow: 0 8px 25px rgba(247, 151, 30, 0.2);
         }
         .btn-bet:disabled {
             opacity: 0.5;
@@ -607,50 +788,55 @@
             transform: none;
         }
         .game-result {
-            padding: 14px;
-            border-radius: 14px;
+            padding: 12px;
+            border-radius: 12px;
             text-align: center;
-            margin-bottom: 15px;
-            font-size: 18px;
-            min-height: 55px;
+            margin-bottom: 12px;
+            font-size: 16px;
+            min-height: 48px;
             font-weight: 600;
             animation: fadeIn 0.3s ease;
         }
         .game-result.win {
-            background: rgba(76, 175, 80, 0.15);
-            border: 1px solid rgba(76, 175, 80, 0.3);
+            background: rgba(76, 175, 80, 0.12);
+            border: 1px solid rgba(76, 175, 80, 0.2);
             color: #4caf50;
         }
         .game-result.lose {
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid rgba(255, 0, 0, 0.2);
+            background: rgba(255, 0, 0, 0.08);
+            border: 1px solid rgba(255, 0, 0, 0.15);
             color: #ff6b6b;
         }
         .game-result.jackpot {
-            background: rgba(255, 215, 0, 0.15);
-            border: 1px solid rgba(255, 215, 0, 0.3);
+            background: rgba(255, 215, 0, 0.12);
+            border: 1px solid rgba(255, 215, 0, 0.2);
             color: #ffd700;
             animation: pulse 0.5s ease 3;
         }
+        .game-result.draw {
+            background: rgba(100, 100, 255, 0.08);
+            border: 1px solid rgba(100, 100, 255, 0.15);
+            color: #6bcbff;
+        }
         .game-history {
             background: var(--bg-card);
-            padding: 12px 15px;
-            border-radius: 14px;
-            max-height: 140px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            max-height: 120px;
             overflow-y: auto;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
         .game-history h4 {
             color: var(--text-secondary);
-            margin-bottom: 8px;
-            font-size: 13px;
+            margin-bottom: 6px;
+            font-size: 12px;
         }
         .history-item {
             display: flex;
             justify-content: space-between;
-            padding: 4px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            font-size: 12px;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            font-size: 11px;
         }
         .history-item.win {
             color: #4caf50;
@@ -662,19 +848,131 @@
             color: #ffd700;
             font-weight: 700;
         }
+        .history-item.draw {
+            color: #6bcbff;
+        }
+
+        /* ====================================== */
+        /* PROFILE */
+        /* ====================================== */
+        .profile-container {
+            padding: 15px 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .profile-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .profile-card .avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--gold);
+            margin: 0 auto 15px;
+            display: block;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .profile-card .avatar-large:hover {
+            transform: scale(1.03);
+        }
+        .profile-card .profile-name {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+        }
+        .profile-card .profile-name span {
+            color: var(--gold);
+        }
+        .profile-card .profile-bio {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin: 8px 0 16px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            min-height: 40px;
+        }
+        .profile-card .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .profile-card .profile-stats .stat {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px;
+            border-radius: 12px;
+        }
+        .profile-card .profile-stats .stat .num {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffd700;
+        }
+        .profile-card .profile-stats .stat .label {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        .profile-card .profile-edit {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .profile-card .profile-edit input,
+        .profile-card .profile-edit textarea {
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        .profile-card .profile-edit input:focus,
+        .profile-card .profile-edit textarea:focus {
+            border-color: var(--gold);
+        }
+        .profile-card .profile-edit textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        .profile-card .profile-edit .btn-save {
+            padding: 10px;
+            background: var(--gold-gradient);
+            border: none;
+            border-radius: 12px;
+            color: #1a1a2e;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .profile-card .profile-edit .btn-save:hover {
+            transform: scale(1.02);
+        }
 
         /* ====================================== */
         /* LEADERBOARD */
         /* ====================================== */
         .leaderboard-container {
-            padding: 15px 20px;
+            padding: 12px 16px;
             flex: 1;
             overflow-y: auto;
         }
         .leaderboard-container h2 {
             text-align: center;
-            margin-bottom: 18px;
-            font-size: 24px;
+            margin-bottom: 14px;
+            font-size: 22px;
             background: var(--gold-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -683,54 +981,106 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 14px;
+            padding: 8px 12px;
             background: var(--bg-card);
-            border-radius: 12px;
-            margin-bottom: 6px;
+            border-radius: 10px;
+            margin-bottom: 5px;
             border: 1px solid rgba(255, 255, 255, 0.03);
             transition: var(--transition);
         }
         .leaderboard-item:hover {
-            transform: translateX(4px);
+            transform: translateX(3px);
         }
         .leaderboard-item .rank {
             font-weight: 700;
             color: var(--gold);
-            width: 30px;
-            font-size: 14px;
+            width: 28px;
+            font-size: 13px;
         }
         .leaderboard-item .avatar-mini {
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             object-fit: cover;
-            margin-left: 10px;
+            margin-left: 8px;
         }
         .leaderboard-item .name {
             flex: 1;
-            margin-right: 8px;
-            font-size: 14px;
+            margin-right: 6px;
+            font-size: 13px;
         }
         .leaderboard-item .score {
             color: #ffd700;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
         }
         .leaderboard-item .wins {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
         }
         .leaderboard-item.top1 {
             border-color: #ffd700;
-            background: rgba(255, 215, 0, 0.08);
+            background: rgba(255, 215, 0, 0.06);
         }
         .leaderboard-item.top2 {
             border-color: #c0c0c0;
-            background: rgba(192, 192, 192, 0.06);
+            background: rgba(192, 192, 192, 0.05);
         }
         .leaderboard-item.top3 {
             border-color: #cd7f32;
-            background: rgba(205, 127, 50, 0.06);
+            background: rgba(205, 127, 50, 0.05);
+        }
+
+        /* ====================================== */
+        /* SHOP */
+        /* ====================================== */
+        .shop-container {
+            padding: 12px 16px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .shop-container h2 {
+            text-align: center;
+            margin-bottom: 14px;
+            font-size: 22px;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .shop-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: var(--transition);
+        }
+        .shop-item:hover {
+            border-color: rgba(247, 151, 30, 0.2);
+        }
+        .shop-item .info .title {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .shop-item .info .desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .shop-item .btn-buy {
+            padding: 8px 20px;
+            background: var(--gold-gradient);
+            border: none;
+            border-radius: 10px;
+            color: #1a1a2e;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .shop-item .btn-buy:hover {
+            transform: scale(1.03);
         }
 
         /* ====================================== */
@@ -738,84 +1088,35 @@
         /* ====================================== */
         .app-footer {
             text-align: center;
-            padding: 8px;
+            padding: 6px;
             color: var(--text-secondary);
-            font-size: 10px;
+            font-size: 9px;
             border-top: 1px solid rgba(255, 255, 255, 0.02);
             letter-spacing: 1px;
             flex-shrink: 0;
-            opacity: 0.4;
+            opacity: 0.3;
         }
         .app-footer span {
             color: var(--gold);
         }
 
         /* ====================================== */
-        /* RESPONSIVE */
-        /* ====================================== */
-        @media (max-width: 550px) {
-            .login-box {
-                width: 95%;
-                padding: 30px 20px;
-            }
-            .header {
-                justify-content: center;
-                padding: 8px 12px;
-            }
-            .game-stats {
-                grid-template-columns: 1fr 1fr;
-            }
-            .bet-area .row {
-                grid-template-columns: 1fr;
-            }
-            .logo-small {
-                font-size: 16px;
-            }
-            .header-balance {
-                font-size: 11px;
-                padding: 4px 10px;
-            }
-            .tab {
-                font-size: 12px;
-                padding: 10px 8px;
-            }
-            .tab .badge {
-                width: 16px;
-                height: 16px;
-                font-size: 8px;
-            }
-        }
-        @media (max-width: 400px) {
-            .header-right .btn-icon {
-                padding: 4px 8px;
-                font-size: 14px;
-            }
-            .header-user {
-                font-size: 12px;
-            }
-            .header-left .avatar {
-                width: 28px;
-                height: 28px;
-            }
-        }
-
-        /* ====================================== */
-        /* TOAST NOTIFICATION */
+        /* TOAST */
         /* ====================================== */
         .toast {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 12px 24px;
-            border-radius: 14px;
+            padding: 10px 22px;
+            border-radius: 12px;
             background: var(--bg-secondary);
             color: var(--text-primary);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: var(--shadow);
             z-index: 9999;
             animation: fadeIn 0.3s ease;
-            font-size: 14px;
+            font-size: 13px;
             display: none;
         }
         .toast.show {
@@ -830,6 +1131,78 @@
         .toast.info {
             border-color: var(--gold);
         }
+
+        /* ====================================== */
+        /* RESPONSIVE */
+        /* ====================================== */
+        @media (max-width: 550px) {
+            .login-box {
+                width: 95%;
+                padding: 25px 18px;
+            }
+            .header {
+                padding: 6px 12px;
+            }
+            .header::after {
+                font-size: 8px;
+                bottom: -14px;
+            }
+            .game-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            .bet-area .row {
+                grid-template-columns: 1fr;
+            }
+            .logo-small {
+                font-size: 14px;
+            }
+            .header-balance {
+                font-size: 10px;
+                padding: 3px 8px;
+            }
+            .tab {
+                font-size: 11px;
+                padding: 8px 6px;
+            }
+            .tab .badge {
+                width: 14px;
+                height: 14px;
+                font-size: 7px;
+            }
+            .profile-card .profile-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            .shop-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+        }
+        @media (max-width: 400px) {
+            .header-right .btn-icon {
+                padding: 3px 6px;
+                font-size: 13px;
+            }
+            .header-user {
+                font-size: 11px;
+            }
+            .header-left .avatar {
+                width: 26px;
+                height: 26px;
+            }
+            .chat-input .btn-media {
+                padding: 6px 8px;
+                font-size: 14px;
+            }
+            .chat-input .btn-send {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            .msg {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -840,26 +1213,38 @@
     <div id="toast" class="toast"></div>
 
     <!-- ========================================== -->
-    <!-- LOGIN PAGE -->
+    <!-- LOGIN PAGE - حرفه‌ای -->
     <!-- ========================================== -->
     <div id="loginPage">
         <div class="login-box">
             <div class="logo">💎 BIT<span>VOLT</span></div>
-            <div class="sub">پیام‌رسان فوق‌لوکس</div>
+            <div class="sub">پیام‌رسان <span>فوق‌لوکس</span></div>
 
             <div class="avatar-preview">
-                <img id="avatarPreview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='40' fill='%23333'/%3E%3Ctext x='40' y='48' text-anchor='middle' font-size='32' fill='%23fff' font-family='Arial'%3E👤%3C/text%3E%3C/svg%3E" alt="آواتار" onclick="document.getElementById('avatarInput').click()">
+                <img id="avatarPreview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Ccircle cx='45' cy='45' r='45' fill='%23333'/%3E%3Ctext x='45' y='55' text-anchor='middle' font-size='38' fill='%23fff' font-family='Arial'%3E👤%3C/text%3E%3C/svg%3E" alt="آواتار" onclick="document.getElementById('avatarInput').click()">
+                <span class="upload-hint">📷 برای تغییر آواتار کلیک کن</span>
                 <input type="file" id="avatarInput" class="avatar-upload" accept="image/*" onchange="previewAvatar(event)">
             </div>
 
-            <input type="text" id="loginUser" placeholder="👤 نام کاربری">
-            <input type="password" id="loginPass" placeholder="🔑 رمز عبور">
-
-            <button class="btn" onclick="handleLogin()">🚀 وارد شو</button>
-
-            <div class="link">
-                حساب نداری؟ <a onclick="handleRegister()">ثبت‌نام کن</a>
+            <div class="input-group">
+                <span class="icon">👤</span>
+                <input type="text" id="loginUser" placeholder="نام کاربری">
             </div>
+            <div class="input-group">
+                <span class="icon">🔑</span>
+                <input type="password" id="loginPass" placeholder="رمز عبور">
+            </div>
+
+            <button class="btn" onclick="handleLogin()">🚀 ورود</button>
+            <button class="btn btn-secondary" onclick="handleRegister()">📝 ثبت‌نام</button>
+
+            <div class="divider"><span>یا</span></div>
+
+            <div class="social-login">
+                <button onclick="showToast('🚧 به زودی', 'info')">🟣 با گوگل</button>
+                <button onclick="showToast('🚧 به زودی', 'info')">🔵 با تلگرام</button>
+            </div>
+
             <div class="footer">
                 ساخته شده توسط <span>BITVOLT.MTV</span>
             </div>
@@ -874,13 +1259,13 @@
         <!-- HEADER -->
         <header class="header">
             <div class="header-left">
-                <img id="headerAvatar" class="avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='40' fill='%23333'/%3E%3Ctext x='40' y='48' text-anchor='middle' font-size='32' fill='%23fff' font-family='Arial'%3E👤%3C/text%3E%3C/svg%3E" alt="آواتار" onclick="document.getElementById('avatarInput2').click()">
+                <img id="headerAvatar" class="avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Ccircle cx='17' cy='17' r='17' fill='%23333'/%3E%3Ctext x='17' y='23' text-anchor='middle' font-size='18' fill='%23fff' font-family='Arial'%3E👤%3C/text%3E%3C/svg%3E" alt="آواتار" onclick="document.getElementById('avatarInput2').click()">
                 <input type="file" id="avatarInput2" class="avatar-upload" accept="image/*" onchange="previewAvatar2(event)">
                 <span class="logo-small">💎 BIT<span>VOLT</span></span>
             </div>
             <span class="header-user" id="userDisplay">کاربر</span>
             <div class="header-right">
-                <span class="header-balance" id="balanceDisplay">💰 ۰ تومان</span>
+                <span class="header-balance" id="balanceDisplay" onclick="switchTab('shop')">💰 ۰ تومان</span>
                 <span class="header-online"><span class="dot"></span> <span id="onlineCount">۰</span></span>
                 <button class="btn-icon" onclick="toggleTheme()" title="تغییر تم">🌓</button>
                 <button class="btn-logout" onclick="logout()">🚪 خروج</button>
@@ -890,8 +1275,10 @@
         <!-- TABS -->
         <div class="tabs">
             <button class="tab active" onclick="switchTab('chat')">💬 چت</button>
-            <button class="tab" onclick="switchTab('game')">🎰 شرط‌بندی</button>
+            <button class="tab" onclick="switchTab('game')">🎯 حکم</button>
+            <button class="tab" onclick="switchTab('profile')">👤 پروفایل</button>
             <button class="tab" onclick="switchTab('leaderboard')">🏆 جدول</button>
+            <button class="tab" onclick="switchTab('shop')">🛒 بازار</button>
         </div>
 
         <!-- ===== CHAT TAB ===== -->
@@ -906,17 +1293,20 @@
                 </div>
                 <div class="chat-input">
                     <input type="text" id="msgInput" placeholder="پیامت رو بنویس..." onkeydown="if(event.key==='Enter') sendMessage()">
-                    <button onclick="sendMessage()">📨 ارسال</button>
+                    <button class="btn-media" onclick="document.getElementById('fileInput').click()" title="ارسال عکس">🖼️</button>
+                    <button class="btn-media" onclick="startRecording()" id="voiceBtn" title="ارسال ویس">🎤</button>
+                    <input type="file" id="fileInput" class="media-upload" accept="image/*" onchange="sendImage(event)">
+                    <button class="btn-send" onclick="sendMessage()">📨</button>
                 </div>
             </div>
         </div>
 
-        <!-- ===== GAME TAB ===== -->
+        <!-- ===== GAME TAB - حکم ===== -->
         <div id="gameTab" class="tab-content">
             <div class="game-container">
                 <div class="game-header">
-                    <h2>🎰 شرط‌بندی پیشرفته</h2>
-                    <p>حدس بزن و پولدار شو!</p>
+                    <h2>🎯 بازی حکم</h2>
+                    <p>یک عدد بین ۱ تا ۱۰۰ حدس بزن!</p>
                 </div>
 
                 <div class="game-stats">
@@ -949,18 +1339,18 @@
                             <input type="number" id="betAmount" value="10000" min="100" step="1000">
                         </div>
                         <div class="bet-input-group">
-                            <label>🎯 نوع بازی:</label>
+                            <label>🎯 سطح سختی:</label>
                             <select id="gameType">
-                                <option value="normal">ساده (ضریب ۲)</option>
-                                <option value="medium">متوسط (ضریب ۵)</option>
+                                <option value="easy">آسان (ضریب ۲)</option>
+                                <option value="normal">متوسط (ضریب ۵)</option>
                                 <option value="hard">سخت (ضریب ۱۰)</option>
-                                <option value="jackpot">جکپات (ضریب ۵۰)</option>
+                                <option value="expert">حرفه‌ای (ضریب ۲۵)</option>
                             </select>
                         </div>
                     </div>
                     <div class="bet-input-group">
-                        <label>🎯 حدس عدد (۱ تا ۱۰):</label>
-                        <input type="number" id="guessNumber" min="1" max="10" value="5">
+                        <label>🎯 عدد مورد نظر (۱ تا ۱۰۰):</label>
+                        <input type="number" id="guessNumber" min="1" max="100" value="50">
                     </div>
                     <button class="btn-bet" id="betBtn" onclick="playGame()">🎲 شرط ببند</button>
                 </div>
@@ -974,11 +1364,67 @@
             </div>
         </div>
 
+        <!-- ===== PROFILE TAB ===== -->
+        <div id="profileTab" class="tab-content">
+            <div class="profile-container">
+                <div class="profile-card">
+                    <img id="profileAvatar" class="avatar-large" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='60' fill='%23333'/%3E%3Ctext x='60' y='72' text-anchor='middle' font-size='48' fill='%23fff' font-family='Arial'%3E👤%3C/text%3E%3C/svg%3E" alt="پروفایل" onclick="document.getElementById('avatarInput3').click()">
+                    <input type="file" id="avatarInput3" class="avatar-upload" accept="image/*" onchange="previewAvatar3(event)">
+                    <div class="profile-name" id="profileName">👤 <span>کاربر</span></div>
+                    <div class="profile-bio" id="profileBio">💬 بیوگرافی خود را اینجا بنویس...</div>
+                    <div class="profile-stats">
+                        <div class="stat"><div class="num" id="profileBalance">۰</div><div class="label">موجودی</div></div>
+                        <div class="stat"><div class="num" id="profileWins">۰</div><div class="label">برد</div></div>
+                        <div class="stat"><div class="num" id="profileGames">۰</div><div class="label">بازی</div></div>
+                    </div>
+                    <div class="profile-edit">
+                        <input type="text" id="editBio" placeholder="بیوگرافی جدید..." value="">
+                        <button class="btn-save" onclick="saveBio()">💾 ذخیره بیوگرافی</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- ===== LEADERBOARD TAB ===== -->
         <div id="leaderboardTab" class="tab-content">
             <div class="leaderboard-container">
                 <h2>🏆 جدول بهترین‌ها</h2>
                 <div id="leaderboardList"></div>
+            </div>
+        </div>
+
+        <!-- ===== SHOP TAB ===== -->
+        <div id="shopTab" class="tab-content">
+            <div class="shop-container">
+                <h2>🛒 بازار BITVOLT</h2>
+                <div class="shop-item">
+                    <div class="info">
+                        <div class="title">💰 ۱۰۰,۰۰۰ تومان</div>
+                        <div class="desc">شارژ کیف پول</div>
+                    </div>
+                    <button class="btn-buy" onclick="buyCoins(100000)">💳 خرید</button>
+                </div>
+                <div class="shop-item">
+                    <div class="info">
+                        <div class="title">💰 ۵۰۰,۰۰۰ تومان</div>
+                        <div class="desc">شارژ کیف پول</div>
+                    </div>
+                    <button class="btn-buy" onclick="buyCoins(500000)">💳 خرید</button>
+                </div>
+                <div class="shop-item">
+                    <div class="info">
+                        <div class="title">💰 ۱,۰۰۰,۰۰۰ تومان</div>
+                        <div class="desc">شارژ کیف پول</div>
+                    </div>
+                    <button class="btn-buy" onclick="buyCoins(1000000)">💳 خرید</button>
+                </div>
+                <div class="shop-item">
+                    <div class="info">
+                        <div class="title">💰 ۵,۰۰۰,۰۰۰ تومان</div>
+                        <div class="desc">شارژ کیف پول</div>
+                    </div>
+                    <button class="btn-buy" onclick="buyCoins(5000000)">💳 خرید</button>
+                </div>
             </div>
         </div>
 
@@ -993,7 +1439,7 @@
     <!-- ========================================== -->
     <script>
         // ==========================================
-        // 🔑 کلید Ably - کلید خودت رو اینجا بذار
+        // 🔑 کلید Ably
         // ==========================================
         const ABLY_API_KEY = 'ZzBHQA.1SMLhA:AOCFng9tCNYHmiOQD3GqnaE_DxW2lizdaJUnZcQpj-E';
 
@@ -1003,7 +1449,6 @@
         let users = JSON.parse(localStorage.getItem('bitvolt_users')) || {};
         let currentUser = localStorage.getItem('bitvolt_currentUser');
 
-        // اگر کاربر وارد شده، برو به اپ
         if (currentUser && users[currentUser]) {
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('appPage').style.display = 'flex';
@@ -1026,17 +1471,18 @@
                 return;
             }
 
-            // گرفتن آواتار
             let avatar = document.getElementById('avatarPreview').src;
 
             users[username] = {
                 password: password,
-                balance: 1000000, // ۱ میلیون تومان
+                balance: 1000000,
                 gamesPlayed: 0,
                 gamesWon: 0,
                 biggestWin: 0,
                 avatar: avatar,
-                joinDate: new Date().toISOString()
+                bio: '💬 کاربر جدید BITVOLT',
+                joinDate: new Date().toISOString(),
+                messages: []
             };
             localStorage.setItem('bitvolt_users', JSON.stringify(users));
             showToast('✅ ثبت‌نام موفق! حالا وارد شو.', 'success');
@@ -1066,7 +1512,6 @@
             initApp();
         }
 
-        // Enter در لاگین
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && document.getElementById('loginPage').style.display !== 'none') {
                 handleLogin();
@@ -1093,10 +1538,26 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('headerAvatar').src = e.target.result;
-                    // به‌روزرسانی در دیتابیس
                     if (currentUser && users[currentUser]) {
                         users[currentUser].avatar = e.target.result;
                         localStorage.setItem('bitvolt_users', JSON.stringify(users));
+                        updateProfile();
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function previewAvatar3(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profileAvatar').src = e.target.result;
+                    if (currentUser && users[currentUser]) {
+                        users[currentUser].avatar = e.target.result;
+                        localStorage.setItem('bitvolt_users', JSON.stringify(users));
+                        document.getElementById('headerAvatar').src = e.target.result;
                     }
                 };
                 reader.readAsDataURL(file);
@@ -1112,19 +1573,19 @@
 
         function connectAbly() {
             try {
-                if (ABLY_API_KEY === 'YOUR_ABLY_API_KEY') {
-                    document.getElementById('messages').innerHTML = '';
-                    addSystemMessage('⚠️ لطفاً کلید Ably را در کد تنظیم کن!');
-                    document.getElementById('chatStatus').textContent = '⚠️ بدون کلید';
-                    return;
-                }
-
                 ably = new Ably.Realtime(ABLY_API_KEY);
                 channel = ably.channels.get('bitvolt-chat');
 
                 channel.subscribe('message', (msg) => {
                     const data = msg.data;
-                    addMessage(data.name, data.text, data.time, data.avatar, data.name === currentUser);
+                    addMessage(data.name, data.text, data.time, data.avatar, data.type, data.media, data.name ===
+                        currentUser);
+                    // ذخیره پیام برای کاربر
+                    if (users[data.name]) {
+                        if (!users[data.name].messages) users[data.name].messages = [];
+                        users[data.name].messages.push(data);
+                        localStorage.setItem('bitvolt_users', JSON.stringify(users));
+                    }
                 });
 
                 channel.subscribe('game', (msg) => {
@@ -1143,7 +1604,7 @@
                     addSystemMessage('✅ به سرور BITVOLT متصل شدی!');
                     document.getElementById('chatStatus').textContent = '🟢 آنلاین';
                     updateOnlineCount();
-
+                    loadUserMessages();
                     setTimeout(() => {
                         addSystemMessage(`👋 ${currentUser} عزیز به BITVOLT خوش آمدی!`);
                     }, 500);
@@ -1157,7 +1618,7 @@
 
                 ably.connection.on('failed', () => {
                     isConnected = false;
-                    addSystemMessage('❌ اتصال به سرور ناموفق! کلید را بررسی کن.');
+                    addSystemMessage('❌ اتصال به سرور ناموفق!');
                     document.getElementById('chatStatus').textContent = '⚠️ خطا';
                 });
 
@@ -1179,9 +1640,9 @@
         // راه‌اندازی اولیه
         // ==========================================
         function initApp() {
-            // تنظیم آواتار
             if (users[currentUser]?.avatar) {
                 document.getElementById('headerAvatar').src = users[currentUser].avatar;
+                document.getElementById('profileAvatar').src = users[currentUser].avatar;
             }
             updateUI();
             displayMessages();
@@ -1189,21 +1650,20 @@
             updateLeaderboard();
             connectAbly();
             updateOnlineCount();
+            updateProfile();
+            loadUserMessages();
+        }
 
-            // تنظیم max برای guessNumber بر اساس نوع بازی
-            document.getElementById('gameType').addEventListener('change', function() {
-                const guessInput = document.getElementById('guessNumber');
-                if (this.value === 'jackpot') {
-                    guessInput.max = 100;
-                    guessInput.placeholder = '۱ تا ۱۰۰';
-                } else {
-                    guessInput.max = 10;
-                    guessInput.placeholder = '۱ تا ۱۰';
-                }
-                if (parseInt(guessInput.value) > parseInt(guessInput.max)) {
-                    guessInput.value = guessInput.max;
-                }
-            });
+        // ==========================================
+        // بارگذاری پیام‌های کاربر
+        // ==========================================
+        function loadUserMessages() {
+            if (users[currentUser]?.messages) {
+                users[currentUser].messages.forEach(msg => {
+                    addMessage(msg.name, msg.text, msg.time, msg.avatar, msg.type, msg.media, msg.name ===
+                        currentUser);
+                });
+            }
         }
 
         // ==========================================
@@ -1224,6 +1684,7 @@
                 text: text,
                 time: new Date().toLocaleTimeString('fa-IR'),
                 avatar: avatar,
+                type: 'text',
                 id: Date.now()
             };
 
@@ -1232,6 +1693,101 @@
             channel.publish('message', msg);
             input.value = '';
             displayMessages();
+        }
+
+        // ==========================================
+        // ارسال عکس
+        // ==========================================
+        function sendImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (!isConnected) {
+                addSystemMessage('⚠️ به سرور متصل نیستی!');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                let avatar = users[currentUser]?.avatar || '';
+                let msg = {
+                    name: currentUser,
+                    text: '📷 عکس',
+                    time: new Date().toLocaleTimeString('fa-IR'),
+                    avatar: avatar,
+                    type: 'image',
+                    media: e.target.result,
+                    id: Date.now()
+                };
+                messages.push(msg);
+                localStorage.setItem('bitvolt_messages', JSON.stringify(messages));
+                channel.publish('message', msg);
+                displayMessages();
+                showToast('📷 عکس ارسال شد!', 'success');
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        // ==========================================
+        // ارسال ویس
+        // ==========================================
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+
+        function startRecording() {
+            if (isRecording) {
+                stopRecording();
+                return;
+            }
+
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
+                    mediaRecorder.onstop = function() {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            let avatar = users[currentUser]?.avatar || '';
+                            let msg = {
+                                name: currentUser,
+                                text: '🎤 ویس',
+                                time: new Date().toLocaleTimeString('fa-IR'),
+                                avatar: avatar,
+                                type: 'audio',
+                                media: e.target.result,
+                                id: Date.now()
+                            };
+                            messages.push(msg);
+                            localStorage.setItem('bitvolt_messages', JSON.stringify(messages));
+                            channel.publish('message', msg);
+                            displayMessages();
+                            showToast('🎤 ویس ارسال شد!', 'success');
+                        };
+                        reader.readAsDataURL(audioBlob);
+                        stream.getTracks().forEach(track => track.stop());
+                    };
+                    mediaRecorder.start();
+                    isRecording = true;
+                    document.getElementById('voiceBtn').textContent = '⏹️';
+                    document.getElementById('voiceBtn').style.color = '#ff6b6b';
+                    showToast('🎤 در حال ضبط... دوباره کلیک کن تا متوقف بشه', 'info');
+                })
+                .catch(err => {
+                    showToast('❌ دسترسی به میکروفون ممکن نیست!', 'error');
+                    console.error('Microphone error:', err);
+                });
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                document.getElementById('voiceBtn').textContent = '🎤';
+                document.getElementById('voiceBtn').style.color = '';
+            }
         }
 
         function displayMessages() {
@@ -1245,10 +1801,17 @@
                 let div = document.createElement('div');
                 div.className = `msg ${msg.name === currentUser ? 'me' : 'other'}`;
                 let avatarHtml = msg.avatar ? `<img class="msg-avatar" src="${msg.avatar}" alt="">` : '';
+                let mediaHtml = '';
+                if (msg.type === 'image' && msg.media) {
+                    mediaHtml = `<img class="msg-media" src="${msg.media}" alt="عکس">`;
+                } else if (msg.type === 'audio' && msg.media) {
+                    mediaHtml = `<audio class="msg-audio" controls src="${msg.media}"></audio>`;
+                }
                 div.innerHTML = `
                     ${avatarHtml}
                     <span class="msg-name">${msg.name}</span>
                     ${msg.text}
+                    ${mediaHtml}
                     <span class="msg-time">${msg.time}</span>
                 `;
                 container.appendChild(div);
@@ -1256,7 +1819,7 @@
             container.scrollTop = container.scrollHeight;
         }
 
-        function addMessage(name, text, time, avatar, isMe) {
+        function addMessage(name, text, time, avatar, type = 'text', media = null, isMe = false) {
             let container = document.getElementById('messages');
             if (container.children.length === 1 && container.children[0].classList.contains('system-msg')) {
                 container.innerHTML = '';
@@ -1264,21 +1827,21 @@
             let div = document.createElement('div');
             div.className = `msg ${isMe ? 'me' : 'other'}`;
             let avatarHtml = avatar ? `<img class="msg-avatar" src="${avatar}" alt="">` : '';
+            let mediaHtml = '';
+            if (type === 'image' && media) {
+                mediaHtml = `<img class="msg-media" src="${media}" alt="عکس">`;
+            } else if (type === 'audio' && media) {
+                mediaHtml = `<audio class="msg-audio" controls src="${media}"></audio>`;
+            }
             div.innerHTML = `
                 ${avatarHtml}
                 <span class="msg-name">${name}</span>
                 ${text}
+                ${mediaHtml}
                 <span class="msg-time">${time}</span>
             `;
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
-
-            let msg = { name, text, time, avatar, id: Date.now() };
-            let exists = messages.some(m => m.id === msg.id);
-            if (!exists) {
-                messages.push(msg);
-                localStorage.setItem('bitvolt_messages', JSON.stringify(messages));
-            }
         }
 
         function addSystemMessage(text) {
@@ -1291,7 +1854,7 @@
         }
 
         // ==========================================
-        // بازی شرط‌بندی
+        // بازی حکم
         // ==========================================
         function playGame() {
             let betAmount = parseInt(document.getElementById('betAmount').value);
@@ -1300,12 +1863,11 @@
             let resultDiv = document.getElementById('gameResult');
             let betBtn = document.getElementById('betBtn');
 
-            // ضریب‌ها
             const multipliers = {
-                normal: { multiplier: 2, max: 10 },
-                medium: { multiplier: 5, max: 10 },
-                hard: { multiplier: 10, max: 10 },
-                jackpot: { multiplier: 50, max: 100 }
+                easy: { multiplier: 2, max: 100 },
+                normal: { multiplier: 5, max: 100 },
+                hard: { multiplier: 10, max: 100 },
+                expert: { multiplier: 25, max: 100 }
             };
 
             const currentGame = multipliers[gameType];
@@ -1336,7 +1898,7 @@
                 let randomNum = Math.floor(Math.random() * maxNum) + 1;
                 let win = (guess === randomNum);
                 let winAmount = win ? Math.floor(betAmount * currentGame.multiplier) : 0;
-                let isJackpot = win && gameType === 'jackpot';
+                let isJackpot = win && gameType === 'expert';
 
                 if (win) {
                     user.balance += winAmount;
@@ -1348,7 +1910,7 @@
                     if (isJackpot) {
                         resultDiv.className = 'game-result jackpot';
                         resultDiv.innerHTML =
-                        `🎉🎉 جکپات! عدد ${randomNum} بود! ${winAmount.toLocaleString()} تومان بردی! 🎉🎉`;
+                            `🎉🎉 جکپات! عدد ${randomNum} بود! ${winAmount.toLocaleString()} تومان بردی! 🎉🎉`;
                         showToast(`🎉 جکپات! ${winAmount.toLocaleString()} تومان بردی!`, 'success');
                     } else {
                         resultDiv.className = 'game-result win';
@@ -1387,6 +1949,7 @@
                 updateUI();
                 updateHistory();
                 updateLeaderboard();
+                updateProfile();
                 betBtn.disabled = false;
                 betBtn.textContent = '🎲 شرط ببند';
             }, 800);
@@ -1398,18 +1961,56 @@
             gameHistory.slice(0, 20).forEach(item => {
                 let div = document.createElement('div');
                 let className = 'history-item';
-                if (item.win && item.gameType === 'jackpot') className += ' jackpot';
+                if (item.win && item.gameType === 'expert') className += ' jackpot';
                 else if (item.win) className += ' win';
                 else className += ' lose';
                 div.className = className;
                 let emoji = item.win ? '🎉' : '😢';
-                if (item.gameType === 'jackpot' && item.win) emoji = '💎';
+                if (item.gameType === 'expert' && item.win) emoji = '💎';
                 div.innerHTML = `
                     <span>${emoji} ${item.user}: ${item.win ? 'برد' : 'باخت'} (حدس: ${item.guess} | عدد: ${item.result})</span>
                     <span>${item.win ? '+' : '-'}${item.win ? item.amount : item.bet} تومان</span>
                 `;
                 container.appendChild(div);
             });
+        }
+
+        // ==========================================
+        // پروفایل
+        // ==========================================
+        function updateProfile() {
+            let user = users[currentUser];
+            document.getElementById('profileName').innerHTML = `👤 <span>${currentUser}</span>`;
+            document.getElementById('profileBio').textContent = user.bio || '💬 بیوگرافی خود را اینجا بنویس...';
+            document.getElementById('profileBalance').textContent = user.balance.toLocaleString();
+            document.getElementById('profileWins').textContent = user.gamesWon || 0;
+            document.getElementById('profileGames').textContent = user.gamesPlayed || 0;
+            if (user.avatar) {
+                document.getElementById('profileAvatar').src = user.avatar;
+            }
+            document.getElementById('editBio').value = user.bio || '';
+        }
+
+        function saveBio() {
+            let bio = document.getElementById('editBio').value.trim();
+            if (users[currentUser]) {
+                users[currentUser].bio = bio || '💬 کاربر BITVOLT';
+                localStorage.setItem('bitvolt_users', JSON.stringify(users));
+                updateProfile();
+                showToast('✅ بیوگرافی ذخیره شد!', 'success');
+            }
+        }
+
+        // ==========================================
+        // بازار
+        // ==========================================
+        function buyCoins(amount) {
+            if (!users[currentUser]) return;
+            users[currentUser].balance += amount;
+            localStorage.setItem('bitvolt_users', JSON.stringify(users));
+            updateUI();
+            updateProfile();
+            showToast(`✅ ${amount.toLocaleString()} تومان به کیف پولت اضافه شد!`, 'success');
         }
 
         // ==========================================
@@ -1436,7 +2037,7 @@
 
                 div.className = `leaderboard-item ${rankClass}`;
                 let avatarHtml = user.avatar ? `<img class="avatar-mini" src="${user.avatar}" alt="">` :
-                    `<span style="margin-left:10px;">👤</span>`;
+                    `<span style="margin-left:8px;">👤</span>`;
                 div.innerHTML = `
                     <span class="rank">#${index + 1}</span>
                     ${avatarHtml}
@@ -1453,7 +2054,6 @@
         // ==========================================
         function updateOnlineCount() {
             onlineUsers.add(currentUser);
-            // شبیه‌سازی کاربران دیگر
             const fakeUsers = ['Ali_Reza', 'Sara_2024', 'Milad_Pro', 'Nazanin_Art', 'Hossein_Dev', 'Maryam_Star', 'Amir_Dev',
                 'Zahra_Code'
             ];
@@ -1489,6 +2089,7 @@
 
             if (tab === 'leaderboard') updateLeaderboard();
             if (tab === 'game') updateHistory();
+            if (tab === 'profile') updateProfile();
         }
 
         function toggleTheme() {
@@ -1525,11 +2126,10 @@
             }
         }, 3000);
 
-        console.log('💎 BITVOLT.MTV - با مدیریت علیخا');
+        console.log('💎 BITVOLT.MTV - با مدیریت عیلیخا');
         console.log('👤 کاربر فعلی:', currentUser);
         console.log('💰 موجودی:', users[currentUser]?.balance || 0);
-        console.log('🔑 کلید Ably: ✅ تنظیم شده');
-        console.log('🎮 ۴ نوع بازی: ساده(۲x) | متوسط(۵x) | سخت(۱۰x) | جکپات(۵۰x)');
+        console.log('🎯 بازی حکم: آسان(۲x) | متوسط(۵x) | سخت(۱۰x) | حرفه‌ای(۲۵x)');
     </script>
 
 </body>
