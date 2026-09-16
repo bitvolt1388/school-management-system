@@ -1,813 +1,962 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🎲 بت‌هاوس - پلتفرم شرط‌بندی</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap');
-        * { font-family: 'Vazirmatn', sans-serif; }
-        body { background: #0a0a0f; }
-        
-        /* انیمیشن‌ها */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.2); }
-            50% { box-shadow: 0 0 40px rgba(251, 191, 36, 0.5); }
-        }
-        @keyframes slide-up {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes shake {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-10deg); }
-            75% { transform: rotate(10deg); }
-        }
-        @keyframes win-flash {
-            0% { background: rgba(34, 197, 94, 0); }
-            50% { background: rgba(34, 197, 94, 0.3); }
-            100% { background: rgba(34, 197, 94, 0); }
-        }
-        @keyframes lose-flash {
-            0% { background: rgba(239, 68, 68, 0); }
-            50% { background: rgba(239, 68, 68, 0.3); }
-            100% { background: rgba(239, 68, 68, 0); }
-        }
-        
-        .float-animation { animation: float 3s ease-in-out infinite; }
-        .glow-animation { animation: pulse-glow 2s ease-in-out infinite; }
-        .slide-up { animation: slide-up 0.5s ease-out; }
-        .shake { animation: shake 0.5s ease-in-out; }
-        .win-flash { animation: win-flash 0.8s ease; }
-        .lose-flash { animation: lose-flash 0.8s ease; }
-        
-        /* اسکرول بار سفارشی */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1a1a2e; }
-        ::-webkit-scrollbar-thumb { background: #fbbf24; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
-        
-        /* کارت‌های شرط */
-        .dice-option {
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-        .dice-option:hover {
-            transform: scale(1.05);
-            border-color: #fbbf24;
-        }
-        .dice-option.selected {
-            border-color: #22c55e;
-            background: rgba(34, 197, 94, 0.2);
-            box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
-        }
-        
-        /* گلاس‌مورفیسم */
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .glass-dark {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        /* دکمه‌ها */
-        .btn-primary {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
-        }
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            transition: all 0.3s ease;
-        }
-        .btn-danger:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
-        }
-        
-        .btn-success {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            transition: all 0.3s ease;
-        }
-        .btn-success:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قمبول دات کام | آپلود ویدیو</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET ============ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --neon-pink: #ff2e88;
+  --neon-purple: #a020f0;
+  --neon-cyan: #00e5ff;
+  --dark: #0a0014;
+  --dark-2: #15002a;
+  --dark-3: #1f003b;
+  --text: #ffffff;
+  --text-dim: #b8a5d6;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Vazirmatn', Tahoma, sans-serif;
+  background: var(--dark);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(160,32,240,.25), transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(255,46,136,.22), transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(0,229,255,.10), transparent 60%);
+}
+
+/* ============ گرید متحرک پس‌زمینه ============ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(160,32,240,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(160,32,240,.06) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+  animation: gridMove 20s linear infinite;
+}
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 50px 50px; }
+}
+
+/* ============ HEADER ============ */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 18px 30px;
+  background: rgba(10, 0, 20, 0.85);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(160,32,240,.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.logo {
+  font-size: 34px;
+  font-weight: 900;
+  background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple), var(--neon-cyan));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradientShift 4s ease infinite;
+  text-shadow: 0 0 30px rgba(255,46,136,.4);
+  letter-spacing: 1px;
+}
+.logo span { display: inline-block; animation: bounce 2s infinite; }
+.logo span:nth-child(2) { animation-delay: .1s; }
+.logo span:nth-child(3) { animation-delay: .2s; }
+.logo span:nth-child(4) { animation-delay: .3s; }
+.logo span:nth-child(5) { animation-delay: .4s; }
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+nav {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 16px;
+  transition: all .3s;
+  position: relative;
+}
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  right: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan));
+  transition: width .3s;
+}
+nav a:hover::after { width: 100%; }
+nav a:hover { color: var(--neon-pink); text-shadow: 0 0 12px var(--neon-pink); }
+
+/* ============ HERO ============ */
+.hero {
+  padding: 80px 30px 50px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.hero h1 {
+  font-size: clamp(38px, 6vw, 72px);
+  font-weight: 900;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #fff 20%, var(--neon-pink) 50%, var(--neon-purple) 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 1.2;
+}
+.hero p {
+  font-size: 20px;
+  color: var(--text-dim);
+  max-width: 700px;
+  margin: 0 auto 35px;
+}
+
+/* ============ CONTAINER ============ */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.section-title {
+  font-size: 32px;
+  font-weight: 900;
+  margin: 50px 0 25px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.section-title::before {
+  content: '';
+  width: 6px;
+  height: 36px;
+  background: linear-gradient(180deg, var(--neon-pink), var(--neon-purple));
+  border-radius: 5px;
+  box-shadow: 0 0 15px var(--neon-pink);
+}
+.section-title .count-badge {
+  font-size: 16px;
+  background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+  padding: 4px 14px;
+  border-radius: 50px;
+  box-shadow: 0 0 20px rgba(160,32,240,.6);
+}
+
+/* ============ UPLOAD ZONE ============ */
+.upload-zone {
+  background: rgba(31, 0, 59, 0.6);
+  border: 2px dashed rgba(160,32,240,.6);
+  border-radius: 20px;
+  padding: 60px 30px;
+  text-align: center;
+  transition: all .4s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.upload-zone:hover {
+  border-color: var(--neon-pink);
+  background: rgba(255,46,136,.05);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 60px rgba(255,46,136,.2);
+}
+.upload-zone.dragover {
+  border-color: var(--neon-cyan);
+  background: rgba(0,229,255,.1);
+  box-shadow: 0 0 60px rgba(0,229,255,.4) inset;
+  transform: scale(1.02);
+}
+.upload-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+  display: block;
+  filter: drop-shadow(0 0 20px var(--neon-pink));
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+.upload-zone h3 {
+  font-size: 26px;
+  margin-bottom: 10px;
+  color: #fff;
+}
+.upload-zone p {
+  color: var(--text-dim);
+  margin-bottom: 5px;
+  font-size: 15px;
+}
+.upload-zone input[type="file"] { display: none; }
+
+.upload-btn {
+  margin-top: 25px;
+  padding: 14px 45px;
+  background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-weight: 900;
+  cursor: pointer;
+  font-size: 17px;
+  font-family: inherit;
+  transition: all .3s;
+  box-shadow: 0 0 25px rgba(160,32,240,.6);
+}
+.upload-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 45px rgba(255,46,136,.9);
+}
+
+/* ============ PROGRESS ============ */
+.progress-container {
+  margin-top: 20px;
+  display: none;
+}
+.progress-container.active { display: block; }
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255,255,255,.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink), var(--neon-cyan));
+  background-size: 200% 100%;
+  animation: progressGlow 2s linear infinite;
+  transition: width .3s;
+  border-radius: 10px;
+}
+@keyframes progressGlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.progress-text {
+  text-align: center;
+  margin-top: 8px;
+  color: var(--neon-cyan);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ============ VIDEO GRID ============ */
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  margin-top: 25px;
+}
+
+.video-card {
+  background: linear-gradient(160deg, rgba(31,0,59,.9), rgba(21,0,42,.9));
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(160,32,240,.3);
+  transition: all .4s;
+  position: relative;
+  animation: cardIn .5s ease;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px) scale(.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.video-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple), var(--neon-cyan));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity .4s;
+  pointer-events: none;
+  z-index: 5;
+}
+.video-card:hover::before { opacity: 1; }
+.video-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 60px rgba(255,46,136,.35);
+}
+
+.video-media {
+  width: 100%;
+  height: 200px;
+  background: #000;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.video-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.4);
+  opacity: 1;
+  transition: opacity .3s;
+  pointer-events: none;
+}
+.play-overlay::before {
+  content: '▶';
+  font-size: 40px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 5px;
+  box-shadow: 0 0 40px rgba(255,46,136,.9);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(255,46,136,.9); }
+  50% { transform: scale(1.1); box-shadow: 0 0 60px rgba(255,46,136,1); }
+}
+.video-card:hover .play-overlay { opacity: 0; }
+
+.badge-new {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+  padding: 5px 14px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 900;
+  box-shadow: 0 0 20px var(--neon-pink);
+  z-index: 3;
+}
+
+.video-body {
+  padding: 18px;
+}
+.video-body h3 {
+  font-size: 17px;
+  margin-bottom: 10px;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.video-meta {
+  display: flex;
+  gap: 15px;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.video-meta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.video-actions {
+  display: flex;
+  gap: 8px;
+}
+.video-actions button,
+.video-actions a {
+  flex: 1;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  transition: all .3s;
+  text-decoration: none;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.btn-play {
+  background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+  color: #fff;
+  box-shadow: 0 0 15px rgba(160,32,240,.5);
+}
+.btn-play:hover { box-shadow: 0 0 25px var(--neon-pink); transform: scale(1.05); }
+.btn-download {
+  background: rgba(0,229,255,.15);
+  color: var(--neon-cyan);
+  border: 1px solid rgba(0,229,255,.4) !important;
+}
+.btn-download:hover { background: var(--neon-cyan); color: #000; }
+.btn-delete {
+  background: rgba(255,46,136,.15);
+  color: var(--neon-pink);
+  border: 1px solid rgba(255,46,136,.4) !important;
+}
+.btn-delete:hover { background: var(--neon-pink); color: #fff; }
+
+/* ============ MODAL ============ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.92);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.active { display: flex; animation: fadeIn .3s; }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.modal {
+  background: linear-gradient(160deg, var(--dark-2), var(--dark-3));
+  border-radius: 20px;
+  max-width: 900px;
+  width: 100%;
+  padding: 25px;
+  border: 1px solid rgba(160,32,240,.5);
+  box-shadow: 0 0 80px rgba(160,32,240,.4);
+  position: relative;
+  animation: modalIn .4s ease;
+}
+@keyframes modalIn {
+  from { transform: scale(.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.modal h2 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  padding-left: 50px;
+  background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.modal video {
+  width: 100%;
+  max-height: 70vh;
+  border-radius: 12px;
+  background: #000;
+  outline: none;
+}
+.close-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255,46,136,.2);
+  border: 1px solid var(--neon-pink);
+  color: var(--neon-pink);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 900;
+  transition: all .3s;
+  font-family: inherit;
+  z-index: 10;
+}
+.close-btn:hover { background: var(--neon-pink); color: #fff; transform: rotate(90deg); }
+
+/* ============ TOAST ============ */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(150%);
+  background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+  color: #fff;
+  padding: 15px 35px;
+  border-radius: 50px;
+  font-weight: 700;
+  box-shadow: 0 10px 40px rgba(255,46,136,.6);
+  transition: transform .4s cubic-bezier(.68,-0.55,.27,1.55);
+  z-index: 2000;
+  font-family: inherit;
+  max-width: 90%;
+  text-align: center;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ============ EMPTY STATE ============ */
+.empty-state {
+  text-align: center;
+  padding: 60px 30px;
+  color: var(--text-dim);
+  font-size: 18px;
+  grid-column: 1 / -1;
+}
+.empty-state .emoji {
+  font-size: 80px;
+  display: block;
+  margin-bottom: 20px;
+  opacity: .4;
+}
+
+/* ============ FOOTER ============ */
+footer {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-dim);
+  border-top: 1px solid rgba(160,32,240,.2);
+  position: relative;
+  z-index: 1;
+}
+footer .logo { font-size: 22px; display: block; margin-bottom: 12px; }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+  header { padding: 15px 18px; }
+  .logo { font-size: 24px; }
+  nav { gap: 15px; font-size: 14px; }
+  .hero { padding: 50px 20px 30px; }
+  .hero p { font-size: 16px; }
+  .container { padding: 0 18px 40px; }
+  .section-title { font-size: 22px; }
+  .upload-zone { padding: 40px 20px; }
+  .upload-icon { font-size: 60px; }
+  .upload-zone h3 { font-size: 20px; }
+  .videos-grid { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
 
-    <!-- ============================================ -->
-    <!-- صفحه لاگین -->
-    <!-- ============================================ -->
-    <div id="loginPage" class="min-h-screen flex items-center justify-center p-4">
-        <div class="glass-dark rounded-3xl p-8 w-full max-w-md slide-up">
-            <!-- لوگو -->
-            <div class="text-center mb-8">
-                <div class="text-6xl mb-2 float-animation">🎲</div>
-                <h1 class="text-4xl font-black text-yellow-400">بت‌هاوس</h1>
-                <p class="text-gray-400 text-sm mt-1">پلتفرم حرفه‌ای شرط‌بندی</p>
-            </div>
-            
-            <!-- فرم -->
-            <form id="loginForm" class="space-y-4">
-                <div id="loginMode">
-                    <div>
-                        <label class="block text-gray-300 text-sm mb-1">نام کاربری</label>
-                        <input type="text" id="loginUsername" placeholder="example" 
-                               class="w-full px-4 py-3 bg-gray-800/50 rounded-xl text-white border border-gray-700 focus:border-yellow-400 focus:outline-none transition">
-                    </div>
-                    <div>
-                        <label class="block text-gray-300 text-sm mb-1">رمز عبور</label>
-                        <input type="password" id="loginPassword" placeholder="••••••••" 
-                               class="w-full px-4 py-3 bg-gray-800/50 rounded-xl text-white border border-gray-700 focus:border-yellow-400 focus:outline-none transition">
-                    </div>
-                </div>
-                
-                <div id="registerMode" class="hidden space-y-4">
-                    <div>
-                        <label class="block text-gray-300 text-sm mb-1">نام کامل</label>
-                        <input type="text" id="registerFullName" placeholder="علی محمدی" 
-                               class="w-full px-4 py-3 bg-gray-800/50 rounded-xl text-white border border-gray-700 focus:border-yellow-400 focus:outline-none transition">
-                    </div>
-                    <div>
-                        <label class="block text-gray-300 text-sm mb-1">نام کاربری</label>
-                        <input type="text" id="registerUsername" placeholder="alimohammadi" 
-                               class="w-full px-4 py-3 bg-gray-800/50 rounded-xl text-white border border-gray-700 focus:border-yellow-400 focus:outline-none transition">
-                    </div>
-                    <div>
-                        <label class="block text-gray-300 text-sm mb-1">ایمیل</label>
-                        <input type="email" id="registerEmail" placeholder="ali@example.com" 
-                               class="w-full px-4 py-3 bg-gray-800/50 rounded-xl text-white border border-gray-700 focus:border-yellow-400 focus:outline-none transition">
-                    </div>
-                    <div>
-                        <label class="block text-gray-300 text-sm mb-1">رمز عبور</label>
-                        <input type="password" id="registerPassword" placeholder="••••••••" 
-                               class="w-full px-4 py-3 bg-gray-800/50 rounded-xl text-white border border-gray-700 focus:border-yellow-400 focus:outline-none transition">
-                    </div>
-                </div>
-                
-                <button type="submit" id="authButton" class="btn-primary w-full py-3 rounded-xl text-gray-900 font-bold text-lg">
-                    ورود
-                </button>
-            </form>
-            
-            <div class="text-center mt-4">
-                <button id="toggleAuthMode" class="text-yellow-400 hover:text-yellow-300 text-sm transition">
-                    ثبت‌نام ندارید؟ ثبت‌نام کنید
-                </button>
-            </div>
-            
-            <div id="authError" class="mt-3 text-red-400 text-sm text-center hidden"></div>
-            
-            <div class="mt-6 p-3 bg-gray-800/30 rounded-xl border border-gray-700">
-                <p class="text-xs text-gray-400 text-center">
-                    💡 برای تست: <span class="text-yellow-400">admin</span> / <span class="text-yellow-400">admin123</span>
-                </p>
-            </div>
-        </div>
-    </div>
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="logo"><span>ق</span><span>م</span><span>ب</span><span>و</span><span>ل</span> دات کام</div>
+  <nav>
+    <a href="#upload">آپلود ویدیو</a>
+    <a href="#gallery">گالری ویدیوها</a>
+  </nav>
+</header>
 
-    <!-- ============================================ -->
-    <!-- داشبورد اصلی -->
-    <!-- ============================================ -->
-    <div id="dashboardPage" class="hidden min-h-screen p-4">
-        
-        <!-- نوار بالا -->
-        <div class="glass-dark rounded-2xl p-4 max-w-6xl mx-auto mb-6 flex flex-wrap items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
-                <span class="text-3xl">🎲</span>
-                <span class="text-xl font-bold text-yellow-400">بت‌هاوس</span>
-                <span class="text-xs text-gray-500 bg-gray-800 px-2 py-1 rounded">v2.0</span>
-            </div>
-            
-            <div class="flex items-center gap-4 flex-wrap">
-                <div class="flex items-center gap-2 bg-gray-800/50 px-4 py-2 rounded-xl">
-                    <span class="text-gray-400">💰</span>
-                    <span id="userBalance" class="text-green-400 font-bold text-lg">0</span>
-                    <span class="text-gray-400 text-sm">تومان</span>
-                </div>
-                <div class="flex items-center gap-2 bg-gray-800/50 px-4 py-2 rounded-xl">
-                    <span class="text-gray-400">🏆</span>
-                    <span id="userWins" class="text-yellow-400 font-bold">0</span>
-                    <span class="text-gray-400 text-sm">برد</span>
-                </div>
-                <button id="logoutBtn" class="btn-danger px-4 py-2 rounded-xl text-white text-sm font-bold">
-                    خروج
-                </button>
-            </div>
-        </div>
-        
-        <!-- محتوای اصلی -->
-        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            <!-- بخش اصلی: بازی تاس -->
-            <div class="lg:col-span-2">
-                <div class="glass-dark rounded-2xl p-6">
-                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                        🎲 بازی تاس
-                        <span class="text-sm text-gray-400 font-normal">شانس خودت رو امتحان کن!</span>
-                    </h2>
-                    
-                    <!-- شانس‌های لحظه‌ای -->
-                    <div class="bg-gray-800/30 rounded-xl p-4 mb-4">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400 text-sm">📊 شانس‌های لحظه‌ای</span>
-                            <span class="text-xs text-green-400 animate-pulse">● زنده</span>
-                        </div>
-                        <div id="oddsDisplay" class="grid grid-cols-6 gap-2 mt-2">
-                            <div class="text-center p-2 bg-gray-700/30 rounded"><span class="text-white text-sm">۱</span><br><span class="text-yellow-400 font-bold" id="odds1">6.00</span></div>
-                            <div class="text-center p-2 bg-gray-700/30 rounded"><span class="text-white text-sm">۲</span><br><span class="text-yellow-400 font-bold" id="odds2">6.00</span></div>
-                            <div class="text-center p-2 bg-gray-700/30 rounded"><span class="text-white text-sm">۳</span><br><span class="text-yellow-400 font-bold" id="odds3">6.00</span></div>
-                            <div class="text-center p-2 bg-gray-700/30 rounded"><span class="text-white text-sm">۴</span><br><span class="text-yellow-400 font-bold" id="odds4">6.00</span></div>
-                            <div class="text-center p-2 bg-gray-700/30 rounded"><span class="text-white text-sm">۵</span><br><span class="text-yellow-400 font-bold" id="odds5">6.00</span></div>
-                            <div class="text-center p-2 bg-gray-700/30 rounded"><span class="text-white text-sm">۶</span><br><span class="text-yellow-400 font-bold" id="odds6">6.00</span></div>
-                        </div>
-                    </div>
-                    
-                    <!-- عددهای تاس برای انتخاب -->
-                    <div class="grid grid-cols-6 gap-3 mb-4">
-                        <div class="dice-option text-center p-4 rounded-xl bg-gray-800/50 hover:bg-gray-700/50" data-number="1">1️⃣</div>
-                        <div class="dice-option text-center p-4 rounded-xl bg-gray-800/50 hover:bg-gray-700/50" data-number="2">2️⃣</div>
-                        <div class="dice-option text-center p-4 rounded-xl bg-gray-800/50 hover:bg-gray-700/50" data-number="3">3️⃣</div>
-                        <div class="dice-option text-center p-4 rounded-xl bg-gray-800/50 hover:bg-gray-700/50" data-number="4">4️⃣</div>
-                        <div class="dice-option text-center p-4 rounded-xl bg-gray-800/50 hover:bg-gray-700/50" data-number="5">5️⃣</div>
-                        <div class="dice-option text-center p-4 rounded-xl bg-gray-800/50 hover:bg-gray-700/50" data-number="6">6️⃣</div>
-                    </div>
-                    
-                    <!-- مبلغ شرط -->
-                    <div class="flex flex-wrap gap-3 items-center mb-4">
-                        <span class="text-gray-300 text-sm">مبلغ شرط:</span>
-                        <div class="flex gap-2 flex-wrap">
-                            <button class="bet-amount-btn px-4 py-2 bg-gray-700/50 rounded-lg text-white text-sm hover:bg-gray-600/50 transition" data-amount="10">۱۰</button>
-                            <button class="bet-amount-btn px-4 py-2 bg-gray-700/50 rounded-lg text-white text-sm hover:bg-gray-600/50 transition" data-amount="25">۲۵</button>
-                            <button class="bet-amount-btn px-4 py-2 bg-gray-700/50 rounded-lg text-white text-sm hover:bg-gray-600/50 transition" data-amount="50">۵۰</button>
-                            <button class="bet-amount-btn px-4 py-2 bg-gray-700/50 rounded-lg text-white text-sm hover:bg-gray-600/50 transition" data-amount="100">۱۰۰</button>
-                            <button class="bet-amount-btn px-4 py-2 bg-gray-700/50 rounded-lg text-white text-sm hover:bg-gray-600/50 transition" data-amount="500">۵۰۰</button>
-                        </div>
-                        <input type="number" id="betAmountInput" value="10" min="1" 
-                               class="w-24 px-3 py-2 bg-gray-800/50 rounded-xl text-white border border-gray-700 focus:border-yellow-400 focus:outline-none transition">
-                    </div>
-                    
-                    <!-- دکمه شرط‌بندی و نتیجه -->
-                    <div class="flex flex-wrap gap-3 items-center">
-                        <button id="placeBetBtn" class="btn-success px-8 py-3 rounded-xl text-white font-bold text-lg flex-1 min-w-[150px]">
-                            🎯 شرط ببند
-                        </button>
-                        <div id="betResult" class="flex-1 text-center p-3 rounded-xl bg-gray-800/30 min-w-[150px]">
-                            <span class="text-gray-400 text-sm">نتیجه:</span>
-                            <span id="resultDisplay" class="text-white font-bold">-</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- تاریخچه شرط‌ها -->
-                <div class="glass-dark rounded-2xl p-6 mt-6">
-                    <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
-                        📜 تاریخچه شرط‌ها
-                        <span class="text-xs text-gray-400 font-normal">(آخرین ۱۰ تایی)</span>
-                    </h3>
-                    <div id="betHistory" class="space-y-2 max-h-60 overflow-y-auto">
-                        <p class="text-gray-500 text-sm text-center">هنوز شرطی ثبت نشده</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- سایدبار: اطلاعات کاربر و آمار -->
-            <div class="space-y-6">
-                <!-- پروفایل کاربر -->
-                <div class="glass-dark rounded-2xl p-6">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-2xl">
-                            👤
-                        </div>
-                        <div>
-                            <p id="userFullName" class="text-white font-bold">کاربر</p>
-                            <p id="userUsername" class="text-gray-400 text-sm">@username</p>
-                        </div>
-                    </div>
-                    <div class="space-y-2 text-sm">
-                        <div class="flex justify-between text-gray-300">
-                            <span>موجودی:</span>
-                            <span id="sidebarBalance" class="text-green-400 font-bold">0 تومان</span>
-                        </div>
-                        <div class="flex justify-between text-gray-300">
-                            <span>کل برد:</span>
-                            <span id="sidebarWins" class="text-yellow-400 font-bold">0</span>
-                        </div>
-                        <div class="flex justify-between text-gray-300">
-                            <span>کل باخت:</span>
-                            <span id="sidebarLosses" class="text-red-400 font-bold">0</span>
-                        </div>
-                        <div class="flex justify-between text-gray-300">
-                            <span>تعداد شرط‌ها:</span>
-                            <span id="sidebarTotalBets" class="text-blue-400 font-bold">0</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- بازی‌های محبوب -->
-                <div class="glass-dark rounded-2xl p-6">
-                    <h4 class="text-white font-bold mb-3">🎮 بازی‌های دیگر</h4>
-                    <div class="space-y-2">
-                        <div class="flex items-center gap-3 p-3 bg-gray-800/30 rounded-xl hover:bg-gray-700/30 transition cursor-pointer">
-                            <span class="text-2xl">⚽</span>
-                            <div>
-                                <p class="text-white text-sm font-bold">پیش‌بینی فوتبال</p>
-                                <p class="text-gray-400 text-xs">به زودی...</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3 p-3 bg-gray-800/30 rounded-xl hover:bg-gray-700/30 transition cursor-pointer">
-                            <span class="text-2xl">🃏</span>
-                            <div>
-                                <p class="text-white text-sm font-bold">پوکر</p>
-                                <p class="text-gray-400 text-xs">به زودی...</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3 p-3 bg-gray-800/30 rounded-xl hover:bg-gray-700/30 transition cursor-pointer">
-                            <span class="text-2xl">🎰</span>
-                            <div>
-                                <p class="text-white text-sm font-bold">اسلات</p>
-                                <p class="text-gray-400 text-xs">به زودی...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <h1>ویدیوت رو آپلود کن 🎬</h1>
+  <p>سریع، ساده و امن. ویدیوهات رو بفرست، پخش کن و با بقیه به اشتراک بذار.</p>
+</section>
 
-    <!-- ============================================ -->
-    <!-- اسکریپت اصلی -->
-    <!-- ============================================ -->
-    <script>
-        // =============================================
-        // مدیریت کاربران با LocalStorage
-        // =============================================
-        
-        // کاربر پیش‌فرض برای تست
-        const DEFAULT_USER = {
-            id: 1,
-            fullName: 'مدیر سیستم',
-            username: 'admin',
-            email: 'admin@betting.com',
-            password: 'admin123',
-            balance: 10000,
-            wins: 0,
-            losses: 0,
-            totalBets: 0,
-            history: []
+<div class="container">
+
+  <!-- ===== UPLOAD SECTION ===== -->
+  <h2 class="section-title" id="upload">📤 آپلود ویدیو</h2>
+  <div class="upload-zone" id="uploadZone">
+    <span class="upload-icon">🎥</span>
+    <h3>ویدیو رو اینجا بکش یا کلیک کن</h3>
+    <p>فرمت‌های پشتیبانی‌شده: MP4, WebM, OGG, MOV, AVI</p>
+    <p style="font-size:13px; margin-top:8px; color: #ff2e88;">حداکثر حجم: 500 مگابایت</p>
+    <input type="file" id="fileInput" accept="video/*" multiple>
+    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+      🚀 انتخاب ویدیو
+    </button>
+
+    <div class="progress-container" id="progressContainer">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text" id="progressText">در حال آپلود...</div>
+    </div>
+  </div>
+
+  <!-- ===== GALLERY ===== -->
+  <h2 class="section-title" id="gallery">
+    🎞️ گالری ویدیوها
+    <span class="count-badge" id="videoCount">0</span>
+  </h2>
+  <div class="videos-grid" id="videosGrid"></div>
+
+</div>
+
+<!-- ===== VIDEO PLAYER MODAL ===== -->
+<div class="modal-overlay" id="playerModal">
+  <div class="modal">
+    <button class="close-btn" onclick="closePlayer()">✕</button>
+    <h2 id="playerTitle">پخش ویدیو</h2>
+    <video id="playerVideo" controls autoplay></video>
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="logo">قمبول دات کام</div>
+  <p>© 2026 قمبول دات کام — تمامی حقوق محفوظ است 💜</p>
+</footer>
+
+<script>
+/* ==========================================
+   📦 متغیرهای اصلی
+========================================== */
+let videos = [];
+const MAX_SIZE = 500 * 1024 * 1024; // 500MB
+const STORAGE_KEY = 'ghonbool_videos';
+
+/* ==========================================
+   💾 ذخیره/بازیابی از localStorage
+   (فقط متادیتا — فایل اصلی ویدیو توی مرورگر می‌مونه)
+========================================== */
+function loadVideos() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) videos = JSON.parse(saved);
+  } catch (e) {
+    console.warn('خطا در خواندن حافظه');
+    videos = [];
+  }
+}
+
+function saveVideoMeta() {
+  // فقط متادیتا رو ذخیره می‌کنیم (بدون داده ویدیو که حجم زیاده)
+  const meta = videos.map(v => ({
+    id: v.id,
+    name: v.name,
+    size: v.size,
+    type: v.type,
+    duration: v.duration,
+    uploadedAt: v.uploadedAt,
+    url: v.url // فقط برای ویدیوهای کوچک
+  }));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(meta));
+  } catch (e) {
+    console.warn('حافظه پر است');
+  }
+}
+
+/* ==========================================
+   🎨 رندر گالری ویدیوها
+========================================== */
+function renderVideos() {
+  const grid = document.getElementById('videosGrid');
+  const countEl = document.getElementById('videoCount');
+  countEl.textContent = videos.length;
+
+  if (videos.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <span class="emoji">🎬</span>
+        هنوز ویدیویی آپلود نکردی!<br>
+        <small style="font-size:14px;">از کادر بالا شروع کن</small>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = videos.map(v => `
+    <div class="video-card" data-id="${v.id}">
+      <div class="video-media" onclick="playVideo('${v.id}')">
+        ${v.url
+          ? `<video src="${v.url}" muted preload="metadata"></video>`
+          : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:70px;background:linear-gradient(135deg,#1f003b,#0a0014);">🎞️</div>`
+        }
+        <span class="badge-new">NEW</span>
+        <div class="play-overlay"></div>
+      </div>
+      <div class="video-body">
+        <h3 title="${escapeHtml(v.name)}">${escapeHtml(v.name)}</h3>
+        <div class="video-meta">
+          <span>💾 ${formatSize(v.size)}</span>
+          <span>⏱️ ${v.duration || '---'}</span>
+          <span>📅 ${v.uploadedAt}</span>
+        </div>
+        <div class="video-actions">
+          <button class="btn-play" onclick="playVideo('${v.id}')">▶ پخش</button>
+          ${v.url ? `<a class="btn-download" href="${v.url}" download="${escapeHtml(v.name)}">⬇ دانلود</a>` : ''}
+          <button class="btn-delete" onclick="deleteVideo('${v.id}')">🗑 حذف</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ==========================================
+   📤 آپلود فایل
+========================================== */
+const uploadZone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('fileInput');
+const progressContainer = document.getElementById('progressContainer');
+const progressFill = document.getElementById('progressFill');
+const progressText = document.getElementById('progressText');
+
+// Drag & Drop
+['dragenter', 'dragover'].forEach(ev => {
+  uploadZone.addEventListener(ev, e => {
+    e.preventDefault();
+    e.stopPropagation();
+    uploadZone.classList.add('dragover');
+  });
+});
+['dragleave', 'drop'].forEach(ev => {
+  uploadZone.addEventListener(ev, e => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (ev === 'dragleave' && uploadZone.contains(e.relatedTarget)) return;
+    uploadZone.classList.remove('dragover');
+  });
+});
+uploadZone.addEventListener('drop', e => {
+  handleFiles(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', e => {
+  handleFiles(e.target.files);
+  fileInput.value = '';
+});
+
+function handleFiles(files) {
+  const videoFiles = Array.from(files).filter(f => f.type.startsWith('video/'));
+
+  if (videoFiles.length === 0) {
+    return showToast('❌ فقط فایل ویدیویی مجاز است');
+  }
+
+  videoFiles.forEach((file, idx) => {
+    if (file.size > MAX_SIZE) {
+      return showToast(`❌ ${file.name} بیش از 500 مگابایت است`);
+    }
+    setTimeout(() => uploadSingleFile(file), idx * 300);
+  });
+}
+
+function uploadSingleFile(file) {
+  return new Promise((resolve) => {
+    // نمایش نوار پیشرفت
+    progressContainer.classList.add('active');
+    progressFill.style.width = '0%';
+    progressText.textContent = `در حال پردازش: ${file.name}`;
+
+    const reader = new FileReader();
+
+    reader.onprogress = (e) => {
+      if (e.lengthComputable) {
+        const percent = Math.round((e.loaded / e.total) * 100);
+        progressFill.style.width = percent + '%';
+        progressText.textContent = `آپلود ${file.name} — ${percent}%`;
+      }
+    };
+
+    reader.onload = (e) => {
+      const dataUrl = e.target.result;
+
+      // گرفتن مدت زمان ویدیو
+      const tempVideo = document.createElement('video');
+      tempVideo.preload = 'metadata';
+      tempVideo.src = dataUrl;
+
+      tempVideo.onloadedmetadata = () => {
+        const duration = formatDuration(tempVideo.duration);
+        tempVideo.currentTime = 0.1; // برای ساخت تامبنیل
+
+        const newVideo = {
+          id: 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          duration: duration,
+          uploadedAt: new Date().toLocaleDateString('fa-IR'),
+          url: dataUrl
         };
-        
-        // مقداردهی اولیه
-        let currentUser = null;
-        let selectedNumber = null;
-        let currentOdds = { 1: 6.0, 2: 6.0, 3: 6.0, 4: 6.0, 5: 6.0, 6: 6.0 };
-        let betAmount = 10;
-        let isLoginMode = true;
-        
-        // =============================================
-        // توابع کمکی
-        // =============================================
-        
-        function getUsers() {
-            const data = localStorage.getItem('betting_users');
-            if (!data) {
-                // ذخیره کاربر پیش‌فرض
-                localStorage.setItem('betting_users', JSON.stringify([DEFAULT_USER]));
-                return [DEFAULT_USER];
-            }
-            return JSON.parse(data);
-        }
-        
-        function saveUsers(users) {
-            localStorage.setItem('betting_users', JSON.stringify(users));
-        }
-        
-        function getCurrentUser() {
-            const data = localStorage.getItem('betting_current_user');
-            if (!data) return null;
-            return JSON.parse(data);
-        }
-        
-        function saveCurrentUser(user) {
-            localStorage.setItem('betting_current_user', JSON.stringify(user));
-        }
-        
-        function clearCurrentUser() {
-            localStorage.removeItem('betting_current_user');
-        }
-        
-        // =============================================
-        // تولید شانس‌های تصادفی
-        // =============================================
-        
-        function generateRandomOdds() {
-            const odds = {};
-            for (let i = 1; i <= 6; i++) {
-                odds[i] = (3 + Math.random() * 7).toFixed(2);
-            }
-            return odds;
-        }
-        
-        // =============================================
-        // توابع رابط کاربری
-        // =============================================
-        
-        function showLoginPage() {
-            document.getElementById('loginPage').classList.remove('hidden');
-            document.getElementById('dashboardPage').classList.add('hidden');
-        }
-        
-        function showDashboardPage() {
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('dashboardPage').classList.remove('hidden');
-            updateDashboard();
-        }
-        
-        function updateDashboard() {
-            if (!currentUser) return;
-            
-            // آپدیت موجودی
-            document.getElementById('userBalance').textContent = currentUser.balance.toLocaleString();
-            document.getElementById('sidebarBalance').textContent = currentUser.balance.toLocaleString() + ' تومان';
-            
-            // آپدیت برد/باخت
-            document.getElementById('userWins').textContent = currentUser.wins || 0;
-            document.getElementById('sidebarWins').textContent = currentUser.wins || 0;
-            document.getElementById('sidebarLosses').textContent = currentUser.losses || 0;
-            document.getElementById('sidebarTotalBets').textContent = currentUser.totalBets || 0;
-            
-            // اطلاعات کاربر
-            document.getElementById('userFullName').textContent = currentUser.fullName || 'کاربر';
-            document.getElementById('userUsername').textContent = '@' + (currentUser.username || 'username');
-            
-            // تاریخچه
-            updateHistory();
-        }
-        
-        function updateHistory() {
-            const container = document.getElementById('betHistory');
-            const history = currentUser.history || [];
-            
-            if (history.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-sm text-center">هنوز شرطی ثبت نشده</p>';
-                return;
-            }
-            
-            // نمایش آخرین ۱۰ تایی
-            const recent = history.slice(-10).reverse();
-            container.innerHTML = recent.map(item => `
-                <div class="flex justify-between items-center p-3 rounded-xl ${item.win ? 'bg-green-900/20 border border-green-800/30' : 'bg-red-900/20 border border-red-800/30'}">
-                    <div>
-                        <span class="text-white text-sm">🎲 عدد ${item.selection}</span>
-                        <span class="text-gray-400 text-xs mx-2">|</span>
-                        <span class="text-gray-400 text-xs">${item.amount} تومان</span>
-                    </div>
-                    <div class="text-sm font-bold ${item.win ? 'text-green-400' : 'text-red-400'}">
-                        ${item.win ? `+${(item.amount * item.odds).toFixed(0)}` : `-${item.amount}`}
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        function showResult(number, win, winAmount) {
-            const display = document.getElementById('resultDisplay');
-            const container = document.getElementById('betResult');
-            
-            // حذف کلاس‌های قبلی
-            container.classList.remove('win-flash', 'lose-flash');
-            
-            if (win) {
-                display.textContent = `🎉 برد! ${winAmount.toFixed(0)} تومان`;
-                display.className = 'text-green-400 font-bold';
-                container.classList.add('win-flash');
-            } else {
-                display.textContent = `😢 عدد ${number} آمد`;
-                display.className = 'text-red-400 font-bold';
-                container.classList.add('lose-flash');
-            }
-            
-            // بعد از ۳ ثانیه ریست
-            setTimeout(() => {
-                container.classList.remove('win-flash', 'lose-flash');
-            }, 3000);
-        }
-        
-        function updateOddsDisplay(odds) {
-            for (let i = 1; i <= 6; i++) {
-                document.getElementById(`odds${i}`).textContent = odds[i] || '6.00';
-            }
-        }
-        
-        // =============================================
-        // توابع احراز هویت
-        // =============================================
-        
-        function handleLogin(username, password) {
-            const users = getUsers();
-            const user = users.find(u => u.username === username && u.password === password);
-            
-            if (!user) {
-                document.getElementById('authError').textContent = '❌ نام کاربری یا رمز عبور اشتباه است';
-                document.getElementById('authError').classList.remove('hidden');
-                return false;
-            }
-            
-            currentUser = user;
-            saveCurrentUser(user);
-            showDashboardPage();
-            return true;
-        }
-        
-        function handleRegister(fullName, username, email, password) {
-            const users = getUsers();
-            
-            // بررسی تکراری بودن
-            if (users.find(u => u.username === username)) {
-                document.getElementById('authError').textContent = '❌ این نام کاربری قبلاً ثبت شده است';
-                document.getElementById('authError').classList.remove('hidden');
-                return false;
-            }
-            
-            if (users.find(u => u.email === email)) {
-                document.getElementById('authError').textContent = '❌ این ایمیل قبلاً ثبت شده است';
-                document.getElementById('authError').classList.remove('hidden');
-                return false;
-            }
-            
-            // ایجاد کاربر جدید
-            const newUser = {
-                id: users.length + 1,
-                fullName,
-                username,
-                email,
-                password,
-                balance: 1000, // جایزه ثبت‌نام
-                wins: 0,
-                losses: 0,
-                totalBets: 0,
-                history: []
-            };
-            
-            users.push(newUser);
-            saveUsers(users);
-            
-            currentUser = newUser;
-            saveCurrentUser(newUser);
-            showDashboardPage();
-            return true;
-        }
-        
-        function handleLogout() {
-            clearCurrentUser();
-            currentUser = null;
-            showLoginPage();
-            document.getElementById('loginUsername').value = '';
-            document.getElementById('loginPassword').value = '';
-        }
-        
-        // =============================================
-        // شرط‌بندی
-        // =============================================
-        
-        function placeBet() {
-            if (!currentUser) {
-                alert('لطفاً ابتدا وارد شوید!');
-                return;
-            }
-            
-            if (!selectedNumber) {
-                alert('لطفاً یک عدد انتخاب کنید!');
-                return;
-            }
-            
-            const amount = parseInt(document.getElementById('betAmountInput').value);
-            if (isNaN(amount) || amount < 1) {
-                alert('مبلغ شرط باید حداقل ۱ تومان باشد!');
-                return;
-            }
-            
-            if (amount > currentUser.balance) {
-                alert('موجودی شما کافی نیست!');
-                return;
-            }
-            
-            // دریافت شانس فعلی
-            const odds = parseFloat(currentOdds[selectedNumber]);
-            
-            // پرتاب تاس
-            const diceResult = Math.floor(Math.random() * 6) + 1;
-            const win = (diceResult === selectedNumber);
-            const winAmount = win ? amount * odds : 0;
-            
-            // به‌روزرسانی موجودی
-            currentUser.balance = currentUser.balance - amount + winAmount;
-            currentUser.totalBets = (currentUser.totalBets || 0) + 1;
-            
-            if (win) {
-                currentUser.wins = (currentUser.wins || 0) + 1;
-            } else {
-                currentUser.losses = (currentUser.losses || 0) + 1;
-            }
-            
-            // ذخیره تاریخچه
-            if (!currentUser.history) currentUser.history = [];
-            currentUser.history.push({
-                selection: selectedNumber,
-                result: diceResult,
-                amount: amount,
-                odds: odds,
-                win: win,
-                winAmount: winAmount,
-                time: new Date().toLocaleString()
-            });
-            
-            // ذخیره در localStorage
-            const users = getUsers();
-            const index = users.findIndex(u => u.id === currentUser.id);
-            if (index !== -1) {
-                users[index] = currentUser;
-                saveUsers(users);
-            }
-            saveCurrentUser(currentUser);
-            
-            // نمایش نتیجه
-            showResult(diceResult, win, winAmount);
-            
-            // آپدیت داشبورد
-            updateDashboard();
-            
-            // انیمیشن شیک
-            document.getElementById('placeBetBtn').classList.add('shake');
-            setTimeout(() => {
-                document.getElementById('placeBetBtn').classList.remove('shake');
-            }, 500);
-        }
-        
-        // =============================================
-        // شروع کننده‌های خودکار
-        // =============================================
-        
-        // تغییر خودکار شانس‌ها هر ۳ ثانیه
-        setInterval(() => {
-            currentOdds = generateRandomOdds();
-            updateOddsDisplay(currentOdds);
-        }, 3000);
-        
-        // =============================================
-        // رویدادها (Event Listeners)
-        // =============================================
-        
-        // ---------- لاگین/ثبت‌نام ----------
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            document.getElementById('authError').classList.add('hidden');
-            
-            if (isLoginMode) {
-                const username = document.getElementById('loginUsername').value.trim();
-                const password = document.getElementById('loginPassword').value.trim();
-                if (!username || !password) {
-                    document.getElementById('authError').textContent = '❌ همه فیلدها را پر کنید';
-                    document.getElementById('authError').classList.remove('hidden');
-                    return;
-                }
-                handleLogin(username, password);
-            } else {
-                const fullName = document.getElementById('registerFullName').value.trim();
-                const username = document.getElementById('registerUsername').value.trim();
-                const email = document.getElementById('registerEmail').value.trim();
-                const password = document.getElementById('registerPassword').value.trim();
-                if (!fullName || !username || !email || !password) {
-                    document.getElementById('authError').textContent = '❌ همه فیلدها را پر کنید';
-                    document.getElementById('authError').classList.remove('hidden');
-                    return;
-                }
-                if (password.length < 6) {
-                    document.getElementById('authError').textContent = '❌ رمز عبور باید حداقل ۶ کاراکتر باشد';
-                    document.getElementById('authError').classList.remove('hidden');
-                    return;
-                }
-                handleRegister(fullName, username, email, password);
-            }
-        });
-        
-        // تغییر حالت لاگین/ثبت‌نام
-        document.getElementById('toggleAuthMode').addEventListener('click', function() {
-            isLoginMode = !isLoginMode;
-            const loginMode = document.getElementById('loginMode');
-            const registerMode = document.getElementById('registerMode');
-            const button = document.getElementById('authButton');
-            const toggleText = document.getElementById('toggleAuthMode');
-            
-            if (isLoginMode) {
-                loginMode.classList.remove('hidden');
-                registerMode.classList.add('hidden');
-                button.textContent = 'ورود';
-                toggleText.textContent = 'ثبت‌نام ندارید؟ ثبت‌نام کنید';
-            } else {
-                loginMode.classList.add('hidden');
-                registerMode.classList.remove('hidden');
-                button.textContent = 'ثبت‌نام';
-                toggleText.textContent = 'قبلاً ثبت‌نام کرده‌اید؟ وارد شوید';
-            }
-            document.getElementById('authError').classList.add('hidden');
-        });
-        
-        // ---------- انتخاب عدد تاس ----------
-        document.querySelectorAll('.dice-option').forEach(el => {
-            el.addEventListener('click', function() {
-                // حذف انتخاب قبلی
-                document.querySelectorAll('.dice-option').forEach(e => e.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedNumber = parseInt(this.dataset.number);
-                
-                // آپدیت نمایش
-                document.getElementById('resultDisplay').textContent = `✅ ${selectedNumber} انتخاب شد`;
-                document.getElementById('resultDisplay').className = 'text-yellow-400 font-bold';
-            });
-        });
-        
-        // ---------- انتخاب مبلغ شرط ----------
-        document.querySelectorAll('.bet-amount-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const amount = parseInt(this.dataset.amount);
-                document.getElementById('betAmountInput').value = amount;
-                betAmount = amount;
-            });
-        });
-        
-        document.getElementById('betAmountInput').addEventListener('change', function() {
-            const val = parseInt(this.value);
-            if (!isNaN(val) && val > 0) {
-                betAmount = val;
-            }
-        });
-        
-        // ---------- دکمه شرط‌بندی ----------
-        document.getElementById('placeBetBtn').addEventListener('click', placeBet);
-        
-        // ---------- خروج ----------
-        document.getElementById('logoutBtn').addEventListener('click', handleLogout);
-        
-        // ---------- دکمه Enter برای لاگین ----------
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                const loginPage = document.getElementById('loginPage');
-                if (!loginPage.classList.contains('hidden')) {
-                    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
-                }
-            }
-        });
-        
-        // =============================================
-        // بارگذاری اولیه
-        // =============================================
-        
-        // چک کردن کاربر ذخیره شده
-        const savedUser = getCurrentUser();
-        if (savedUser) {
-            // همگام‌سازی با لیست کاربران
-            const users = getUsers();
-            const found = users.find(u => u.id === savedUser.id);
-            if (found) {
-                currentUser = found;
-                showDashboardPage();
-            } else {
-                clearCurrentUser();
-                showLoginPage();
-            }
-        } else {
-            showLoginPage();
-        }
-        
-        // مقداردهی اولیه شانس‌ها
-        currentOdds = generateRandomOdds();
-        updateOddsDisplay(currentOdds);
-        
-        console.log('🎲 بت‌هاوس با موفقیت بارگذاری شد!');
-        console.log('👤 برای تست: admin / admin123');
-    </script>
 
-</body>
-</html>
+        videos.unshift(newVideo);
+        saveVideoMeta();
+        renderVideos();
+
+        progressFill.style.width = '100%';
+        progressText.textContent = '✅ آپلود کامل شد!';
+
+        setTimeout(() => {
+          progressContainer.classList.remove('active');
+          progressFill.style.width = '0%';
+        }, 1500);
+
+        showToast(`✅ ${file.name} با موفقیت آپلود شد`);
+        resolve(newVideo);
+      };
+
+      tempVideo.onerror = () => {
+        // اگه متادیتا نخوند، بازم ذخیره کن
+        const newVideo = {
+          id: 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          duration: '---',
+          uploadedAt: new Date().toLocaleDateString('fa-IR'),
+          url: dataUrl
+        };
+        videos.unshift(newVideo);
+        saveVideoMeta();
+        renderVideos();
+        progressContainer.classList.remove('active');
+        showToast(`✅ ${file.name} آپلود شد`);
+        resolve(newVideo);
+      };
+    };
+
+    reader.onerror = () => {
+      showToast(`❌ خطا در خواندن ${file.name}`);
+      progressContainer.classList.remove('active');
+      resolve(null);
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ==========================================
+   ▶️ پخش ویدیو
+========================================== */
+function playVideo(id) {
+  const v = videos.find(x => x.id === id);
+  if (!v || !v.url) return showToast('❌ فایل ویدیو در دسترس نیست');
+
+  document.getElementById('playerTitle').textContent = v.name;
+  const playerVideo = document.getElementById('playerVideo');
+  playerVideo.src = v.url;
+  playerVideo.load();
+  playerVideo.play().catch(() => {});
+  document.getElementById('playerModal').classList.add('active');
+}
+
+function closePlayer() {
+  const playerVideo = document.getElementById('playerVideo');
+  playerVideo.pause();
+  playerVideo.src = '';
+  document.getElementById('playerModal').classList.remove('active');
+}
+
+/* ==========================================
+   🗑 حذف ویدیو
+========================================== */
+function deleteVideo(id) {
+  const v = videos.find(x => x.id === id);
+  if (!v) return;
+  if (!confirm(`«${v.name}» حذف بشه؟`)) return;
+
+  videos = videos.filter(x => x.id !== id);
+  saveVideoMeta();
+  renderVideos();
+  showToast('🗑 ویدیو حذف شد');
+}
+
+/* ==========================================
+   🎨 توابع کمکی
+========================================== */
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  if (bytes < 1024 * 1024 * 1024) return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+  return (bytes / 1024 / 1024 / 1024).toFixed(2) + ' GB';
+}
+
+function formatDuration(seconds) {
+  if (!seconds || isNaN(seconds)) return '---';
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ==========================================
+   🖱️ رویدادها
+========================================== */
+// بستن مودال با کلیک روی پس‌زمینه
+document.getElementById('playerModal').addEventListener('click', e => {
+  if (e.target.id === 'playerModal') closePlayer();
+});
+
+// بستن با ESC
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closePlayer();
+});
+
+// اسکرول نرم
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const href = a.getAttribute('href');
+    if (href.length > 1) {
+      e.preventDefault();
+      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+
+/* ==========================================
+  
