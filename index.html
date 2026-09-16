@@ -3,960 +3,262 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>قمبول دات کام | آپلود ویدیو</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+<title>🐵 مسابقه‌ی میمون‌ها</title>
 <style>
-/* ============ RESET ============ */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --neon-pink: #ff2e88;
-  --neon-purple: #a020f0;
-  --neon-cyan: #00e5ff;
-  --dark: #0a0014;
-  --dark-2: #15002a;
-  --dark-3: #1f003b;
-  --text: #ffffff;
-  --text-dim: #b8a5d6;
-}
+  body {
+    font-family: 'Tahoma', sans-serif;
+    background: linear-gradient(135deg, #ff9ec4, #ffd1e3, #ffe4f0);
+    min-height: 100vh;
+    padding: 30px 15px;
+    color: #5a2a4a;
+  }
 
-html { scroll-behavior: smooth; }
+  header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
 
-body {
-  font-family: 'Vazirmatn', Tahoma, sans-serif;
-  background: var(--dark);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-  background-image:
-    radial-gradient(circle at 15% 20%, rgba(160,32,240,.25), transparent 45%),
-    radial-gradient(circle at 85% 80%, rgba(255,46,136,.22), transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(0,229,255,.10), transparent 60%);
-}
+  header h1 {
+    font-size: 2.2rem;
+    color: #d6336c;
+    text-shadow: 2px 2px 0 #fff;
+    margin-bottom: 10px;
+  }
 
-/* ============ گرید متحرک پس‌زمینه ============ */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(160,32,240,.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(160,32,240,.06) 1px, transparent 1px);
-  background-size: 50px 50px;
-  pointer-events: none;
-  z-index: 0;
-  animation: gridMove 20s linear infinite;
-}
-@keyframes gridMove {
-  0% { background-position: 0 0; }
-  100% { background-position: 50px 50px; }
-}
+  header p {
+    font-size: 1.1rem;
+    color: #a03060;
+  }
 
-/* ============ HEADER ============ */
-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  padding: 18px 30px;
-  background: rgba(10, 0, 20, 0.85);
-  backdrop-filter: blur(15px);
-  border-bottom: 1px solid rgba(160,32,240,.3);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 15px;
-}
+  .monkey-box {
+    background: #fff;
+    border: 4px dashed #ff69b4;
+    border-radius: 25px;
+    padding: 20px;
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto 30px;
+    box-shadow: 0 8px 20px rgba(214, 51, 108, 0.2);
+  }
 
-.logo {
-  font-size: 34px;
-  font-weight: 900;
-  background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple), var(--neon-cyan));
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: gradientShift 4s ease infinite;
-  text-shadow: 0 0 30px rgba(255,46,136,.4);
-  letter-spacing: 1px;
-}
-.logo span { display: inline-block; animation: bounce 2s infinite; }
-.logo span:nth-child(2) { animation-delay: .1s; }
-.logo span:nth-child(3) { animation-delay: .2s; }
-.logo span:nth-child(4) { animation-delay: .3s; }
-.logo span:nth-child(5) { animation-delay: .4s; }
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
+  .monkey-name {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #d6336c;
+  }
 
-nav {
-  display: flex;
-  gap: 25px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-nav a {
-  color: var(--text);
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 16px;
-  transition: all .3s;
-  position: relative;
-}
-nav a::after {
-  content: '';
-  position: absolute;
-  bottom: -5px;
-  right: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan));
-  transition: width .3s;
-}
-nav a:hover::after { width: 100%; }
-nav a:hover { color: var(--neon-pink); text-shadow: 0 0 12px var(--neon-pink); }
+  .monkey-emoji {
+    font-size: 4rem;
+    display: block;
+    margin: 10px 0;
+    animation: bounce 1.5s infinite;
+  }
 
-/* ============ HERO ============ */
-.hero {
-  padding: 80px 30px 50px;
-  text-align: center;
-  position: relative;
-  z-index: 1;
-}
-.hero h1 {
-  font-size: clamp(38px, 6vw, 72px);
-  font-weight: 900;
-  margin-bottom: 20px;
-  background: linear-gradient(135deg, #fff 20%, var(--neon-pink) 50%, var(--neon-purple) 80%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  line-height: 1.2;
-}
-.hero p {
-  font-size: 20px;
-  color: var(--text-dim);
-  max-width: 700px;
-  margin: 0 auto 35px;
-}
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
 
-/* ============ CONTAINER ============ */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 30px 60px;
-  position: relative;
-  z-index: 1;
-}
+  .walnuts {
+    font-size: 2rem;
+  }
 
-.section-title {
-  font-size: 32px;
-  font-weight: 900;
-  margin: 50px 0 25px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-.section-title::before {
-  content: '';
-  width: 6px;
-  height: 36px;
-  background: linear-gradient(180deg, var(--neon-pink), var(--neon-purple));
-  border-radius: 5px;
-  box-shadow: 0 0 15px var(--neon-pink);
-}
-.section-title .count-badge {
-  font-size: 16px;
-  background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
-  padding: 4px 14px;
-  border-radius: 50px;
-  box-shadow: 0 0 20px rgba(160,32,240,.6);
-}
+  .upload-section {
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px;
+    max-width: 600px;
+    margin: 0 auto 30px;
+    box-shadow: 0 6px 18px rgba(214, 51, 108, 0.15);
+    text-align: center;
+  }
 
-/* ============ UPLOAD ZONE ============ */
-.upload-zone {
-  background: rgba(31, 0, 59, 0.6);
-  border: 2px dashed rgba(160,32,240,.6);
-  border-radius: 20px;
-  padding: 60px 30px;
-  text-align: center;
-  transition: all .4s;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.upload-zone:hover {
-  border-color: var(--neon-pink);
-  background: rgba(255,46,136,.05);
-  transform: translateY(-3px);
-  box-shadow: 0 20px 60px rgba(255,46,136,.2);
-}
-.upload-zone.dragover {
-  border-color: var(--neon-cyan);
-  background: rgba(0,229,255,.1);
-  box-shadow: 0 0 60px rgba(0,229,255,.4) inset;
-  transform: scale(1.02);
-}
-.upload-icon {
-  font-size: 80px;
-  margin-bottom: 20px;
-  display: block;
-  filter: drop-shadow(0 0 20px var(--neon-pink));
-  animation: float 3s ease-in-out infinite;
-}
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
-}
-.upload-zone h3 {
-  font-size: 26px;
-  margin-bottom: 10px;
-  color: #fff;
-}
-.upload-zone p {
-  color: var(--text-dim);
-  margin-bottom: 5px;
-  font-size: 15px;
-}
-.upload-zone input[type="file"] { display: none; }
+  .upload-section h2 {
+    color: #d6336c;
+    margin-bottom: 15px;
+  }
 
-.upload-btn {
-  margin-top: 25px;
-  padding: 14px 45px;
-  background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
-  color: #fff;
-  border: none;
-  border-radius: 50px;
-  font-weight: 900;
-  cursor: pointer;
-  font-size: 17px;
-  font-family: inherit;
-  transition: all .3s;
-  box-shadow: 0 0 25px rgba(160,32,240,.6);
-}
-.upload-btn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 45px rgba(255,46,136,.9);
-}
+  input[type="file"] {
+    display: none;
+  }
 
-/* ============ PROGRESS ============ */
-.progress-container {
-  margin-top: 20px;
-  display: none;
-}
-.progress-container.active { display: block; }
-.progress-bar {
-  width: 100%;
-  height: 8px;
-  background: rgba(255,255,255,.1);
-  border-radius: 10px;
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink), var(--neon-cyan));
-  background-size: 200% 100%;
-  animation: progressGlow 2s linear infinite;
-  transition: width .3s;
-  border-radius: 10px;
-}
-@keyframes progressGlow {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-.progress-text {
-  text-align: center;
-  margin-top: 8px;
-  color: var(--neon-cyan);
-  font-size: 14px;
-  font-weight: 700;
-}
+  .upload-btn {
+    display: inline-block;
+    background: #ff69b4;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: 0.3s;
+    border: none;
+  }
 
-/* ============ VIDEO GRID ============ */
-.videos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 25px;
-  margin-top: 25px;
-}
+  .upload-btn:hover {
+    background: #d6336c;
+    transform: scale(1.05);
+  }
 
-.video-card {
-  background: linear-gradient(160deg, rgba(31,0,59,.9), rgba(21,0,42,.9));
-  border-radius: 18px;
-  overflow: hidden;
-  border: 1px solid rgba(160,32,240,.3);
-  transition: all .4s;
-  position: relative;
-  animation: cardIn .5s ease;
-}
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(20px) scale(.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-.video-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 18px;
-  padding: 1px;
-  background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple), var(--neon-cyan));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity .4s;
-  pointer-events: none;
-  z-index: 5;
-}
-.video-card:hover::before { opacity: 1; }
-.video-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 25px 60px rgba(255,46,136,.35);
-}
+  #preview {
+    margin-top: 20px;
+  }
 
-.video-media {
-  width: 100%;
-  height: 200px;
-  background: #000;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-}
-.video-media video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
+  #preview img {
+    max-width: 200px;
+    border-radius: 15px;
+    border: 3px solid #ff69b4;
+  }
 
-.play-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,.4);
-  opacity: 1;
-  transition: opacity .3s;
-  pointer-events: none;
-}
-.play-overlay::before {
-  content: '▶';
-  font-size: 40px;
-  color: #fff;
-  background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-right: 5px;
-  box-shadow: 0 0 40px rgba(255,46,136,.9);
-  animation: pulse 2s infinite;
-}
-@keyframes pulse {
-  0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(255,46,136,.9); }
-  50% { transform: scale(1.1); box-shadow: 0 0 60px rgba(255,46,136,1); }
-}
-.video-card:hover .play-overlay { opacity: 0; }
+  #score {
+    margin-top: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #d6336c;
+    min-height: 40px;
+  }
 
-.badge-new {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
-  padding: 5px 14px;
-  border-radius: 50px;
-  font-size: 12px;
-  font-weight: 900;
-  box-shadow: 0 0 20px var(--neon-pink);
-  z-index: 3;
-}
+  .prize {
+    font-size: 2rem;
+    margin-top: 10px;
+  }
 
-.video-body {
-  padding: 18px;
-}
-.video-body h3 {
-  font-size: 17px;
-  margin-bottom: 10px;
-  color: #fff;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.video-meta {
-  display: flex;
-  gap: 15px;
-  font-size: 13px;
-  color: var(--text-dim);
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-}
-.video-meta span {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.video-actions {
-  display: flex;
-  gap: 8px;
-}
-.video-actions button,
-.video-actions a {
-  flex: 1;
-  padding: 9px 12px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-family: inherit;
-  font-weight: 700;
-  font-size: 13px;
-  transition: all .3s;
-  text-decoration: none;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-}
-.btn-play {
-  background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
-  color: #fff;
-  box-shadow: 0 0 15px rgba(160,32,240,.5);
-}
-.btn-play:hover { box-shadow: 0 0 25px var(--neon-pink); transform: scale(1.05); }
-.btn-download {
-  background: rgba(0,229,255,.15);
-  color: var(--neon-cyan);
-  border: 1px solid rgba(0,229,255,.4) !important;
-}
-.btn-download:hover { background: var(--neon-cyan); color: #000; }
-.btn-delete {
-  background: rgba(255,46,136,.15);
-  color: var(--neon-pink);
-  border: 1px solid rgba(255,46,136,.4) !important;
-}
-.btn-delete:hover { background: var(--neon-pink); color: #fff; }
+  .players {
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px;
+    max-width: 600px;
+    margin: 0 auto 30px;
+    box-shadow: 0 6px 18px rgba(214, 51, 108, 0.15);
+  }
 
-/* ============ MODAL ============ */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.92);
-  backdrop-filter: blur(10px);
-  z-index: 1000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-.modal-overlay.active { display: flex; animation: fadeIn .3s; }
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-.modal {
-  background: linear-gradient(160deg, var(--dark-2), var(--dark-3));
-  border-radius: 20px;
-  max-width: 900px;
-  width: 100%;
-  padding: 25px;
-  border: 1px solid rgba(160,32,240,.5);
-  box-shadow: 0 0 80px rgba(160,32,240,.4);
-  position: relative;
-  animation: modalIn .4s ease;
-}
-@keyframes modalIn {
-  from { transform: scale(.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-.modal h2 {
-  font-size: 22px;
-  margin-bottom: 15px;
-  padding-left: 50px;
-  background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.modal video {
-  width: 100%;
-  max-height: 70vh;
-  border-radius: 12px;
-  background: #000;
-  outline: none;
-}
-.close-btn {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background: rgba(255,46,136,.2);
-  border: 1px solid var(--neon-pink);
-  color: var(--neon-pink);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 20px;
-  font-weight: 900;
-  transition: all .3s;
-  font-family: inherit;
-  z-index: 10;
-}
-.close-btn:hover { background: var(--neon-pink); color: #fff; transform: rotate(90deg); }
+  .players h2 {
+    text-align: center;
+    color: #d6336c;
+    margin-bottom: 20px;
+  }
 
-/* ============ TOAST ============ */
-.toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%) translateY(150%);
-  background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
-  color: #fff;
-  padding: 15px 35px;
-  border-radius: 50px;
-  font-weight: 700;
-  box-shadow: 0 10px 40px rgba(255,46,136,.6);
-  transition: transform .4s cubic-bezier(.68,-0.55,.27,1.55);
-  z-index: 2000;
-  font-family: inherit;
-  max-width: 90%;
-  text-align: center;
-}
-.toast.show { transform: translateX(-50%) translateY(0); }
+  .player-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-bottom: 1px dashed #ffd1e3;
+    font-size: 1.05rem;
+    color: #5a2a4a;
+    cursor: default;
+    user-select: none;
+  }
 
-/* ============ EMPTY STATE ============ */
-.empty-state {
-  text-align: center;
-  padding: 60px 30px;
-  color: var(--text-dim);
-  font-size: 18px;
-  grid-column: 1 / -1;
-}
-.empty-state .emoji {
-  font-size: 80px;
-  display: block;
-  margin-bottom: 20px;
-  opacity: .4;
-}
+  .player-row:last-child { border-bottom: none; }
 
-/* ============ FOOTER ============ */
-footer {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--text-dim);
-  border-top: 1px solid rgba(160,32,240,.2);
-  position: relative;
-  z-index: 1;
-}
-footer .logo { font-size: 22px; display: block; margin-bottom: 12px; }
+  .player-row .medal {
+    font-size: 1.3rem;
+  }
 
-/* ============ RESPONSIVE ============ */
-@media (max-width: 768px) {
-  header { padding: 15px 18px; }
-  .logo { font-size: 24px; }
-  nav { gap: 15px; font-size: 14px; }
-  .hero { padding: 50px 20px 30px; }
-  .hero p { font-size: 16px; }
-  .container { padding: 0 18px 40px; }
-  .section-title { font-size: 22px; }
-  .upload-zone { padding: 40px 20px; }
-  .upload-icon { font-size: 60px; }
-  .upload-zone h3 { font-size: 20px; }
-  .videos-grid { grid-template-columns: 1fr; }
-}
+  .player-row .p-name {
+    font-weight: bold;
+    color: #d6336c;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    color: #a03060;
+    font-size: 0.95rem;
+    line-height: 1.9;
+  }
+
+  footer .credit {
+    margin-top: 15px;
+    font-weight: bold;
+    color: #d6336c;
+    font-size: 1.05rem;
+  }
 </style>
 </head>
 <body>
 
-<!-- ===== HEADER ===== -->
 <header>
-  <div class="logo"><span>ق</span><span>م</span><span>ب</span><span>و</span><span>ل</span> دات کام</div>
-  <nav>
-    <a href="#upload">آپلود ویدیو</a>
-    <a href="#gallery">گالری ویدیوها</a>
-  </nav>
+  <h1>🐵 مسابقه‌ی بزرگ میمون‌ها 🍌</h1>
+  <p>بهترین عکس میمون رو آپلود کن و جایزه‌ی موز طلایی رو ببر!</p>
 </header>
 
-<!-- ===== HERO ===== -->
-<section class="hero">
-  <h1>ویدیوت رو آپلود کن 🎬</h1>
-  <p>سریع، ساده و امن. ویدیوهات رو بفرست، پخش کن و با بقیه به اشتراک بذار.</p>
-</section>
-
-<div class="container">
-
-  <!-- ===== UPLOAD SECTION ===== -->
-  <h2 class="section-title" id="upload">📤 آپلود ویدیو</h2>
-  <div class="upload-zone" id="uploadZone">
-    <span class="upload-icon">🎥</span>
-    <h3>ویدیو رو اینجا بکش یا کلیک کن</h3>
-    <p>فرمت‌های پشتیبانی‌شده: MP4, WebM, OGG, MOV, AVI</p>
-    <p style="font-size:13px; margin-top:8px; color: #ff2e88;">حداکثر حجم: 500 مگابایت</p>
-    <input type="file" id="fileInput" accept="video/*" multiple>
-    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
-      🚀 انتخاب ویدیو
-    </button>
-
-    <div class="progress-container" id="progressContainer">
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-      <div class="progress-text" id="progressText">در حال آپلود...</div>
-    </div>
-  </div>
-
-  <!-- ===== GALLERY ===== -->
-  <h2 class="section-title" id="gallery">
-    🎞️ گالری ویدیوها
-    <span class="count-badge" id="videoCount">0</span>
-  </h2>
-  <div class="videos-grid" id="videosGrid"></div>
-
+<!-- کارت میمون اصلی -->
+<div class="monkey-box">
+  <div class="monkey-name">🐒 میمون علی</div>
+  <span class="monkey-emoji">🐵</span>
+  <div class="walnuts">🌰 🌰</div>
 </div>
 
-<!-- ===== VIDEO PLAYER MODAL ===== -->
-<div class="modal-overlay" id="playerModal">
-  <div class="modal">
-    <button class="close-btn" onclick="closePlayer()">✕</button>
-    <h2 id="playerTitle">پخش ویدیو</h2>
-    <video id="playerVideo" controls autoplay></video>
-  </div>
+<!-- بخش آپلود عکس -->
+<div class="upload-section">
+  <h2>📸 عکس میمون خودت رو آپلود کن</h2>
+  <label for="fileInput" class="upload-btn">انتخاب عکس</label>
+  <input type="file" id="fileInput" accept="image/*">
+
+  <div id="preview"></div>
+  <div id="score"></div>
+  <div class="prize" id="prize"></div>
 </div>
 
-<!-- ===== TOAST ===== -->
-<div class="toast" id="toast"></div>
+<!-- لیست شرکت‌کننده‌ها (غیرقابل ویرایش) -->
+<div class="players">
+  <h2>🐵 شرکت‌کننده‌ها</h2>
 
-<!-- ===== FOOTER ===== -->
+  <div class="player-row"><span class="medal">🍫</span><span class="p-name">میمون علی</span></div>
+  <div class="player-row"><span class="medal">🍫</span><span class="p-name">رادین شپش</span></div>
+  <div class="player-row"><span class="medal">🍫</span><span class="p-name">سوشی کونی</span></div>
+  <div class="player-row"><span class="medal">🍫</span><span class="p-name">هوشمند صنایع دستی</span></div>
+  <div class="player-row"><span class="medal">🍫</span><span class="p-name"> پینوکیو مش</span></div>
+  <div class="player-row"><span class="medal">🍫</span><span class="p-name">  امیرfuckزاویه </span></div>
+  <div class="player-row"><span class="medal">🍫</span><span class="p-name">باران ویرایش (سینر)</span></div>
+  <div class="player-row"><span class="medal">🍫</span><span class="p-name">عسل گمنام</span></div>
+  <div class="player-row"><span class="medal">🍫</span><span class="p-name">حنانه سایلنت</span></div>
+  <div class="player-row"><span class="medal">🍫</span><span class="p-name">بتمن فیک(فاک)</span></div>
+  <div class="player-row"><span class="medal">🍫</span><span class="p-name">حسام پتی</span></div>
+</div>
+
 <footer>
-  <div class="logo">قمبول دات کام</div>
-  <p>© 2026 قمبول دات کام — تمامی حقوق محفوظ است 💜</p>
+  <div>🍌 جایزه‌ی نفر اول: موز طلایی</div>
+  <div>🍫 جایزه‌ی رتبه‌های بعدی: موز سیاه (شکلاتی)</div>
+  <div>🍆 جایزه‌ی رتبه‌ی آخر: بادمجان!</div>
+  <div class="credit">✨ با افتخار: هوشمند مهندس و سازنده سایت صنایع دستی ✨</div>
 </footer>
 
 <script>
-/* ==========================================
-   📦 متغیرهای اصلی
-========================================== */
-let videos = [];
-const MAX_SIZE = 500 * 1024 * 1024; // 500MB
-const STORAGE_KEY = 'ghonbool_videos';
+  const fileInput = document.getElementById('fileInput');
+  const preview = document.getElementById('preview');
+  const scoreDiv = document.getElementById('score');
+  const prizeDiv = document.getElementById('prize');
 
-/* ==========================================
-   💾 ذخیره/بازیابی از localStorage
-   (فقط متادیتا — فایل اصلی ویدیو توی مرورگر می‌مونه)
-========================================== */
-function loadVideos() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) videos = JSON.parse(saved);
-  } catch (e) {
-    console.warn('خطا در خواندن حافظه');
-    videos = [];
-  }
-}
-
-function saveVideoMeta() {
-  // فقط متادیتا رو ذخیره می‌کنیم (بدون داده ویدیو که حجم زیاده)
-  const meta = videos.map(v => ({
-    id: v.id,
-    name: v.name,
-    size: v.size,
-    type: v.type,
-    duration: v.duration,
-    uploadedAt: v.uploadedAt,
-    url: v.url // فقط برای ویدیوهای کوچک
-  }));
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(meta));
-  } catch (e) {
-    console.warn('حافظه پر است');
-  }
-}
-
-/* ==========================================
-   🎨 رندر گالری ویدیوها
-========================================== */
-function renderVideos() {
-  const grid = document.getElementById('videosGrid');
-  const countEl = document.getElementById('videoCount');
-  countEl.textContent = videos.length;
-
-  if (videos.length === 0) {
-    grid.innerHTML = `
-      <div class="empty-state">
-        <span class="emoji">🎬</span>
-        هنوز ویدیویی آپلود نکردی!<br>
-        <small style="font-size:14px;">از کادر بالا شروع کن</small>
-      </div>
-    `;
-    return;
-  }
-
-  grid.innerHTML = videos.map(v => `
-    <div class="video-card" data-id="${v.id}">
-      <div class="video-media" onclick="playVideo('${v.id}')">
-        ${v.url
-          ? `<video src="${v.url}" muted preload="metadata"></video>`
-          : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:70px;background:linear-gradient(135deg,#1f003b,#0a0014);">🎞️</div>`
-        }
-        <span class="badge-new">NEW</span>
-        <div class="play-overlay"></div>
-      </div>
-      <div class="video-body">
-        <h3 title="${escapeHtml(v.name)}">${escapeHtml(v.name)}</h3>
-        <div class="video-meta">
-          <span>💾 ${formatSize(v.size)}</span>
-          <span>⏱️ ${v.duration || '---'}</span>
-          <span>📅 ${v.uploadedAt}</span>
-        </div>
-        <div class="video-actions">
-          <button class="btn-play" onclick="playVideo('${v.id}')">▶ پخش</button>
-          ${v.url ? `<a class="btn-download" href="${v.url}" download="${escapeHtml(v.name)}">⬇ دانلود</a>` : ''}
-          <button class="btn-delete" onclick="deleteVideo('${v.id}')">🗑 حذف</button>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-/* ==========================================
-   📤 آپلود فایل
-========================================== */
-const uploadZone = document.getElementById('uploadZone');
-const fileInput = document.getElementById('fileInput');
-const progressContainer = document.getElementById('progressContainer');
-const progressFill = document.getElementById('progressFill');
-const progressText = document.getElementById('progressText');
-
-// Drag & Drop
-['dragenter', 'dragover'].forEach(ev => {
-  uploadZone.addEventListener(ev, e => {
-    e.preventDefault();
-    e.stopPropagation();
-    uploadZone.classList.add('dragover');
-  });
-});
-['dragleave', 'drop'].forEach(ev => {
-  uploadZone.addEventListener(ev, e => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (ev === 'dragleave' && uploadZone.contains(e.relatedTarget)) return;
-    uploadZone.classList.remove('dragover');
-  });
-});
-uploadZone.addEventListener('drop', e => {
-  handleFiles(e.dataTransfer.files);
-});
-fileInput.addEventListener('change', e => {
-  handleFiles(e.target.files);
-  fileInput.value = '';
-});
-
-function handleFiles(files) {
-  const videoFiles = Array.from(files).filter(f => f.type.startsWith('video/'));
-
-  if (videoFiles.length === 0) {
-    return showToast('❌ فقط فایل ویدیویی مجاز است');
-  }
-
-  videoFiles.forEach((file, idx) => {
-    if (file.size > MAX_SIZE) {
-      return showToast(`❌ ${file.name} بیش از 500 مگابایت است`);
-    }
-    setTimeout(() => uploadSingleFile(file), idx * 300);
-  });
-}
-
-function uploadSingleFile(file) {
-  return new Promise((resolve) => {
-    // نمایش نوار پیشرفت
-    progressContainer.classList.add('active');
-    progressFill.style.width = '0%';
-    progressText.textContent = `در حال پردازش: ${file.name}`;
+  fileInput.addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
 
     const reader = new FileReader();
+    reader.onload = function (event) {
+      preview.innerHTML = `<img src="${event.target.result}" alt="عکس میمون">`;
 
-    reader.onprogress = (e) => {
-      if (e.lengthComputable) {
-        const percent = Math.round((e.loaded / e.total) * 100);
-        progressFill.style.width = percent + '%';
-        progressText.textContent = `آپلود ${file.name} — ${percent}%`;
+      const score = Math.floor(Math.random() * 101);
+      scoreDiv.textContent = `امتیاز تو: ${score} از ۱۰۰`;
+
+      let prize = '';
+      if (score >= 90) {
+        prize = '🍌 موز طلایی!';
+      } else if (score >= 50) {
+        prize = '🍫 موز سیاه (شکلاتی)!';
+      } else {
+        prize = '🍆 بادمجان!';
       }
+      prizeDiv.textContent = prize;
     };
-
-    reader.onload = (e) => {
-      const dataUrl = e.target.result;
-
-      // گرفتن مدت زمان ویدیو
-      const tempVideo = document.createElement('video');
-      tempVideo.preload = 'metadata';
-      tempVideo.src = dataUrl;
-
-      tempVideo.onloadedmetadata = () => {
-        const duration = formatDuration(tempVideo.duration);
-        tempVideo.currentTime = 0.1; // برای ساخت تامبنیل
-
-        const newVideo = {
-          id: 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          duration: duration,
-          uploadedAt: new Date().toLocaleDateString('fa-IR'),
-          url: dataUrl
-        };
-
-        videos.unshift(newVideo);
-        saveVideoMeta();
-        renderVideos();
-
-        progressFill.style.width = '100%';
-        progressText.textContent = '✅ آپلود کامل شد!';
-
-        setTimeout(() => {
-          progressContainer.classList.remove('active');
-          progressFill.style.width = '0%';
-        }, 1500);
-
-        showToast(`✅ ${file.name} با موفقیت آپلود شد`);
-        resolve(newVideo);
-      };
-
-      tempVideo.onerror = () => {
-        // اگه متادیتا نخوند، بازم ذخیره کن
-        const newVideo = {
-          id: 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          duration: '---',
-          uploadedAt: new Date().toLocaleDateString('fa-IR'),
-          url: dataUrl
-        };
-        videos.unshift(newVideo);
-        saveVideoMeta();
-        renderVideos();
-        progressContainer.classList.remove('active');
-        showToast(`✅ ${file.name} آپلود شد`);
-        resolve(newVideo);
-      };
-    };
-
-    reader.onerror = () => {
-      showToast(`❌ خطا در خواندن ${file.name}`);
-      progressContainer.classList.remove('active');
-      resolve(null);
-    };
-
     reader.readAsDataURL(file);
   });
-}
+</script>
 
-/* ==========================================
-   ▶️ پخش ویدیو
-========================================== */
-function playVideo(id) {
-  const v = videos.find(x => x.id === id);
-  if (!v || !v.url) return showToast('❌ فایل ویدیو در دسترس نیست');
-
-  document.getElementById('playerTitle').textContent = v.name;
-  const playerVideo = document.getElementById('playerVideo');
-  playerVideo.src = v.url;
-  playerVideo.load();
-  playerVideo.play().catch(() => {});
-  document.getElementById('playerModal').classList.add('active');
-}
-
-function closePlayer() {
-  const playerVideo = document.getElementById('playerVideo');
-  playerVideo.pause();
-  playerVideo.src = '';
-  document.getElementById('playerModal').classList.remove('active');
-}
-
-/* ==========================================
-   🗑 حذف ویدیو
-========================================== */
-function deleteVideo(id) {
-  const v = videos.find(x => x.id === id);
-  if (!v) return;
-  if (!confirm(`«${v.name}» حذف بشه؟`)) return;
-
-  videos = videos.filter(x => x.id !== id);
-  saveVideoMeta();
-  renderVideos();
-  showToast('🗑 ویدیو حذف شد');
-}
-
-/* ==========================================
-   🎨 توابع کمکی
-========================================== */
-function escapeHtml(str) {
-  if (!str) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function formatSize(bytes) {
-  if (bytes < 1024) return bytes + ' B';
-  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-  if (bytes < 1024 * 1024 * 1024) return (bytes / 1024 / 1024).toFixed(1) + ' MB';
-  return (bytes / 1024 / 1024 / 1024).toFixed(2) + ' GB';
-}
-
-function formatDuration(seconds) {
-  if (!seconds || isNaN(seconds)) return '---';
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-}
-
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-/* ==========================================
-   🖱️ رویدادها
-========================================== */
-// بستن مودال با کلیک روی پس‌زمینه
-document.getElementById('playerModal').addEventListener('click', e => {
-  if (e.target.id === 'playerModal') closePlayer();
-});
-
-// بستن با ESC
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closePlayer();
-});
-
-// اسکرول نرم
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const href = a.getAttribute('href');
-    if (href.length > 1) {
-      e.preventDefault();
-      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
-    }
-  });
-});
-
-/* ==========================================
-  
+</body>
+</html>
