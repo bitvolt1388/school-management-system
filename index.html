@@ -2,526 +2,1170 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>English Master Pro v5 | محمد مهدی شهسواری</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0a0e1a">
+<title>⚡ English Master Pro — ساخته شده توسط محمد مهدی شهسواری</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
+/* ============================================================
+   ROOT & RESET
+   ============================================================ */
 :root{
-  --primary:#7c3aed;--primary-dark:#6d28d9;--primary-light:#a78bfa;
-  --success:#10b981;--success-dark:#059669;
-  --danger:#ef4444;--warning:#f59e0b;--gold:#fbbf24;
-  --pink:#ec4899;--cyan:#06b6d4;
-  --bg-1:#0a0e1a;--bg-2:#0f1524;--bg-3:#1a2332;--bg-4:#252e3f;
+  --p1:#8b5cf6;--p2:#6366f1;--p3:#a855f7;
+  --pink:#ec4899;--cyan:#06b6d4;--green:#10b981;
+  --yellow:#fbbf24;--red:#ef4444;--orange:#f97316;
+  --bg-0:#05070f;--bg-1:#0a0e1a;--bg-2:#0f1524;--bg-3:#1a2332;
   --text-1:#f8fafc;--text-2:#cbd5e1;--text-3:#94a3b8;
-  --border:#2a3547;--border-hi:#3d4d66;
-  /* سطح‌ها */
-  --lvl-a1:#10b981;--lvl-a2:#3b82f6;--lvl-b1:#f59e0b;--lvl-b2:#ef4444;--lvl-c1:#a855f7;--lvl-c2:#64748b;
+  --border:rgba(148,163,184,.15);
+  --border-hi:rgba(148,163,184,.3);
+  --glass:rgba(26,35,50,.5);
+  --shadow:0 25px 50px -12px rgba(0,0,0,.7);
+  --shadow-glow:0 0 40px rgba(139,92,246,.35);
 }
 [data-theme="light"]{
-  --bg-1:#f0f4f9;--bg-2:#ffffff;--bg-3:#e6edf5;--bg-4:#d3dde8;
+  --bg-0:#f5f7fb;--bg-1:#eef2f8;--bg-2:#ffffff;--bg-3:#e2e8f0;
   --text-1:#0f172a;--text-2:#334155;--text-3:#64748b;
-  --border:#c7d2df;--border-hi:#a5b3c5;
+  --border:rgba(15,23,42,.08);
+  --border-hi:rgba(15,23,42,.18);
+  --glass:rgba(255,255,255,.7);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{overflow-x:hidden;}
 body{
-  font-family:'Vazirmatn','Segoe UI',Tahoma,system-ui,sans-serif;
-  background:var(--bg-1);
-  background-image:
-    radial-gradient(ellipse at 10% 0%,rgba(124,58,237,.18),transparent 50%),
-    radial-gradient(ellipse at 90% 100%,rgba(236,72,153,.12),transparent 50%);
-  background-attachment:fixed;
-  min-height:100vh;color:var(--text-1);line-height:1.65;
+  font-family:'Vazirmatn',system-ui,sans-serif;
+  background:var(--bg-0);
+  color:var(--text-1);
+  line-height:1.6;
+  min-height:100vh;
   transition:background .3s,color .3s;
+  position:relative;
 }
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+input,textarea{font-family:inherit;}
 .hidden{display:none!important;}
-button{font-family:inherit;}
 
-/* Login */
-#loginPage{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
-.login-card{
+/* ============================================================
+   AURORA BACKGROUND
+   ============================================================ */
+.aurora{
+  position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;
+}
+.aurora::before,.aurora::after{
+  content:'';position:absolute;width:80vmax;height:80vmax;border-radius:50%;
+  filter:blur(100px);opacity:.5;animation:aurora 20s ease-in-out infinite;
+}
+.aurora::before{
+  background:radial-gradient(circle,rgba(139,92,246,.7),transparent 70%);
+  top:-40%;left:-20%;
+}
+.aurora::after{
+  background:radial-gradient(circle,rgba(236,72,153,.6),transparent 70%);
+  bottom:-40%;right:-20%;animation-delay:-10s;
+}
+@keyframes aurora{
+  0%,100%{transform:translate(0,0) scale(1);}
+  33%{transform:translate(5%,5%) scale(1.1);}
+  66%{transform:translate(-3%,-3%) scale(.9);}
+}
+.stars{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%,#fff,transparent),
+    radial-gradient(1px 1px at 60% 70%,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 40% 20%,#fff,transparent),
+    radial-gradient(1px 1px at 80% 40%,#fff,transparent),
+    radial-gradient(1px 1px at 10% 80%,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 90% 90%,#fff,transparent),
+    radial-gradient(1px 1px at 50% 50%,#fff,transparent);
+  opacity:.4;
+  animation:twinkle 8s ease-in-out infinite;
+}
+@keyframes twinkle{0%,100%{opacity:.3}50%{opacity:.7}}
+
+/* ============================================================
+   LOGIN SCREEN
+   ============================================================ */
+.login-screen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:20px;position:relative;
+}
+.login-box{
   max-width:520px;width:100%;
-  background:linear-gradient(160deg,rgba(26,35,50,.85),rgba(15,21,36,.95));
-  backdrop-filter:blur(24px);border-radius:36px;padding:52px 44px;
-  border:1px solid rgba(124,58,237,.35);
-  box-shadow:0 40px 80px rgba(0,0,0,.7),0 0 120px rgba(124,58,237,.25);
+  background:linear-gradient(155deg,rgba(26,35,50,.75),rgba(15,21,36,.9));
+  backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);
+  border-radius:36px;padding:52px 40px;
+  border:1px solid rgba(139,92,246,.4);
+  box-shadow:
+    0 40px 80px rgba(0,0,0,.7),
+    inset 0 1px 0 rgba(255,255,255,.1),
+    0 0 100px rgba(139,92,246,.3);
   text-align:center;position:relative;overflow:hidden;
-  animation:loginIn .7s cubic-bezier(.16,1,.3,1);
+  animation:slideUp .8s cubic-bezier(.16,1,.3,1);
 }
-.login-card::before{
-  content:'';position:absolute;inset:-50%;
-  background:conic-gradient(from 0deg,transparent,rgba(124,58,237,.1),transparent 25%,transparent 75%,rgba(236,72,153,.08),transparent);
-  animation:rotate 15s linear infinite;pointer-events:none;
+.login-box::before{
+  content:'';position:absolute;inset:-2px;
+  background:conic-gradient(from 0deg,#8b5cf6,#ec4899,#06b6d4,#10b981,#fbbf24,#8b5cf6);
+  border-radius:38px;z-index:-1;
+  animation:spin 8s linear infinite;
+  opacity:.5;
+  filter:blur(20px);
 }
-@keyframes rotate{100%{transform:rotate(360deg)}}
-@keyframes loginIn{from{opacity:0;transform:translateY(40px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
-.login-card > *{position:relative;z-index:1;}
-.logo-orb{
-  width:88px;height:88px;margin:0 auto 20px;
-  background:linear-gradient(135deg,#7c3aed,#ec4899,#fbbf24);
-  border-radius:28px;display:flex;align-items:center;justify-content:center;
-  font-size:2.6rem;box-shadow:0 20px 40px rgba(124,58,237,.5),0 0 60px rgba(236,72,153,.4);
-  animation:orbPulse 3s ease-in-out infinite;
-}
-@keyframes orbPulse{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.06) rotate(-3deg)}}
-.login-card h1{font-size:2.1rem;font-weight:900;background:linear-gradient(135deg,#fbbf24,#ec4899,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;}
-.login-card .sub{color:var(--text-3);font-size:.95rem;margin-bottom:28px;}
-.login-field{text-align:right;margin-bottom:18px;}
-.login-field label{display:block;color:var(--text-2);font-size:.88rem;font-weight:700;margin-bottom:8px;}
-.login-field input{width:100%;padding:17px 20px;border-radius:16px;border:2px solid var(--border);background:rgba(10,14,26,.6);color:var(--text-1);font-size:1rem;outline:none;text-align:center;font-family:inherit;transition:all .3s;}
-.login-field input:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(124,58,237,.2);}
-.levels-mini{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:22px;padding-top:20px;border-top:1px dashed var(--border);}
-.levels-mini .lv{text-align:center;padding:8px 4px;border-radius:10px;font-size:.7rem;font-weight:900;color:#fff;box-shadow:0 4px 10px rgba(0,0,0,.3);}
-.lv.a1{background:linear-gradient(135deg,#10b981,#059669);}
-.lv.a2{background:linear-gradient(135deg,#3b82f6,#2563eb);}
-.lv.b1{background:linear-gradient(135deg,#f59e0b,#d97706);}
-.lv.b2{background:linear-gradient(135deg,#ef4444,#b91c1c);}
-.lv.c1{background:linear-gradient(135deg,#a855f7,#7c3aed);}
-.lv.c2{background:linear-gradient(135deg,#64748b,#334155);}
-.creator-tag{margin-top:22px;padding-top:18px;border-top:1px dashed var(--border);font-size:.82rem;color:var(--text-3);line-height:1.9;}
-.creator-tag .nm{background:linear-gradient(135deg,#fbbf24,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:800;font-size:.95rem;}
-.creator-tag .br{background:linear-gradient(135deg,#7c3aed,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:900;letter-spacing:1px;}
-.creator-tag .hr{color:#ef4444;animation:heartbeat 1.2s infinite;display:inline-block;}
-@keyframes heartbeat{0%,100%{transform:scale(1)}25%{transform:scale(1.3)}50%{transform:scale(1)}75%{transform:scale(1.2)}}
+@keyframes spin{100%{transform:rotate(360deg)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(60px) scale(.9);}to{opacity:1;transform:translateY(0) scale(1);}}
 
-/* App */
-.app{max-width:1480px;margin:0 auto;padding:20px;}
-.app-header{
+.logo-wrap{
+  position:relative;display:inline-block;margin-bottom:24px;
+}
+.logo-wrap .orbit{
+  position:absolute;inset:-20px;
+  border:2px dashed rgba(139,92,246,.4);
+  border-radius:50%;
+  animation:spin 15s linear infinite;
+}
+.logo-wrap .orbit::before{
+  content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%);
+  width:12px;height:12px;border-radius:50%;
+  background:linear-gradient(135deg,#ec4899,#8b5cf6);
+  box-shadow:0 0 20px rgba(236,72,153,.8);
+}
+.logo-core{
+  width:100px;height:100px;border-radius:30px;
+  background:linear-gradient(135deg,#8b5cf6,#ec4899,#fbbf24);
+  display:flex;align-items:center;justify-content:center;
+  font-size:3rem;
+  box-shadow:0 25px 50px rgba(139,92,246,.5),inset 0 -8px 20px rgba(0,0,0,.2);
+  animation:float 3s ease-in-out infinite;
+  position:relative;z-index:1;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+.login-box h1{
+  font-size:2.2rem;font-weight:900;letter-spacing:-.5px;
+  background:linear-gradient(135deg,#fbbf24,#ec4899,#8b5cf6,#06b6d4);
+  background-size:200% 200%;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:8px;
+  animation:gradient 4s ease infinite;
+}
+@keyframes gradient{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.login-box .tagline{color:var(--text-3);font-size:.9rem;margin-bottom:32px;}
+
+.input-group{
+  position:relative;margin-bottom:20px;
+}
+.input-group input{
+  width:100%;padding:18px 24px;
+  background:rgba(10,14,26,.6);
+  border:2px solid var(--border-hi);
+  border-radius:16px;color:var(--text-1);font-size:1rem;
+  outline:none;transition:all .3s;font-weight:600;
+}
+[data-theme="light"] .input-group input{background:rgba(255,255,255,.8);}
+.input-group input::placeholder{color:var(--text-3);font-weight:400;}
+.input-group input:focus{
+  border-color:var(--p1);
+  background:rgba(139,92,246,.08);
+  box-shadow:0 0 0 6px rgba(139,92,246,.15),0 0 30px rgba(139,92,246,.3);
+  transform:translateY(-2px);
+}
+
+.btn-main{
+  width:100%;padding:18px;border-radius:16px;
+  background:linear-gradient(135deg,#8b5cf6,#ec4899);
+  background-size:200% 200%;
+  color:#fff;font-size:1.05rem;font-weight:900;letter-spacing:.3px;
+  transition:all .3s;position:relative;overflow:hidden;
+  box-shadow:0 10px 30px rgba(139,92,246,.5);
+  animation:gradient 4s ease infinite;
+}
+.btn-main::after{
+  content:'';position:absolute;top:50%;left:50%;
+  width:0;height:0;border-radius:50%;
+  background:rgba(255,255,255,.3);
+  transform:translate(-50%,-50%);
+  transition:width .5s,height .5s;
+}
+.btn-main:hover::after{width:400px;height:400px;}
+.btn-main:hover{transform:translateY(-3px);box-shadow:0 20px 40px rgba(139,92,246,.7);}
+.btn-main:active{transform:translateY(-1px);}
+
+.users-list{
+  margin-top:24px;padding-top:20px;
+  border-top:1px dashed var(--border-hi);
+}
+.users-list .label{color:var(--text-3);font-size:.78rem;margin-bottom:12px;font-weight:600;}
+.users-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.user-bubble{
+  padding:8px 16px;border-radius:30px;
+  background:rgba(139,92,246,.15);
+  border:1px solid rgba(139,92,246,.3);
+  color:var(--text-2);font-size:.8rem;font-weight:700;
+  transition:all .2s;display:flex;align-items:center;gap:6px;
+  cursor:pointer;
+}
+.user-bubble:hover{background:rgba(139,92,246,.3);border-color:var(--p1);transform:translateY(-2px);color:#fff;}
+.user-bubble .av{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#ec4899);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;color:#fff;}
+.user-bubble .del{color:#ef4444;font-size:.85rem;padding:0 4px;}
+
+.creator-foot{
+  margin-top:24px;padding-top:20px;
+  border-top:1px dashed var(--border);
+  font-size:.82rem;color:var(--text-3);line-height:1.9;
+}
+.creator-foot .nm{
+  background:linear-gradient(135deg,#fbbf24,#ec4899);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  font-weight:900;font-size:1rem;
+}
+.creator-foot .br{
+  background:linear-gradient(135deg,#8b5cf6,#06b6d4);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  font-weight:900;letter-spacing:1.5px;
+}
+.creator-foot .heart{color:#ef4444;animation:heart 1.2s infinite;display:inline-block;}
+@keyframes heart{0%,100%{transform:scale(1)}25%{transform:scale(1.35)}50%{transform:scale(1)}75%{transform:scale(1.2)}}
+
+/* ============================================================
+   APP SHELL
+   ============================================================ */
+.app{max-width:1400px;margin:0 auto;padding:14px;padding-bottom:100px;}
+
+.top-bar{
+  position:sticky;top:14px;z-index:100;
+  background:var(--glass);backdrop-filter:blur(30px);
+  -webkit-backdrop-filter:blur(30px);
+  border:1px solid var(--border-hi);
+  border-radius:20px;padding:12px 18px;margin-bottom:16px;
   display:flex;align-items:center;justify-content:space-between;
-  padding:14px 22px;background:rgba(26,35,50,.65);backdrop-filter:blur(20px);
-  border-radius:22px;border:1px solid var(--border);margin-bottom:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,.3);
   flex-wrap:wrap;gap:10px;
 }
-.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.1rem;}
-.brand-logo{width:40px;height:40px;background:linear-gradient(135deg,#7c3aed,#ec4899);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 0 20px rgba(124,58,237,.5);}
-.brand-name{background:linear-gradient(135deg,#f8fafc,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-[data-theme="light"] .brand-name{background:linear-gradient(135deg,#0f172a,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.header-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-.tool-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--border);background:rgba(10,14,26,.5);color:var(--text-2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all .2s;}
-.tool-btn:hover{background:rgba(124,58,237,.25);border-color:var(--primary);color:var(--text-1);}
-.user-chip{display:flex;align-items:center;gap:8px;background:rgba(124,58,237,.18);padding:7px 14px;border-radius:40px;border:1px solid rgba(124,58,237,.35);font-size:.88rem;font-weight:700;}
-.user-av{width:30px;height:30px;background:linear-gradient(135deg,#7c3aed,#ec4899);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.82rem;color:#fff;}
-
-/* Level progress bar */
-.level-progress{
-  display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px;
-  background:rgba(26,35,50,.6);padding:10px;border-radius:16px;border:1px solid var(--border);
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.05rem;}
+.brand .logo{
+  width:40px;height:40px;border-radius:12px;
+  background:linear-gradient(135deg,#8b5cf6,#ec4899);
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+  box-shadow:0 8px 20px rgba(139,92,246,.5);
+  animation:float 3s ease-in-out infinite;
 }
-.lvl-step{
-  padding:10px 6px;border-radius:10px;text-align:center;font-weight:900;font-size:.7rem;
-  color:var(--text-3);background:rgba(10,14,26,.6);border:1px solid var(--border);
-  transition:all .3s;position:relative;
+.brand .name{
+  background:linear-gradient(135deg,var(--text-1),var(--p3));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
 }
-.lvl-step.active{color:#fff;transform:scale(1.05);box-shadow:0 5px 15px rgba(0,0,0,.4);}
-.lvl-step.done{color:#fff;opacity:.7;}
-.lvl-step.active.a1,.lvl-step.done.a1{background:linear-gradient(135deg,#10b981,#059669);border-color:#10b981;}
-.lvl-step.active.a2,.lvl-step.done.a2{background:linear-gradient(135deg,#3b82f6,#2563eb);border-color:#3b82f6;}
-.lvl-step.active.b1,.lvl-step.done.b1{background:linear-gradient(135deg,#f59e0b,#d97706);border-color:#f59e0b;}
-.lvl-step.active.b2,.lvl-step.done.b2{background:linear-gradient(135deg,#ef4444,#b91c1c);border-color:#ef4444;}
-.lvl-step.active.c1,.lvl-step.done.c1{background:linear-gradient(135deg,#a855f7,#7c3aed);border-color:#a855f7;}
-.lvl-step.active.c2,.lvl-step.done.c2{background:linear-gradient(135deg,#64748b,#334155);border-color:#64748b;}
-
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px;}
-.stat{background:linear-gradient(145deg,rgba(26,35,50,.7),rgba(15,21,36,.7));backdrop-filter:blur(12px);border-radius:16px;padding:12px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;}
-.stat .si{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
-.si.b{background:linear-gradient(135deg,#3b82f6,#2563eb);}
-.si.g{background:linear-gradient(135deg,#10b981,#059669);}
-.si.y{background:linear-gradient(135deg,#fbbf24,#f59e0b);}
-.si.p{background:linear-gradient(135deg,#8b5cf6,#7c3aed);}
-.si.r{background:linear-gradient(135deg,#ec4899,#db2777);}
-.si.c{background:linear-gradient(135deg,#06b6d4,#0891b2);}
-.stat .lbl{font-size:.65rem;color:var(--text-3);font-weight:700;}
-.stat .val{font-size:1.1rem;font-weight:900;}
-
-.prog-wrap{background:rgba(26,35,50,.6);backdrop-filter:blur(12px);border-radius:16px;padding:12px 18px;border:1px solid var(--border);margin-bottom:16px;}
-.prog-head{display:flex;justify-content:space-between;margin-bottom:6px;font-size:.85rem;font-weight:700;}
-.prog-head .l{color:var(--text-2);}
-.prog-head .r{color:var(--gold);}
-.prog-track{height:10px;background:rgba(10,14,26,.8);border-radius:20px;overflow:hidden;border:1px solid var(--border);}
-.prog-fill{height:100%;width:0%;border-radius:20px;background:linear-gradient(90deg,#7c3aed,#a78bfa,#ec4899,#fbbf24);background-size:300% 100%;transition:width .8s cubic-bezier(.16,1,.3,1);animation:shimmer 3s linear infinite;}
-@keyframes shimmer{0%{background-position:0% 0}100%{background-position:300% 0}}
-
-.main{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;}
-@media(max-width:1050px){.main{grid-template-columns:1fr;}}
-
-.card{background:rgba(26,35,50,.6);backdrop-filter:blur(20px);border-radius:22px;padding:20px;border:1px solid var(--border);display:flex;flex-direction:column;}
-.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;}
-.card-title{display:flex;align-items:center;gap:9px;font-size:1rem;font-weight:800;}
-.card-title .ic{width:32px;height:32px;background:linear-gradient(135deg,#7c3aed,#a78bfa);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;}
-.badge-sm{background:rgba(124,58,237,.22);color:#c4b5fd;padding:3px 11px;border-radius:20px;font-size:.72rem;font-weight:800;border:1px solid rgba(124,58,237,.35);}
-
-/* Level badge */
-.level-badge{
-  display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;
-  font-weight:900;font-size:.72rem;color:#fff;
+.top-chips{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.chip{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 13px;border-radius:30px;
+  font-weight:800;font-size:.8rem;
+  border:1px solid;
+  transition:all .2s;
 }
-.level-badge.a1{background:linear-gradient(135deg,#10b981,#059669);}
-.level-badge.a2{background:linear-gradient(135deg,#3b82f6,#2563eb);}
-.level-badge.b1{background:linear-gradient(135deg,#f59e0b,#d97706);}
-.level-badge.b2{background:linear-gradient(135deg,#ef4444,#b91c1c);}
-.level-badge.c1{background:linear-gradient(135deg,#a855f7,#7c3aed);}
-.level-badge.c2{background:linear-gradient(135deg,#64748b,#334155);}
+.chip:hover{transform:translateY(-2px);}
+.chip.xp{background:linear-gradient(135deg,rgba(251,191,36,.2),rgba(245,158,11,.1));border-color:rgba(251,191,36,.5);color:#fcd34d;}
+.chip.streak{background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(220,38,38,.1));border-color:rgba(239,68,68,.5);color:#fca5a5;}
+.chip.lvl{background:linear-gradient(135deg,rgba(139,92,246,.2),rgba(99,102,241,.1));border-color:rgba(139,92,246,.5);color:#c4b5fd;}
+.icon-btn{
+  width:38px;height:38px;border-radius:11px;
+  background:rgba(139,92,246,.15);border:1px solid var(--border-hi);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;transition:all .25s;
+}
+.icon-btn:hover{background:rgba(139,92,246,.3);border-color:var(--p1);transform:translateY(-2px) rotate(-5deg);}
+.user-mini{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 14px 5px 6px;border-radius:30px;
+  background:linear-gradient(135deg,rgba(139,92,246,.2),rgba(236,72,153,.15));
+  border:1px solid rgba(139,92,246,.4);
+  font-size:.82rem;font-weight:800;
+}
+.user-mini .av{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,#8b5cf6,#ec4899);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:.8rem;color:#fff;
+  box-shadow:0 3px 10px rgba(139,92,246,.4);
+}
 
-.stage-ribbon{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,rgba(124,58,237,.18),rgba(236,72,153,.1));border:1px solid rgba(124,58,237,.35);border-radius:14px;padding:11px 15px;margin-bottom:12px;}
-.stage-ribbon .l{display:flex;align-items:center;gap:10px;}
-.stage-num-circle{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;font-weight:900;font-size:1rem;}
-.stage-ribbon .info .t{font-weight:800;font-size:.88rem;}
-.stage-ribbon .info .s{color:var(--text-3);font-size:.73rem;}
+/* ============================================================
+   BOTTOM NAVIGATION
+   ============================================================ */
+.bottom-nav{
+  position:fixed;bottom:14px;left:50%;transform:translateX(-50%);
+  z-index:200;
+  background:rgba(15,21,36,.9);
+  backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+  border:1px solid var(--border-hi);
+  border-radius:24px;
+  padding:8px;
+  display:flex;gap:4px;
+  box-shadow:0 20px 50px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08);
+  max-width:calc(100vw - 28px);
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.bottom-nav::-webkit-scrollbar{display:none;}
+[data-theme="light"] .bottom-nav{background:rgba(255,255,255,.9);}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:10px 16px;border-radius:16px;
+  color:var(--text-3);font-size:.68rem;font-weight:800;
+  transition:all .25s;white-space:nowrap;min-width:70px;
+  position:relative;
+}
+.nav-item .ic{font-size:1.25rem;transition:transform .25s;}
+.nav-item:hover{color:var(--text-1);}
+.nav-item.active{
+  background:linear-gradient(135deg,#8b5cf6,#6d28d9);
+  color:#fff;
+  box-shadow:0 8px 25px rgba(139,92,246,.5);
+}
+.nav-item.active .ic{transform:scale(1.15);}
 
-/* Grammar */
-.grammar-card{background:linear-gradient(145deg,rgba(251,191,36,.08),rgba(236,72,153,.04));border:1px solid rgba(251,191,36,.4);border-radius:18px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden;}
-.grammar-card::before{content:'📘';position:absolute;top:-20px;left:-10px;font-size:6rem;opacity:.04;}
-.grammar-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;position:relative;z-index:1;flex-wrap:wrap;}
-.grammar-head .tag{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#451a03;padding:3px 11px;border-radius:20px;font-size:.68rem;font-weight:900;}
-.grammar-head .title{font-weight:900;font-size:.95rem;color:var(--gold);}
-.grammar-head .counter{margin-right:auto;background:rgba(124,58,237,.2);color:#c4b5fd;padding:3px 10px;border-radius:10px;font-size:.68rem;font-weight:800;}
-.grammar-body{position:relative;z-index:1;color:var(--text-2);font-size:.9rem;line-height:1.9;max-height:400px;overflow-y:auto;padding-left:6px;}
-.grammar-body::-webkit-scrollbar{width:5px;}
-.grammar-body::-webkit-scrollbar-thumb{background:var(--primary);border-radius:10px;}
-.grammar-body h4{color:#fcd34d;font-size:.88rem;font-weight:800;margin-top:14px;margin-bottom:6px;padding-right:9px;border-right:3px solid var(--gold);}
-.grammar-body h4:first-child{margin-top:0;}
-.grammar-body p{margin-bottom:8px;}
-.grammar-body strong{color:#fcd34d;font-weight:800;}
-.grammar-body em{color:#f9a8d4;font-weight:800;font-style:normal;}
-.grammar-body code{background:rgba(10,14,26,.8);color:#7dd3fc;padding:2px 8px;border-radius:6px;font-family:'Courier New',monospace;font-size:.83rem;direction:ltr;display:inline-block;border:1px solid rgba(125,211,252,.2);}
-.grammar-body ul{list-style:none;padding-right:16px;margin:6px 0;}
-.grammar-body ul li{position:relative;padding-right:16px;margin-bottom:4px;}
-.grammar-body ul li::before{content:'▸';position:absolute;right:0;color:var(--primary-light);}
-.grammar-body .ex-block{background:rgba(10,14,26,.6);border-right:3px solid var(--primary);border-radius:10px;padding:10px 14px;margin-top:6px;}
-.grammar-body .ex-block .en{color:#7dd3fc;font-family:'Courier New',monospace;direction:ltr;display:block;text-align:left;font-size:.88rem;font-weight:600;}
-.grammar-body .ex-block .fa{color:#86efac;display:block;text-align:right;font-size:.82rem;margin-top:2px;}
-.grammar-body .ex-block .nt{display:block;color:#fcd34d;font-size:.75rem;margin-top:6px;padding-top:6px;border-top:1px dashed rgba(251,191,36,.25);text-align:right;}
+/* ============================================================
+   PAGES
+   ============================================================ */
+.page{display:none;animation:pageIn .35s ease-out;}
+.page.active{display:block;}
+@keyframes pageIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
 
-/* Inline exercises */
-.inline-ex{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.3);border-radius:12px;padding:12px;margin-top:12px;position:relative;z-index:1;}
-.inline-ex .ex-h{color:var(--primary-light);font-weight:800;font-size:.82rem;margin-bottom:10px;}
-.ex-q{background:rgba(10,14,26,.6);border-radius:10px;padding:11px;margin-bottom:8px;border:1px solid var(--border);}
-.ex-q:last-child{margin-bottom:0;}
-.ex-q .q{color:var(--text-1);font-size:.88rem;margin-bottom:8px;font-weight:600;}
-.ex-q .q code{background:rgba(124,58,237,.2);color:#c4b5fd;padding:2px 8px;border-radius:6px;font-family:'Courier New',monospace;direction:ltr;display:inline-block;}
+/* HERO */
+.hero{
+  background:linear-gradient(135deg,rgba(139,92,246,.25),rgba(236,72,153,.15),rgba(6,182,212,.1));
+  background-size:200% 200%;
+  animation:gradient 8s ease infinite;
+  border-radius:24px;padding:24px;margin-bottom:16px;
+  border:1px solid rgba(139,92,246,.4);
+  position:relative;overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.15);
+}
+.hero::before{
+  content:'';position:absolute;top:-50%;right:-30%;
+  width:70%;height:200%;
+  background:radial-gradient(circle,rgba(251,191,36,.2),transparent 60%);
+  pointer-events:none;
+}
+.hero-content{position:relative;z-index:1;}
+.hero h2{font-size:1.5rem;font-weight:900;margin-bottom:6px;}
+.hero .sub{color:var(--text-2);font-size:.88rem;margin-bottom:16px;}
+.hero .cta-row{display:flex;gap:10px;flex-wrap:wrap;}
+.btn-grad{
+  padding:12px 22px;border-radius:14px;
+  background:linear-gradient(135deg,#8b5cf6,#ec4899);
+  color:#fff;font-weight:900;font-size:.88rem;
+  box-shadow:0 10px 25px rgba(139,92,246,.4);
+  transition:all .3s;display:inline-flex;align-items:center;gap:7px;
+  border:none;
+}
+.btn-grad:hover{transform:translateY(-3px);box-shadow:0 18px 35px rgba(139,92,246,.6);}
+.btn-soft{
+  padding:12px 20px;border-radius:14px;
+  background:rgba(255,255,255,.1);
+  border:1px solid var(--border-hi);
+  color:var(--text-1);font-weight:800;font-size:.85rem;
+  transition:all .25s;display:inline-flex;align-items:center;gap:7px;
+  backdrop-filter:blur(10px);
+}
+.btn-soft:hover{background:rgba(255,255,255,.2);transform:translateY(-2px);}
+
+/* STAT CARDS */
+.grid-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;margin-bottom:16px;
+}
+.stat-card{
+  background:var(--glass);backdrop-filter:blur(20px);
+  border-radius:20px;padding:16px;
+  border:1px solid var(--border-hi);
+  display:flex;align-items:center;gap:12px;
+  transition:all .3s;position:relative;overflow:hidden;
+}
+.stat-card::after{
+  content:'';position:absolute;top:0;right:0;
+  width:100%;height:4px;
+  background:linear-gradient(90deg,var(--c1),var(--c2));
+  border-radius:20px 20px 0 0;
+}
+.stat-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.4);border-color:var(--p1);}
+.stat-card .ic-box{
+  width:44px;height:44px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;flex-shrink:0;
+  background:linear-gradient(135deg,var(--c1),var(--c2));
+  box-shadow:0 8px 20px rgba(0,0,0,.3);
+}
+.stat-card .info{flex:1;min-width:0;}
+.stat-card .lbl{font-size:.7rem;color:var(--text-3);font-weight:700;text-transform:uppercase;letter-spacing:.3px;}
+.stat-card .val{font-size:1.15rem;font-weight:900;color:var(--text-1);}
+
+/* GLASS CARD */
+.g-card{
+  background:var(--glass);backdrop-filter:blur(20px);
+  border-radius:22px;padding:20px;
+  border:1px solid var(--border-hi);
+  margin-bottom:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+.g-card h3{
+  font-size:.98rem;font-weight:900;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.g-card h3 .badge{
+  padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:900;
+  background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;
+}
+
+/* PROGRESS RING */
+.ring-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.ring{position:relative;width:120px;height:120px;flex-shrink:0;}
+.ring svg{transform:rotate(-90deg);}
+.ring circle{
+  fill:none;stroke-width:10;stroke-linecap:round;
+}
+.ring .bg{stroke:rgba(139,92,246,.15);}
+.ring .fg{stroke:url(#grad);transition:stroke-dashoffset 1s;}
+.ring .pct{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  font-weight:900;font-size:1.5rem;
+  background:linear-gradient(135deg,#fbbf24,#ec4899);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.ring-info{flex:1;min-width:200px;}
+
+/* WEEK CHART */
+.chart{
+  display:flex;align-items:flex-end;justify-content:space-around;
+  height:130px;gap:8px;padding:10px 0;
+}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end;}
+.bar{
+  width:100%;max-width:40px;border-radius:8px 8px 3px 3px;
+  background:linear-gradient(180deg,#8b5cf6,#6d28d9);
+  transition:height .6s cubic-bezier(.16,1,.3,1);
+  min-height:6px;position:relative;
+}
+.bar.today{
+  background:linear-gradient(180deg,#fbbf24,#f59e0b);
+  box-shadow:0 0 20px rgba(251,191,36,.6);
+}
+.bar .value{
+  position:absolute;top:-20px;left:50%;transform:translateX(-50%);
+  font-size:.68rem;font-weight:900;color:#fbbf24;white-space:nowrap;
+}
+.bar-wrap .day{font-size:.72rem;color:var(--text-3);font-weight:800;}
+
+/* LEVEL BADGE */
+.lvl-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 16px;border-radius:30px;
+  font-weight:900;font-size:.8rem;color:#fff;
+  box-shadow:0 8px 20px rgba(0,0,0,.3);
+}
+.lvl-a1{background:linear-gradient(135deg,#10b981,#059669);}
+.lvl-a2{background:linear-gradient(135deg,#3b82f6,#2563eb);}
+.lvl-b1{background:linear-gradient(135deg,#f59e0b,#d97706);}
+.lvl-b2{background:linear-gradient(135deg,#ef4444,#b91c1c);}
+.lvl-c1{background:linear-gradient(135deg,#a855f7,#7c3aed);}
+.lvl-c2{background:linear-gradient(135deg,#64748b,#334155);}
+
+/* MAP */
+.map-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:14px;padding:10px 0;
+}
+.map-node{
+  aspect-ratio:1;border-radius:24px;
+  background:var(--glass);backdrop-filter:blur(15px);
+  border:2px solid var(--border-hi);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;cursor:pointer;transition:all .35s cubic-bezier(.16,1,.3,1);
+  position:relative;overflow:hidden;
+}
+.map-node::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.1),transparent 60%);
+  pointer-events:none;
+}
+.map-node .planet{font-size:2.5rem;filter:drop-shadow(0 5px 15px rgba(0,0,0,.5));transition:transform .35s;}
+.map-node .num{font-size:.72rem;font-weight:900;color:var(--text-2);}
+.map-node:hover:not(.locked){transform:translateY(-6px) scale(1.04);border-color:var(--p1);box-shadow:0 20px 40px rgba(139,92,246,.4);}
+.map-node:hover:not(.locked) .planet{transform:scale(1.15) rotate(-8deg);}
+.map-node.done{border-color:#10b981;background:linear-gradient(145deg,rgba(16,185,129,.2),var(--glass));box-shadow:0 10px 30px rgba(16,185,129,.3);}
+.map-node.done .num{color:#4ade80;}
+.map-node.current{
+  border-color:#fbbf24;
+  background:linear-gradient(145deg,rgba(251,191,36,.25),var(--glass));
+  animation:nodePulse 2s infinite;
+}
+@keyframes nodePulse{
+  0%,100%{box-shadow:0 10px 30px rgba(251,191,36,.4);}
+  50%{box-shadow:0 10px 50px rgba(251,191,36,.8);}
+}
+.map-node.current .num{color:#fcd34d;}
+.map-node.locked{opacity:.4;cursor:not-allowed;filter:grayscale(.7);}
+
+/* LESSON VIEW */
+.lesson-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;}
+@media(max-width:1000px){.lesson-grid{grid-template-columns:1fr;}}
+
+.grammar-block{
+  background:linear-gradient(145deg,rgba(251,191,36,.1),rgba(236,72,153,.05));
+  border:1px solid rgba(251,191,36,.4);
+  border-radius:18px;padding:18px;margin-bottom:14px;
+  position:relative;overflow:hidden;
+}
+.grammar-block::before{content:'📘';position:absolute;top:-25px;left:-15px;font-size:6rem;opacity:.05;}
+.grammar-block .title{
+  display:flex;align-items:center;gap:8px;margin-bottom:12px;
+  color:#fcd34d;font-weight:900;font-size:.95rem;
+}
+.grammar-block .title .tag{
+  padding:3px 11px;border-radius:20px;font-size:.65rem;font-weight:900;
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#451a03;
+}
+.grammar-content{
+  max-height:400px;overflow-y:auto;color:var(--text-2);
+  font-size:.87rem;line-height:1.9;padding-left:6px;
+}
+.grammar-content::-webkit-scrollbar{width:5px;}
+.grammar-content::-webkit-scrollbar-thumb{background:var(--p1);border-radius:10px;}
+.grammar-content h4{
+  color:#fcd34d;font-size:.85rem;font-weight:900;margin-top:14px;margin-bottom:6px;
+  padding-right:10px;border-right:3px solid #fbbf24;
+}
+.grammar-content h4:first-child{margin-top:0;}
+.grammar-content strong{color:#fcd34d;font-weight:800;}
+.grammar-content code{
+  background:rgba(10,14,26,.8);color:#7dd3fc;padding:2px 8px;
+  border-radius:6px;font-family:'Courier New',monospace;
+  font-size:.82rem;direction:ltr;display:inline-block;
+  border:1px solid rgba(125,211,252,.25);
+}
+.grammar-content ul{list-style:none;padding-right:16px;margin:6px 0;}
+.grammar-content ul li{position:relative;padding-right:16px;margin-bottom:4px;}
+.grammar-content ul li::before{content:'▸';position:absolute;right:0;color:#a78bfa;font-weight:900;}
+.grammar-content .ex{
+  background:rgba(10,14,26,.65);border-right:3px solid var(--p1);
+  border-radius:10px;padding:10px 14px;margin-top:6px;
+}
+.grammar-content .ex .en{
+  color:#7dd3fc;font-family:'Courier New',monospace;
+  direction:ltr;display:block;text-align:left;font-size:.87rem;font-weight:600;
+}
+.grammar-content .ex .fa{
+  color:#86efac;display:block;text-align:right;
+  font-size:.82rem;margin-top:3px;
+}
+
+/* INLINE EXERCISES */
+.inline-ex{
+  background:rgba(139,92,246,.1);
+  border:1px solid rgba(139,92,246,.35);
+  border-radius:14px;padding:14px;margin-top:12px;
+}
+.inline-ex .hdr{color:#c4b5fd;font-weight:900;font-size:.82rem;margin-bottom:10px;}
+.ex-item{background:rgba(10,14,26,.6);border-radius:11px;padding:11px;margin-bottom:8px;border:1px solid var(--border);}
+.ex-item:last-child{margin-bottom:0;}
+.ex-item .q{color:var(--text-1);font-size:.86rem;margin-bottom:8px;font-weight:700;}
+.ex-item .q code{background:rgba(139,92,246,.2);color:#c4b5fd;padding:2px 8px;border-radius:6px;font-family:'Courier New',monospace;direction:ltr;display:inline-block;}
 .ex-opts{display:flex;gap:6px;flex-wrap:wrap;}
-.ex-opt{background:rgba(26,35,50,.8);border:1.5px solid var(--border);color:var(--text-2);padding:6px 14px;border-radius:20px;font-size:.82rem;cursor:pointer;font-weight:700;transition:all .2s;}
-.ex-opt:hover:not(:disabled){border-color:var(--primary);color:var(--text-1);}
-.ex-opt.correct{background:rgba(16,185,129,.25);border-color:var(--success);color:#a7f3d0;}
-.ex-opt.wrong{background:rgba(239,68,68,.25);border-color:var(--danger);color:#fca5a5;}
+.ex-opt{
+  background:rgba(26,35,50,.8);border:1.5px solid var(--border-hi);
+  color:var(--text-2);padding:6px 14px;border-radius:20px;
+  font-size:.8rem;font-weight:800;transition:all .2s;
+}
+.ex-opt:hover:not(:disabled){border-color:var(--p1);color:var(--text-1);transform:translateY(-2px);}
+.ex-opt.correct{background:rgba(16,185,129,.25);border-color:#10b981;color:#a7f3d0;}
+.ex-opt.wrong{background:rgba(239,68,68,.25);border-color:#ef4444;color:#fca5a5;}
 .ex-opt:disabled{cursor:not-allowed;}
 
-/* Tabs */
-.tabs{display:flex;gap:5px;margin-bottom:12px;background:rgba(10,14,26,.55);border-radius:13px;padding:4px;border:1px solid var(--border);flex-wrap:wrap;}
-.tab{flex:1;padding:9px 8px;border-radius:10px;background:transparent;border:none;color:var(--text-3);font-weight:800;font-size:.8rem;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:4px;min-width:70px;}
-.tab:hover{color:var(--text-1);}
-.tab.active{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:white;}
-
-/* Flashcard */
-.fc-area{display:flex;flex-direction:column;gap:12px;min-height:380px;justify-content:center;align-items:center;}
-.flashcard{width:100%;max-width:560px;min-height:320px;background:linear-gradient(155deg,rgba(26,35,50,.98),rgba(15,21,36,.98));border:2px solid rgba(124,58,237,.4);border-radius:28px;padding:34px 26px;text-align:center;cursor:pointer;position:relative;overflow:hidden;transition:all .4s;box-shadow:0 25px 50px rgba(0,0,0,.55),0 0 80px rgba(124,58,237,.2);display:flex;flex-direction:column;justify-content:center;gap:12px;}
-.flashcard:hover{transform:translateY(-5px);border-color:var(--primary);}
-.flashcard.flipped{background:linear-gradient(155deg,rgba(16,185,129,.14),rgba(5,150,105,.08));border-color:var(--success);}
-.fc-top{position:absolute;top:14px;left:14px;right:14px;display:flex;justify-content:space-between;align-items:center;z-index:3;}
-.fc-counter{background:rgba(124,58,237,.22);color:#c4b5fd;padding:4px 12px;border-radius:20px;font-size:.7rem;font-weight:900;}
-.fc-star{width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(251,191,36,.5);background:rgba(251,191,36,.12);color:var(--text-3);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .25s;z-index:3;}
-.fc-star.on{background:linear-gradient(135deg,#fbbf24,#f59e0b);border-color:#fbbf24;color:#451a03;}
-.fc-word{font-size:2.5rem;font-weight:900;color:var(--gold);direction:ltr;letter-spacing:1.5px;position:relative;z-index:1;text-shadow:0 0 35px rgba(251,191,36,.4);}
-.fc-phon{color:var(--text-3);font-size:.85rem;direction:ltr;position:relative;z-index:1;}
-.fc-meaning{font-size:1.6rem;font-weight:900;color:var(--success);position:relative;z-index:1;margin-top:6px;}
-.fc-ex{background:rgba(10,14,26,.75);border-radius:14px;padding:14px;margin-top:10px;text-align:left;border-right:3px solid var(--primary);position:relative;z-index:1;}
-.fc-ex .en{color:#7dd3fc;font-family:'Courier New',monospace;direction:ltr;font-size:.95rem;font-weight:600;}
+/* FLASHCARD */
+.fc-stage{display:flex;flex-direction:column;gap:14px;min-height:400px;justify-content:center;align-items:center;padding:10px;}
+.flashcard{
+  width:100%;max-width:540px;min-height:320px;
+  background:linear-gradient(155deg,rgba(26,35,50,.98),rgba(15,21,36,.98));
+  border:2px solid rgba(139,92,246,.5);
+  border-radius:28px;padding:34px 26px;
+  text-align:center;cursor:pointer;position:relative;overflow:hidden;
+  transition:all .5s cubic-bezier(.16,1,.3,1);
+  box-shadow:0 30px 60px rgba(0,0,0,.6),0 0 80px rgba(139,92,246,.25);
+  display:flex;flex-direction:column;justify-content:center;gap:14px;
+}
+.flashcard::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(139,92,246,.18),transparent 50%),
+    radial-gradient(circle at 80% 80%,rgba(236,72,153,.12),transparent 50%);
+  pointer-events:none;
+}
+.flashcard:hover{transform:translateY(-8px) scale(1.01);border-color:var(--p1);}
+.flashcard.flipped{
+  background:linear-gradient(155deg,rgba(16,185,129,.15),rgba(5,150,105,.08));
+  border-color:#10b981;
+  transform:rotateY(360deg);
+}
+.fc-toolbar{
+  position:absolute;top:14px;left:14px;right:14px;
+  display:flex;justify-content:space-between;align-items:center;z-index:3;
+}
+.fc-count{
+  padding:5px 13px;border-radius:20px;
+  background:rgba(139,92,246,.25);color:#c4b5fd;
+  font-weight:900;font-size:.72rem;
+  border:1px solid rgba(139,92,246,.4);
+}
+.fc-star{
+  width:36px;height:36px;border-radius:50%;
+  border:1.5px solid rgba(251,191,36,.5);
+  background:rgba(251,191,36,.15);color:var(--text-3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.15rem;transition:all .25s;
+}
+.fc-star:hover{transform:scale(1.15);}
+.fc-star.on{
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);
+  border-color:#fbbf24;color:#fff;
+  box-shadow:0 0 25px rgba(251,191,36,.7);
+}
+.fc-word{
+  font-size:2.6rem;font-weight:900;color:#fbbf24;
+  direction:ltr;letter-spacing:1.5px;
+  text-shadow:0 0 40px rgba(251,191,36,.5);position:relative;
+}
+.fc-hint{
+  color:var(--text-3);font-size:.78rem;position:relative;
+  animation:blink 2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:.5}50%{opacity:1}}
+.fc-meaning{
+  font-size:1.7rem;font-weight:900;color:#10b981;
+  position:relative;margin-top:6px;
+}
+.fc-ex{
+  background:rgba(10,14,26,.8);border-radius:14px;
+  padding:14px;margin-top:10px;text-align:left;
+  border-right:3px solid var(--p1);position:relative;
+}
+.fc-ex .en{color:#7dd3fc;font-family:'Courier New',monospace;direction:ltr;font-size:.95rem;font-weight:700;}
 .fc-ex .fa{color:#86efac;font-size:.85rem;margin-top:4px;direction:rtl;text-align:right;}
-.fc-hint{color:var(--text-3);font-size:.75rem;position:relative;z-index:1;animation:pulse 2s ease-in-out infinite;}
-@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
 
-.speak-b{background:linear-gradient(135deg,#06b6d4,#0891b2);border:none;color:#fff;padding:10px 20px;border-radius:50px;font-size:.88rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .25s;box-shadow:0 6px 20px rgba(6,182,212,.4);margin:6px auto 0;position:relative;z-index:1;}
-.speak-b:hover{transform:translateY(-2px);}
-.speak-b.playing{background:linear-gradient(135deg,#ec4899,#db2777);}
+.speak-btn{
+  background:linear-gradient(135deg,#06b6d4,#0891b2);
+  color:#fff;padding:10px 20px;border-radius:50px;
+  font-weight:900;font-size:.85rem;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:all .25s;margin:6px auto 0;
+  box-shadow:0 8px 25px rgba(6,182,212,.5);position:relative;
+}
+.speak-btn:hover{transform:translateY(-3px);box-shadow:0 15px 35px rgba(6,182,212,.7);}
+.speak-btn.playing{background:linear-gradient(135deg,#ec4899,#db2777);animation:pulseBtn 1s infinite;}
+@keyframes pulseBtn{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 
-.fc-controls{display:flex;gap:8px;width:100%;max-width:560px;}
+.fc-controls{display:flex;gap:10px;width:100%;max-width:540px;}
 .fc-controls .btn{flex:1;}
 
-/* Buttons */
-.btn{border:none;border-radius:13px;padding:12px 20px;font-size:.88rem;font-weight:800;cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;justify-content:center;gap:7px;}
-.btn:disabled{opacity:.5;cursor:not-allowed;}
-.btn-p{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;box-shadow:0 6px 18px rgba(124,58,237,.4);}
-.btn-p:hover:not(:disabled){transform:translateY(-2px);}
-.btn-s{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 6px 18px rgba(16,185,129,.4);}
-.btn-s:hover:not(:disabled){transform:translateY(-2px);}
+.btn{
+  padding:13px 20px;border-radius:14px;font-weight:900;font-size:.88rem;
+  transition:all .25s;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+}
+.btn-p{background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;box-shadow:0 8px 25px rgba(139,92,246,.4);}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 15px 35px rgba(139,92,246,.6);}
+.btn-s{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 8px 25px rgba(16,185,129,.4);}
+.btn-s:hover{transform:translateY(-3px);}
 .btn-d{background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;}
 .btn-w{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#451a03;}
-.btn-g{background:rgba(45,55,72,.7);color:var(--text-2);border:1px solid var(--border);}
-.btn-g:hover:not(:disabled){background:rgba(45,55,72,1);color:var(--text-1);}
+.btn-g{background:rgba(255,255,255,.1);border:1px solid var(--border-hi);color:var(--text-1);}
+.btn-g:hover{background:rgba(255,255,255,.2);}
 .btn-block{width:100%;}
-.btn-row{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-row{display:flex;gap:9px;flex-wrap:wrap;}
 .btn-row .btn{flex:1;min-width:120px;}
 
-/* Word list */
-.search-wrap{position:relative;margin-bottom:10px;}
-.search-in{width:100%;padding:11px 38px 11px 14px;border-radius:12px;border:1px solid var(--border);background:rgba(10,14,26,.6);color:var(--text-1);font-size:.88rem;font-family:inherit;outline:none;}
-.search-in:focus{border-color:var(--primary);}
-.search-ic{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text-3);}
-.wlist{max-height:520px;overflow-y:auto;padding-left:4px;display:flex;flex-direction:column;gap:7px;}
-.wlist::-webkit-scrollbar{width:6px;}
-.wlist::-webkit-scrollbar-thumb{background:var(--primary);border-radius:10px;}
-.witem{background:rgba(10,14,26,.55);border:1px solid var(--border);border-radius:13px;padding:11px 15px;cursor:pointer;transition:all .22s;}
-.witem:hover{background:rgba(124,58,237,.12);border-color:rgba(124,58,237,.5);}
-.witem.learned{background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.35);}
-.witem-top{display:flex;justify-content:space-between;align-items:center;gap:10px;}
-.witem .en{font-weight:900;color:var(--gold);font-size:1.02rem;direction:ltr;}
-.witem .fa{color:var(--text-2);font-size:.88rem;margin-top:2px;}
-.witem .ex{color:var(--text-3);font-size:.72rem;margin-top:6px;font-family:'Courier New',monospace;direction:ltr;text-align:left;padding-top:6px;border-top:1px dashed var(--border);}
-.wcheck{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:transparent;flex-shrink:0;}
-.witem.learned .wcheck{background:var(--success);border-color:var(--success);color:#fff;}
-.wstar{color:#fbbf24;font-size:.95rem;}
+/* WORD LIST */
+.search-wrap{position:relative;margin-bottom:12px;}
+.search-in{
+  width:100%;padding:12px 40px 12px 16px;
+  border-radius:14px;border:1px solid var(--border-hi);
+  background:rgba(10,14,26,.6);color:var(--text-1);
+  font-size:.88rem;outline:none;font-weight:600;
+}
+[data-theme="light"] .search-in{background:rgba(255,255,255,.8);}
+.search-in:focus{border-color:var(--p1);box-shadow:0 0 0 4px rgba(139,92,246,.15);}
+.search-ic{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text-3);pointer-events:none;}
 
-/* Quiz */
-.quiz-area{display:flex;flex-direction:column;gap:12px;}
-.qinfo{display:flex;justify-content:space-between;align-items:center;background:rgba(10,14,26,.55);padding:10px 14px;border-radius:12px;border:1px solid var(--border);font-size:.82rem;}
-.qtype{padding:3px 10px;border-radius:20px;font-weight:900;font-size:.7rem;}
+.wlist{max-height:520px;overflow-y:auto;padding-left:5px;display:flex;flex-direction:column;gap:8px;}
+.wlist::-webkit-scrollbar{width:6px;}
+.wlist::-webkit-scrollbar-thumb{background:var(--p1);border-radius:10px;}
+.witem{
+  background:rgba(10,14,26,.55);border:1px solid var(--border);
+  border-radius:14px;padding:12px 16px;cursor:pointer;transition:all .25s;
+}
+.witem:hover{background:rgba(139,92,246,.12);border-color:var(--p1);transform:translateX(-4px);}
+.witem.learned{background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.4);}
+.witem-top{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.witem .en{font-weight:900;color:#fbbf24;font-size:1rem;direction:ltr;}
+.witem .fa{color:var(--text-2);font-size:.87rem;margin-top:2px;}
+.witem .ex{color:var(--text-3);font-size:.72rem;margin-top:6px;font-family:'Courier New',monospace;direction:ltr;text-align:left;padding-top:6px;border-top:1px dashed var(--border-hi);}
+.wcheck{width:22px;height:22px;border-radius:50%;border:2px solid var(--border-hi);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:transparent;flex-shrink:0;}
+.witem.learned .wcheck{background:#10b981;border-color:#10b981;color:#fff;}
+
+/* QUIZ */
+.quiz-top{
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(10,14,26,.55);padding:10px 16px;
+  border-radius:14px;border:1px solid var(--border);margin-bottom:14px;
+  flex-wrap:wrap;gap:10px;
+}
+.qtype{padding:4px 11px;border-radius:20px;font-weight:900;font-size:.7rem;}
 .qtype.word{background:rgba(251,191,36,.22);color:#fcd34d;}
 .qtype.grammar{background:rgba(236,72,153,.22);color:#f9a8d4;}
 .qtype.listen{background:rgba(6,182,212,.22);color:#67e8f9;}
-.qtype.translate{background:rgba(16,185,129,.22);color:#86efac;}
-.qcount{color:var(--text-3);font-weight:700;}
-.qbox{background:rgba(10,14,26,.8);border:1px solid rgba(124,58,237,.35);border-radius:18px;padding:22px 20px;text-align:center;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden;}
-.qbox::before{content:'';position:absolute;inset:-50%;background:conic-gradient(from 0deg,transparent,rgba(124,58,237,.08),transparent 30%);animation:rot 8s linear infinite;pointer-events:none;}
-@keyframes rot{100%{transform:rotate(360deg)}}
-.qlabel{font-size:.72rem;color:var(--primary-light);font-weight:900;letter-spacing:1px;text-transform:uppercase;position:relative;z-index:1;}
-.qtext{font-size:1.3rem;font-weight:800;position:relative;z-index:1;word-break:break-word;}
-.qword{color:var(--gold);font-size:1.75rem;direction:ltr;display:inline-block;text-shadow:0 0 25px rgba(251,191,36,.4);}
-.qfill{color:var(--warning);font-weight:900;font-size:1.5rem;font-family:'Courier New',monospace;}
-.grammar-tip{background:linear-gradient(135deg,rgba(251,191,36,.13),rgba(245,158,11,.06));border:1px solid rgba(251,191,36,.4);border-radius:11px;padding:10px 14px;margin-top:10px;font-size:.8rem;color:#fcd34d;text-align:right;display:flex;align-items:flex-start;gap:8px;line-height:1.6;position:relative;z-index:1;}
-.grammar-tip .ic{font-size:.95rem;flex-shrink:0;}
-.grammar-tip strong{color:#fbbf24;}
-.qopts{display:flex;flex-direction:column;gap:9px;}
-.qopt{background:rgba(10,14,26,.6);border:2px solid var(--border);color:var(--text-1);padding:13px 18px;border-radius:14px;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .22s;text-align:right;display:flex;align-items:center;gap:11px;}
-.qopt:hover:not(:disabled){background:rgba(124,58,237,.15);border-color:var(--primary);transform:translateX(-4px);}
-.qopt .num{width:26px;height:26px;border-radius:8px;background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.4);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:900;color:#c4b5fd;flex-shrink:0;}
-.qopt.correct{background:rgba(16,185,129,.22);border-color:var(--success);color:#a7f3d0;animation:pop .3s;}
-.qopt.correct .num{background:var(--success);border-color:var(--success);color:#fff;}
-.qopt.wrong{background:rgba(239,68,68,.22);border-color:var(--danger);color:#fca5a5;animation:shake .4s;}
-.qopt.wrong .num{background:var(--danger);border-color:var(--danger);color:#fff;}
+.progress-bar{flex:1;min-width:140px;height:10px;background:rgba(10,14,26,.8);border-radius:20px;overflow:hidden;border:1px solid var(--border);}
+.progress-fill{height:100%;background:linear-gradient(90deg,#8b5cf6,#ec4899);transition:width .5s cubic-bezier(.16,1,.3,1);border-radius:20px;box-shadow:0 0 15px rgba(139,92,246,.6);}
+
+.qbox{
+  background:rgba(10,14,26,.75);border:1px solid rgba(139,92,246,.4);
+  border-radius:20px;padding:26px 22px;text-align:center;
+  min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;position:relative;overflow:hidden;margin-bottom:14px;
+}
+.qbox::before{
+  content:'';position:absolute;inset:-50%;
+  background:conic-gradient(from 0deg,transparent,rgba(139,92,246,.1),transparent 30%);
+  animation:spin 10s linear infinite;pointer-events:none;
+}
+.qlabel{font-size:.72rem;color:#a78bfa;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;position:relative;}
+.qtext{font-size:1.35rem;font-weight:900;position:relative;word-break:break-word;line-height:1.5;}
+.qword{color:#fbbf24;font-size:1.9rem;direction:ltr;display:inline-block;text-shadow:0 0 30px rgba(251,191,36,.5);}
+.qfill{color:#f59e0b;font-weight:900;font-size:1.5rem;font-family:'Courier New',monospace;}
+
+.qopts{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+.qopt{
+  background:rgba(10,14,26,.6);border:2px solid var(--border-hi);
+  color:var(--text-1);padding:15px 20px;border-radius:16px;
+  font-size:.95rem;font-weight:800;cursor:pointer;transition:all .25s;
+  text-align:right;display:flex;align-items:center;gap:12px;
+  font-family:inherit;
+}
+.qopt:hover:not(:disabled){background:rgba(139,92,246,.15);border-color:var(--p1);transform:translateX(-5px);}
+.qopt .num{
+  width:28px;height:28px;border-radius:9px;
+  background:rgba(139,92,246,.22);border:1px solid rgba(139,92,246,.45);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.78rem;font-weight:900;color:#c4b5fd;flex-shrink:0;
+}
+.qopt.correct{background:rgba(16,185,129,.22);border-color:#10b981;color:#a7f3d0;animation:pop .35s;}
+.qopt.correct .num{background:#10b981;border-color:#10b981;color:#fff;}
+.qopt.wrong{background:rgba(239,68,68,.22);border-color:#ef4444;color:#fca5a5;animation:shake .4s;}
+.qopt.wrong .num{background:#ef4444;border-color:#ef4444;color:#fff;}
 @keyframes pop{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-.msg{padding:13px 16px;border-radius:13px;text-align:center;font-weight:700;font-size:.88rem;background:rgba(10,14,26,.8);border:1px solid var(--border);color:var(--text-2);display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;}
-.msg.ok{background:rgba(16,185,129,.14);border-color:var(--success);color:#a7f3d0;}
-.msg.err{background:rgba(239,68,68,.14);border-color:var(--danger);color:#fca5a5;}
-.msg.info{background:rgba(124,58,237,.14);border-color:var(--primary);color:#c4b5fd;}
-.msg.warn{background:rgba(245,158,11,.14);border-color:var(--warning);color:#fcd34d;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.qopt:disabled{cursor:not-allowed;}
 
-/* Level Up Modal */
-.lvlup-content{text-align:center;}
-.lvlup-badge{font-size:5rem;margin-bottom:10px;animation:bigPop .5s;}
-@keyframes bigPop{from{transform:scale(0)}to{transform:scale(1)}}
-.lvlup-title{font-size:1.6rem;font-weight:900;background:linear-gradient(135deg,#fbbf24,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;}
+.msg{
+  padding:13px 16px;border-radius:14px;text-align:center;
+  font-weight:800;font-size:.88rem;
+  background:rgba(10,14,26,.8);border:1px solid var(--border);
+  color:var(--text-2);display:flex;align-items:center;justify-content:center;
+  gap:8px;min-height:48px;
+}
+.msg.ok{background:rgba(16,185,129,.15);border-color:#10b981;color:#a7f3d0;}
+.msg.err{background:rgba(239,68,68,.15);border-color:#ef4444;color:#fca5a5;}
+.msg.info{background:rgba(139,92,246,.15);border-color:#8b5cf6;color:#c4b5fd;}
 
-/* Footer */
-.app-footer{margin-top:22px;padding:22px 20px;text-align:center;color:var(--text-3);font-size:.85rem;border-top:1px solid var(--border);background:rgba(10,14,26,.4);border-radius:18px;backdrop-filter:blur(10px);}
-.foot-sig{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:12px;}
-.foot-sig .lbl{color:var(--text-3);font-size:.8rem;}
-.foot-sig .nm{font-size:1.1rem;font-weight:900;background:linear-gradient(135deg,#fbbf24,#f59e0b,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.foot-sig .br{font-size:1.15rem;font-weight:900;background:linear-gradient(135deg,#7c3aed,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px;}
-.foot-sig .hr{color:#ef4444;animation:heartbeat 1.2s infinite;display:inline-block;}
-.foot-stats{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;font-size:.75rem;margin-top:8px;opacity:.75;}
+/* PROFILE */
+.profile-header{
+  display:flex;align-items:center;gap:18px;
+  background:linear-gradient(135deg,rgba(139,92,246,.2),rgba(236,72,153,.12));
+  border-radius:24px;padding:22px;
+  border:1px solid rgba(139,92,246,.35);margin-bottom:16px;
+  flex-wrap:wrap;
+}
+.profile-avatar{
+  width:80px;height:80px;border-radius:24px;
+  background:linear-gradient(135deg,#8b5cf6,#ec4899);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.2rem;font-weight:900;color:#fff;
+  box-shadow:0 15px 35px rgba(139,92,246,.5);
+  flex-shrink:0;
+}
+.profile-info{flex:1;min-width:200px;}
+.profile-info h2{font-size:1.4rem;font-weight:900;margin-bottom:4px;}
+.profile-info .sub{color:var(--text-3);font-size:.85rem;}
 
-.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(200px);background:rgba(15,21,36,.96);backdrop-filter:blur(20px);border:1px solid var(--primary);color:var(--text-1);padding:13px 22px;border-radius:40px;font-weight:800;font-size:.88rem;box-shadow:0 20px 40px rgba(0,0,0,.6);z-index:9999;transition:transform .4s cubic-bezier(.16,1,.3,1);max-width:90vw;display:flex;align-items:center;gap:9px;}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px;}
+.ach{
+  background:rgba(10,14,26,.55);border:1px solid var(--border);
+  border-radius:16px;padding:14px 10px;text-align:center;
+  transition:all .3s;
+}
+.ach.unlocked{
+  background:linear-gradient(145deg,rgba(251,191,36,.15),rgba(245,158,11,.08));
+  border-color:rgba(251,191,36,.5);
+  box-shadow:0 10px 25px rgba(251,191,36,.2);
+}
+.ach:hover{transform:translateY(-4px);}
+.ach .ic{font-size:2rem;display:block;margin-bottom:6px;}
+.ach.locked .ic{filter:grayscale(1);opacity:.35;}
+.ach .nm{font-size:.7rem;font-weight:800;color:var(--text-2);}
+
+/* TOAST + MODAL */
+.toast{
+  position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(200px);
+  background:rgba(15,21,36,.97);backdrop-filter:blur(20px);
+  border:1px solid var(--p1);color:var(--text-1);
+  padding:14px 24px;border-radius:40px;font-weight:800;font-size:.9rem;
+  box-shadow:0 20px 50px rgba(0,0,0,.7);
+  z-index:9999;transition:transform .4s cubic-bezier(.16,1,.3,1);
+  max-width:90vw;display:flex;align-items:center;gap:10px;
+}
 .toast.show{transform:translateX(-50%) translateY(0);}
 
-.mo{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:9998;padding:20px;}
-.mo.show{display:flex;}
-.mbox{background:var(--bg-2);border-radius:22px;padding:30px 26px;max-width:440px;width:100%;border:1px solid var(--border);text-align:center;animation:mIn .4s cubic-bezier(.16,1,.3,1);}
-@keyframes mIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:9998;padding:20px;}
+.mo.show{display:flex;animation:fadeIn .25s;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.mbox{
+  background:linear-gradient(155deg,var(--bg-2),var(--bg-1));
+  border-radius:24px;padding:30px 26px;max-width:440px;width:100%;
+  border:1px solid var(--border-hi);text-align:center;
+  animation:modalIn .35s cubic-bezier(.16,1,.3,1);
+  box-shadow:0 30px 60px rgba(0,0,0,.7);
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.85) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
 .mbox .ic{font-size:3.5rem;display:block;margin-bottom:14px;}
-.mbox h2{font-size:1.3rem;margin-bottom:10px;}
-.mbox p{color:var(--text-2);margin-bottom:22px;font-size:.92rem;line-height:1.75;}
+.mbox h2{font-size:1.25rem;margin-bottom:10px;font-weight:900;}
+.mbox p{color:var(--text-2);margin-bottom:22px;font-size:.9rem;line-height:1.75;}
 
-.welcome{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(10,14,26,.97);z-index:10000;animation:fadeOut 1.3s forwards;}
-@keyframes fadeOut{0%{opacity:1}70%{opacity:1}100%{opacity:0;visibility:hidden}}
-.welcome .txt{font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,#fbbf24,#ec4899,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:zoomIn .5s;}
-@keyframes zoomIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
-.empty{text-align:center;padding:36px 20px;color:var(--text-3);}
-.empty .i{font-size:3.5rem;opacity:.5;margin-bottom:10px;}
-button:focus-visible,input:focus-visible{outline:2px solid var(--primary-light);outline-offset:2px;}
+.welcome-anim{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(5,7,15,.98);z-index:10000;
+  animation:welcomeOut 1.5s ease-in-out forwards;
+}
+@keyframes welcomeOut{0%{opacity:1}70%{opacity:1}100%{opacity:0;visibility:hidden}}
+.welcome-anim .txt{
+  font-size:2.5rem;font-weight:900;
+  background:linear-gradient(135deg,#fbbf24,#ec4899,#8b5cf6,#06b6d4);
+  background-size:200% 200%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:zoomIn .6s,gradient 2s ease infinite;
+}
+@keyframes zoomIn{from{transform:scale(.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+
+.empty{text-align:center;padding:40px 20px;color:var(--text-3);}
+.empty .i{font-size:3.5rem;opacity:.4;margin-bottom:12px;}
+
+button:focus-visible,input:focus-visible{outline:2px solid #a78bfa;outline-offset:2px;}
+
+@media(max-width:600px){
+  .app{padding:10px;padding-bottom:100px;}
+  .top-bar{padding:10px 14px;border-radius:16px;}
+  .brand-name{font-size:.9rem;}
+  .chip{padding:5px 10px;font-size:.72rem;}
+  .stat-card{padding:12px;}
+  .stat-card .val{font-size:1rem;}
+  .flashcard{padding:26px 18px;}
+  .fc-word{font-size:2.1rem;}
+  .qtext{font-size:1.1rem;}
+  .bottom-nav{bottom:10px;padding:6px;}
+  .nav-item{padding:8px 12px;min-width:60px;}
+  .nav-item .ic{font-size:1.1rem;}
+  .nav-item span:last-child{font-size:.62rem;}
+}
 </style>
 </head>
 <body>
 
-<!-- Login -->
-<div id="loginPage">
-  <div class="login-card">
-    <div class="logo-orb">⚡</div>
+<div class="aurora"></div>
+<div class="stars"></div>
+
+<!-- ============ LOGIN ============ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="logo-wrap">
+      <div class="orbit"></div>
+      <div class="logo-core">⚡</div>
+    </div>
     <h1>English Master Pro</h1>
-    <p class="sub">۶ سطح آموزشی | گرامر ساختاریافته | تمرین تعاملی</p>
-    <div class="login-field">
-      <label for="uname">👤 اسمت چیه؟</label>
-      <input id="uname" type="text" placeholder="مثلاً: علی" maxlength="20" autocomplete="off">
+    <p class="tagline">۶ سطح | ۳۰+ گرامر | نقشه یادگیری | ذخیره خودکار</p>
+
+    <div class="input-group">
+      <input id="uname" type="text" placeholder="اسمت رو بنویس و شروع کن..." maxlength="20" autocomplete="off">
     </div>
-    <button class="btn btn-p btn-block" id="loginBtn">🚀 شروع یادگیری</button>
-    <div class="levels-mini">
-      <div class="lv a1">A1</div>
-      <div class="lv a2">A2</div>
-      <div class="lv b1">B1</div>
-      <div class="lv b2">B2</div>
-      <div class="lv c1">C1</div>
-      <div class="lv c2">C2</div>
+    <button class="btn-main" id="loginBtn">🚀 ورود به English Master</button>
+
+    <div class="users-list hidden" id="usersList">
+      <div class="label">👥 کاربران قبلی (کلیک کن تا وارد شی):</div>
+      <div class="users-grid" id="usersGrid"></div>
     </div>
-    <div class="creator-tag">
-      <div>ساخته شده توسط <span class="nm">محمد مهدی شهسواری</span></div>
-      <div><span class="br">BitVolt</span> <span class="hr">❤️</span> با عشق</div>
+
+    <div class="creator-foot">
+      <div>ساخته شده با <span class="heart">❤️</span> توسط</div>
+      <div class="nm">محمد مهدی شهسواری</div>
+      <div class="br">BitVolt</div>
     </div>
   </div>
 </div>
 
-<!-- App -->
+<!-- ============ APP ============ -->
 <div class="app hidden" id="app">
-  <header class="app-header">
+  <header class="top-bar">
     <div class="brand">
-      <div class="brand-logo">⚡</div>
-      <span class="brand-name">English Master Pro</span>
+      <div class="logo">⚡</div>
+      <span class="name">English Master</span>
     </div>
-    <div class="header-tools">
-      <button class="tool-btn" id="themeBtn" title="تم">🌙</button>
-      <button class="tool-btn" id="favBtn" title="علاقه‌مندی‌ها">⭐</button>
-      <div class="user-chip">
-        <div class="user-av" id="uav">U</div>
+    <div class="top-chips">
+      <div class="chip xp">💎 <span id="xpVal">0</span></div>
+      <div class="chip streak">🔥 <span id="streakVal">0</span></div>
+      <div class="chip lvl" id="lvlChip">🟢 A1</div>
+      <button class="icon-btn" id="themeBtn" title="تم شب/روز">🌙</button>
+      <div class="user-mini">
+        <div class="av" id="uav">U</div>
         <span id="unm">-</span>
       </div>
     </div>
   </header>
 
-  <!-- Level Progress Bar -->
-  <div class="level-progress" id="lvlProg"></div>
-
-  <div class="stats-row">
-    <div class="stat"><div class="si b">📚</div><div><div class="lbl">مرحله</div><div class="val"><span id="stg">1</span>/<span id="tstg">60</span></div></div></div>
-    <div class="stat"><div class="si g">✅</div><div><div class="lbl">یادگرفته</div><div class="val" id="lrn">0</div></div></div>
-    <div class="stat"><div class="si y">🏆</div><div><div class="lbl">امتیاز</div><div class="val" id="scr">0</div></div></div>
-    <div class="stat"><div class="si p">🔥</div><div><div class="lbl">کامل‌شده</div><div class="val" id="cmp">0</div></div></div>
-    <div class="stat"><div class="si r">⭐</div><div><div class="lbl">علاقه‌مندی</div><div class="val" id="fav">0</div></div></div>
-    <div class="stat"><div class="si c">🎯</div><div><div class="lbl">دقت</div><div class="val" id="acc">0%</div></div></div>
-  </div>
-
-  <div class="prog-wrap">
-    <div class="prog-head"><div class="l">🎯 پیشرفت کلی</div><div class="r"><span id="ppct">0</span>%</div></div>
-    <div class="prog-track"><div class="prog-fill" id="pfill"></div></div>
-  </div>
-
-  <div class="main">
-    <section class="card">
-      <div class="card-head">
-        <div class="card-title"><span class="ic">📖</span><span>یادگیری مرحله <span id="cstg">1</span></span></div>
-        <span class="badge-sm"><span id="swc">0</span> کلمه</span>
+  <!-- ============ DASHBOARD ============ -->
+  <div class="page active" id="page-dash">
+    <div class="hero">
+      <div class="hero-content">
+        <h2 id="heroGreeting">سلام! 👋</h2>
+        <div class="sub" id="heroSub">آماده‌ای پیشرفت کنی؟</div>
+        <div class="cta-row">
+          <button class="btn-grad" onclick="goPage('lesson')">
+            <span>▶</span><span id="continueTxt">ادامه یادگیری</span>
+          </button>
+          <button class="btn-soft" onclick="goPage('map')">🗺️ نقشه مراحل</button>
+        </div>
       </div>
+    </div>
 
-      <div class="stage-ribbon">
-        <div class="l">
-          <div class="stage-num-circle" id="srn">1</div>
-          <div class="info">
-            <div class="t" id="srt">درس</div>
-            <div class="s" id="srs">مرحله</div>
+    <div class="grid-stats">
+      <div class="stat-card" style="--c1:#3b82f6;--c2:#1d4ed8;">
+        <div class="ic-box">📚</div>
+        <div class="info"><div class="lbl">مرحله</div><div class="val"><span id="stgVal">1</span>/<span id="tstgVal">30</span></div></div>
+      </div>
+      <div class="stat-card" style="--c1:#10b981;--c2:#047857;">
+        <div class="ic-box">✅</div>
+        <div class="info"><div class="lbl">کلمات</div><div class="val" id="lrnVal">0</div></div>
+      </div>
+      <div class="stat-card" style="--c1:#fbbf24;--c2:#d97706;">
+        <div class="ic-box">💎</div>
+        <div class="info"><div class="lbl">XP</div><div class="val" id="xpVal2">0</div></div>
+      </div>
+      <div class="stat-card" style="--c1:#8b5cf6;--c2:#6d28d9;">
+        <div class="ic-box">🔥</div>
+        <div class="info"><div class="lbl">مراحل</div><div class="val" id="cmpVal">0</div></div>
+      </div>
+      <div class="stat-card" style="--c1:#ec4899;--c2:#be185d;">
+        <div class="ic-box">⭐</div>
+        <div class="info"><div class="lbl">ستاره</div><div class="val" id="favVal">0</div></div>
+      </div>
+      <div class="stat-card" style="--c1:#06b6d4;--c2:#0e7490;">
+        <div class="ic-box">🎯</div>
+        <div class="info"><div class="lbl">دقت</div><div class="val" id="accVal">0%</div></div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;" id="dashGrid">
+      <div class="g-card">
+        <h3>📊 پیشرفت کلی</h3>
+        <div class="ring-wrap">
+          <div class="ring">
+            <svg width="120" height="120">
+              <defs>
+                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#8b5cf6"/>
+                  <stop offset="50%" stop-color="#ec4899"/>
+                  <stop offset="100%" stop-color="#fbbf24"/>
+                </linearGradient>
+              </defs>
+              <circle class="bg" cx="60" cy="60" r="50"></circle>
+              <circle class="fg" cx="60" cy="60" r="50" id="ringFg"
+                stroke-dasharray="314.16" stroke-dashoffset="314.16"></circle>
+            </svg>
+            <div class="pct"><span id="ringPct">0</span>%</div>
+          </div>
+          <div class="ring-info">
+            <div style="font-size:1rem;font-weight:900;margin-bottom:6px;">مرحله <span id="ringStage">1</span> از <span id="ringTotal">30</span></div>
+            <div style="color:var(--text-3);font-size:.85rem;">سطح فعلی: <span id="ringLevel">A1</span></div>
+            <div style="color:var(--text-3);font-size:.82rem;margin-top:6px;">پیشرفتت خیلی خوبه، ادامه بده! 💪</div>
           </div>
         </div>
-        <span class="level-badge a1" id="lvlBadge">A1</span>
       </div>
-
-      <div class="grammar-card">
-        <div class="grammar-head">
-          <span class="tag">GRAMMAR</span>
-          <span class="title" id="gt">گرامر</span>
-          <span class="counter" id="gc">درس 1/60</span>
-        </div>
-        <div class="grammar-body" id="gbody"></div>
-        <div class="inline-ex" id="inex">
-          <div class="ex-h">✍️ تمرین سریع این درس (بدون نمره)</div>
-          <div id="exList"></div>
-        </div>
+      <div class="g-card">
+        <h3>📈 فعالیت هفته</h3>
+        <div class="chart" id="weekChart"></div>
       </div>
+    </div>
 
-      <div class="tabs">
-        <button class="tab active" data-mode="card">🎴 کارت</button>
-        <button class="tab" data-mode="list">📋 لیست</button>
-        <button class="tab" data-mode="star">⭐ ستاره‌دار</button>
-      </div>
+    <div class="g-card">
+      <h3>🗓️ تقویم فعالیت (۳۰ روز اخیر)</h3>
+      <div style="display:grid;grid-template-columns:repeat(10,1fr);gap:6px;" id="actCal"></div>
+    </div>
+  </div>
 
-      <div id="cardMode">
-        <div class="fc-area">
-          <div class="flashcard" id="flashcard">
-            <div class="fc-top">
-              <span class="fc-counter" id="fcc">1 / 10</span>
-              <button class="fc-star" id="fcStar">☆</button>
+  <!-- ============ MAP ============ -->
+  <div class="page" id="page-map">
+    <div class="g-card">
+      <h3>🗺️ نقشه یادگیری — ۶ سطح <span class="badge" id="mapLevelBadge">A1</span></h3>
+      <p style="color:var(--text-3);font-size:.85rem;margin-bottom:14px;">روی هر مرحله‌ای که بازه کلیک کن تا وارد شی</p>
+      <div class="map-grid" id="mapGrid"></div>
+    </div>
+  </div>
+
+  <!-- ============ LESSON ============ -->
+  <div class="page" id="page-lesson">
+    <div class="lesson-grid">
+      <div>
+        <div class="g-card">
+          <h3>📖 مرحله <span id="cstgVal">1</span> <span class="badge" id="swcVal">0 کلمه</span></h3>
+          <div class="grammar-block">
+            <div class="title">
+              <span class="tag">GRAMMAR</span>
+              <span id="gTitle">گرامر</span>
             </div>
-            <div class="fc-word" id="fcWord">-</div>
-            <div class="fc-phon" id="fcPhon">-</div>
-            <button class="speak-b" id="fcSpeak">🔊 تلفظ</button>
-            <div class="fc-hint" id="fcHint">👆 کلیک کن تا معنی رو ببینی</div>
-            <div class="hidden" id="fcBack">
-              <div class="fc-meaning" id="fcMeaning">-</div>
-              <div class="fc-ex">
-                <div class="en" id="fcExEn"></div>
-                <div class="fa" id="fcExFa"></div>
+            <div class="grammar-content" id="gBody"></div>
+            <div class="inline-ex" id="inlineEx">
+              <div class="hdr">✍️ تمرین سریع (بدون نمره)</div>
+              <div id="exList"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="g-card">
+          <div class="fc-stage">
+            <div class="flashcard" id="flashcard">
+              <div class="fc-toolbar">
+                <span class="fc-count" id="fcCounter">1 / 10</span>
+                <button class="fc-star" id="fcStar">☆</button>
+              </div>
+              <div class="fc-word" id="fcWord">-</div>
+              <button class="speak-btn" id="fcSpeak">🔊 تلفظ</button>
+              <div class="fc-hint" id="fcHint">👆 کلیک کن تا معنی رو ببینی</div>
+              <div class="hidden" id="fcBack">
+                <div class="fc-meaning" id="fcMeaning">-</div>
+                <div class="fc-ex">
+                  <div class="en" id="fcExEn"></div>
+                  <div class="fa" id="fcExFa"></div>
+                </div>
               </div>
             </div>
+            <div class="fc-controls">
+              <button class="btn btn-g" id="fcPrev">⬅️</button>
+              <button class="btn btn-p" id="fcFlip">🔄 برگردان</button>
+              <button class="btn btn-g" id="fcNext">➡️</button>
+            </div>
+            <button class="btn btn-s btn-block" id="fcLearned">✅ یاد گرفتم (+2 XP)</button>
           </div>
-          <div class="fc-controls">
-            <button class="btn btn-g" id="fcPrev">⬅️</button>
-            <button class="btn btn-p" id="fcFlip">🔄 برگردان</button>
-            <button class="btn btn-g" id="fcNext">➡️</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="g-card">
+          <h3>🧠 آزمون مرحله <span id="qstgVal">1</span> <span class="badge" id="qStatus">آماده</span></h3>
+          <div class="quiz-top hidden" id="quizTop">
+            <span class="qtype word" id="qType">کلمه</span>
+            <div class="progress-bar"><div class="progress-fill" id="qProgress"></div></div>
+            <span style="color:var(--text-3);font-size:.78rem;font-weight:800;" id="qCount">1 / 10</span>
           </div>
-          <button class="btn btn-s btn-block" id="fcLearned">✅ یاد گرفتم</button>
+          <div class="qbox">
+            <div class="qlabel" id="qLabel">آزمون</div>
+            <div class="qtext" id="qText">برای شروع دکمه زیر را بزن</div>
+            <button class="speak-btn hidden" id="qSpeak">🔊 پخش صدا</button>
+          </div>
+          <div class="qopts" id="qOpts"></div>
+          <div class="btn-row" id="qBtns">
+            <button class="btn btn-s btn-block" id="startQuizBtn">🎯 شروع آزمون</button>
+          </div>
+          <div class="msg info" id="qMsg">💡 ابتدا درس رو یاد بگیر!</div>
         </div>
       </div>
-
-      <div id="listMode" class="hidden">
-        <div class="search-wrap">
-          <input class="search-in" id="searchIn" placeholder="جستجو...">
-          <span class="search-ic">🔍</span>
-        </div>
-        <div class="wlist" id="wlist"></div>
-      </div>
-
-      <div id="starMode" class="hidden">
-        <div class="wlist" id="starlist"></div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="card-head">
-        <div class="card-title"><span class="ic">🧠</span><span>آزمون مرحله <span id="qstg">1</span></span></div>
-        <span class="badge-sm" id="qstatus">آماده</span>
-      </div>
-      <div class="quiz-area">
-        <div class="qinfo hidden" id="qinfo">
-          <span class="qtype word" id="qtype">کلمه</span>
-          <span class="qcount" id="qcount">سؤال 1 / 10</span>
-        </div>
-        <div class="qbox">
-          <div class="qlabel" id="qlabel">آزمون</div>
-          <div class="qtext" id="qtext">برای شروع کلیک کن</div>
-          <button class="speak-b hidden" id="qSpeak">🔊 پخش صدا</button>
-          <div class="grammar-tip hidden" id="gtip"><span class="ic">💡</span><span id="gtipText"></span></div>
-        </div>
-        <div class="qopts" id="qopts"></div>
-        <div class="btn-row" id="qBtns">
-          <button class="btn btn-s btn-block" id="startQuizBtn">🎯 شروع آزمون</button>
-        </div>
-        <div class="msg info" id="qmsg">💡 ابتدا درس رو یاد بگیر، بعد امتحان بده!</div>
-      </div>
-    </section>
+    </div>
   </div>
 
-  <footer class="app-footer">
-    <div class="foot-sig">
-      <div class="lbl">✨ ساخته شده با <span class="hr">❤️</span> توسط</div>
-      <div class="nm">محمد مهدی شهسواری</div>
-      <div class="br">BitVolt</div>
-      <div class="lbl" style="margin-top:4px;">با عشق برای یادگیری ❤️</div>
+  <!-- ============ QUIZ ============ -->
+  <div class="page" id="page-quiz">
+    <div class="g-card">
+      <h3>🧠 آزمون سریع ۶ سطح</h3>
+      <p style="color:var(--text-3);font-size:.85rem;margin-bottom:14px;">روی هر سطح کلیک کن و آزمون ۱۰ سؤالی بده</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;">
+        <button class="btn btn-s" onclick="quickQuiz('A1')">🟢 A1 — مبتدی</button>
+        <button class="btn btn-p" onclick="quickQuiz('A2')">🔵 A2 — پایه</button>
+        <button class="btn btn-w" onclick="quickQuiz('B1')">🟠 B1 — متوسط</button>
+        <button class="btn btn-d" onclick="quickQuiz('B2')">🔴 B2 — بالاتر</button>
+        <button class="btn btn-p" onclick="quickQuiz('C1')">🟣 C1 — پیشرفته</button>
+        <button class="btn btn-g" onclick="quickQuiz('C2')">⚫ C2 — حرفه‌ای</button>
+      </div>
     </div>
-    <div class="btn-row" style="max-width:460px;margin:16px auto 0;">
-      <button class="btn btn-g" id="resetStageBtn">🔄 ریست مرحله</button>
-      <button class="btn btn-w" id="resetAllBtn">⚠️ ریست کل</button>
+    <div class="g-card">
+      <h3>⭐ تمرین علاقه‌مندی‌ها</h3>
+      <p style="color:var(--text-3);font-size:.85rem;margin-bottom:14px;">تمرین روی کلماتی که ستاره کردی (<span id="favCountQuick">0</span>)</p>
+      <button class="btn btn-w btn-block" onclick="practiceFavorites()">🎯 شروع تمرین ستاره‌دارها</button>
     </div>
-    <div class="foot-stats">
-      <span>📚 <span id="fw">0</span> کلمه</span>
-      <span>📘 <span id="fg">0</span> درس گرامر</span>
-      <span>🎯 ۶ سطح</span>
-      <span>⚡ v5.0</span>
+  </div>
+
+  <!-- ============ PROFILE ============ -->
+  <div class="page" id="page-profile">
+    <div class="profile-header">
+      <div class="profile-avatar" id="profAv">U</div>
+      <div class="profile-info">
+        <h2 id="profName">کاربر</h2>
+        <div class="sub">سطح فعلی: <span id="profLevel">A1</span></div>
+        <div class="sub">عضو از: <span id="profSince">-</span></div>
+      </div>
     </div>
-  </footer>
+
+    <div class="grid-stats">
+      <div class="stat-card" style="--c1:#10b981;--c2:#047857;">
+        <div class="ic-box">🏆</div>
+        <div class="info"><div class="lbl">مراحل کامل</div><div class="val" id="profStages">0</div></div>
+      </div>
+      <div class="stat-card" style="--c1:#3b82f6;--c2:#1d4ed8;">
+        <div class="ic-box">📚</div>
+        <div class="info"><div class="lbl">کلمات</div><div class="val" id="profWords">0</div></div>
+      </div>
+      <div class="stat-card" style="--c1:#fbbf24;--c2:#d97706;">
+        <div class="ic-box">💎</div>
+        <div class="info"><div class="lbl">XP</div><div class="val" id="profXP">0</div></div>
+      </div>
+      <div class="stat-card" style="--c1:#ec4899;--c2:#be185d;">
+        <div class="ic-box">🎯</div>
+        <div class="info"><div class="lbl">دقت</div><div class="val" id="profAcc">0%</div></div>
+      </div>
+    </div>
+
+    <div class="g-card">
+      <h3>🏆 دستاوردها</h3>
+      <div class="ach-grid" id="achGrid"></div>
+    </div>
+
+    <div class="g-card">
+      <h3>⚙️ تنظیمات و مدیریت</h3>
+      <div class="btn-row">
+        <button class="btn btn-g" onclick="resetCurrentStage()">🔄 ریست مرحله فعلی</button>
+        <button class="btn btn-w" onclick="resetAllProgress()">⚠️ ریست کل پیشرفت</button>
+        <button class="btn btn-d" onclick="logout()">🚪 خروج از حساب</button>
+      </div>
+      <div style="margin-top:14px;padding:12px;background:rgba(139,92,246,.1);border-radius:12px;border:1px solid rgba(139,92,246,.25);">
+        <div style="font-size:.78rem;color:var(--text-3);line-height:1.8;">
+          💾 <strong style="color:var(--text-2);">ذخیره‌سازی:</strong> پیشرفت هر کاربر به صورت خودکار در مرورگر ذخیره می‌شه.
+          <br>👥 <strong style="color:var(--text-2);">چند کاربر:</strong> هر کی با اسم خودش وارد شه، پیشرفتش جدا ذخیره می‌شه.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ BOTTOM NAV ============ -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-page="dash"><span class="ic">🏠</span><span>خانه</span></button>
+    <button class="nav-item" data-page="map"><span class="ic">🗺️</span><span>نقشه</span></button>
+    <button class="nav-item" data-page="lesson"><span class="ic">📖</span><span>درس</span></button>
+    <button class="nav-item" data-page="quiz"><span class="ic">🧠</span><span>آزمون</span></button>
+    <button class="nav-item" data-page="profile"><span class="ic">👤</span><span>پروفایل</span></button>
+  </nav>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -538,16 +1182,17 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--primary-light);
 </div>
 
 <script>
-/* =========================================================
-   English Master Pro v5 — ۶ سطح، ۳۰۰+ کلمه، ۳۰+ درس گرامر
-   طراحی: محمد مهدی شهسواری (BitVolt) با عشق ❤️
-   ========================================================= */
+/* ============================================================
+   ENGLISH MASTER PRO v7
+   ساخته شده توسط محمد مهدی شهسواری (BitVolt) با عشق ❤️
+   آماده برای GitHub Pages
+   ============================================================ */
 (function(){
 'use strict';
 
-/* =========================================================
-   WORDS DATABASE — فرمت: en|fa|example_en|example_fa|level
-   ========================================================= */
+/* ============================================================
+   WORDS DATABASE — en|fa|example_en|example_fa|level
+   ============================================================ */
 const WORDS_RAW = `
 apple|سیب|I eat an apple every day.|من هر روز یک سیب می‌خورم.|A1
 book|کتاب|This book is interesting.|این کتاب جالبه.|A1
@@ -572,9 +1217,6 @@ moon|ماه|The moon is full tonight.|ماه امشب کامل است.|A1
 red|قرمز|She wore a red dress.|او لباس قرمز پوشید.|A1
 blue|آبی|The sky is blue.|آسمان آبی است.|A1
 green|سبز|The grass is green.|چمن سبز است.|A1
-yellow|زرد|The sun is yellow.|خورشید زرد است.|A1
-black|سیاه|He has a black cat.|او گربه سیاه دارد.|A1
-white|سفید|Snow is white.|برف سفید است.|A1
 big|بزرگ|This is a big house.|این خانه بزرگی است.|A1
 small|کوچک|She has a small dog.|او سگ کوچکی دارد.|A1
 good|خوب|This is a good idea.|این ایده خوبی است.|A1
@@ -582,48 +1224,26 @@ bad|بد|Smoking is bad.|سیگار بد است.|A1
 happy|خوشحال|I am happy today.|من امروز خوشحالم.|A1
 sad|غمگین|She looks sad.|او غمگین به نظر می‌رسد.|A1
 fast|سریع|He runs fast.|او سریع می‌دود.|A1
-slow|آهسته|The turtle is slow.|لاک‌پشت آهسته است.|A1
 hot|گرم|Summer is hot.|تابستان گرم است.|A1
 cold|سرد|Winter is cold.|زمستان سرد است.|A1
-new|جدید|I bought a new phone.|گوشی جدید خریدم.|A1
-old|قدیمی|This is an old book.|این کتاب قدیمی است.|A1
-young|جوان|He is young.|او جوان است.|A1
-strong|قوی|She is strong.|او قوی است.|A1
 mother|مادر|My mother cooks well.|مادرم خوب آشپزی می‌کند.|A1
 father|پدر|My father works hard.|پدرم سخت کار می‌کند.|A1
 brother|برادر|I have a brother.|من یک برادر دارم.|A1
 sister|خواهر|She is my sister.|او خواهر من است.|A1
-son|پسر|Their son is a doctor.|پسرشان دکتر است.|A1
-daughter|دختر|My daughter is smart.|دخترم باهوش است.|A1
-man|مرد|That man is tall.|آن مرد بلندقد است.|A1
-woman|زن|The woman is reading.|زن در حال خواندن است.|A1
-boy|پسر|The boy plays football.|پسر فوتبال بازی می‌کند.|A1
-girl|دختر|The girl sings well.|دختر خوب آواز می‌خواند.|A1
 bread|نان|We buy fresh bread.|ما نان تازه می‌خریم.|A1
 milk|شیر|I drink milk.|من شیر می‌نوشم.|A1
-cheese|پنیر|This cheese is tasty.|این پنیر خوشمزه است.|A1
-meat|گوشت|He eats meat.|او گوشت می‌خورد.|A1
 rice|برنج|We eat rice daily.|ما روزانه برنج می‌خوریم.|A1
 egg|تخم مرغ|I ate two eggs.|دو تخم مرغ خوردم.|A1
 table|میز|Food is on the table.|غذا روی میز است.|A1
 chair|صندلی|Sit on the chair.|روی صندلی بنشین.|A1
 door|در|Close the door.|در را ببند.|A1
-window|پنجره|Open the window.|پنجره را باز کن.|A1
 morning|صبح|Good morning!|صبح بخیر!|A1
-evening|عصر|Good evening!|عصر بخیر!|A1
-color|رنگ|What color is it?|چه رنگی است؟|A1
-number|عدد|Pick a number.|یک عدد انتخاب کن.|A1
-name|نام|What's your name?|اسمت چیه؟|A1
-age|سن|What's your age?|سنته چنده؟|A1
 flower|گل|Flowers smell good.|گل‌ها بوی خوبی دارند.|A1
 tree|درخت|The tree is tall.|درخت بلند است.|A1
 bird|پرنده|The bird sings.|پرنده آواز می‌خواند.|A1
 fish|ماهی|Fish swim in water.|ماهی‌ها در آب شنا می‌کنند.|A1
 star|ستاره|Stars shine bright.|ستاره‌ها درخشانند.|A1
-cloud|ابر|No clouds today.|امروز ابری نیست.|A1
 rain|باران|It will rain.|باران خواهد بارید.|A1
-snow|برف|Snow is falling.|برف می‌بارد.|A1
-wind|باد|The wind is strong.|باد شدید است.|A1
 walk|راه رفتن|We walk in the park.|ما در پارک قدم می‌زنیم.|A1
 run|دویدن|She runs daily.|او روزانه می‌دود.|A1
 eat|خوردن|Let's eat dinner.|بیا شام بخوریم.|A1
@@ -632,17 +1252,12 @@ sleep|خوابیدن|Babies sleep a lot.|نوزادان زیاد می‌خواب
 read|خواندن|She reads books.|او کتاب می‌خواند.|A1
 write|نوشتن|I write letters.|من نامه می‌نویسم.|A1
 speak|صحبت کردن|He speaks English.|او انگلیسی صحبت می‌کند.|A1
-listen|گوش دادن|Listen carefully.|با دقت گوش کن.|A1
-play|بازی کردن|Kids play outside.|بچه‌ها بیرون بازی می‌کنند.|A1
 work|کار کردن|I work from home.|من از خانه کار می‌کنم.|A1
-
 money|پول|I need money.|من پول لازم دارم.|A2
 job|شغل|What's your job?|شغلت چیه؟|A2
 doctor|دکتر|The doctor helps.|دکتر کمک می‌کند.|A2
 nurse|پرستار|The nurse is kind.|پرستار مهربان است.|A2
 police|پلیس|Call the police!|پلیس را خبر کن!|A2
-driver|راننده|The driver is careful.|راننده مراقب است.|A2
-cook|آشپز|The cook makes food.|آشپز غذا درست می‌کند.|A2
 village|روستا|We live in a village.|ما در روستا زندگی می‌کنیم.|A2
 park|پارک|The park is green.|پارک سبز است.|A2
 street|خیابان|The street is quiet.|خیابان ساکت است.|A2
@@ -660,8 +1275,6 @@ ship|کشتی|The ship sails.|کشتی حرکت می‌کند.|A2
 bicycle|دوچرخه|I ride a bicycle.|من دوچرخه سوار می‌شوم.|A2
 letter|نامه|I wrote a letter.|من نامه نوشتم.|A2
 email|ایمیل|Send me an email.|ایمیل بفرست.|A2
-message|پیام|I got your message.|پیامت را گرفتم.|A2
-newspaper|روزنامه|He reads newspapers.|او روزنامه می‌خواند.|A2
 beautiful|زیبا|What a beautiful flower!|چه گل زیبایی!|A2
 important|مهم|This is important.|این مهم است.|A2
 difficult|سخت|It's difficult.|سخت است.|A2
@@ -670,10 +1283,6 @@ weather|آب و هوا|The weather is nice.|هوا خوب است.|A2
 river|رودخانه|The river flows.|رودخانه جاری است.|A2
 mountain|کوه|We climbed a mountain.|ما کوهی را فتح کردیم.|A2
 animal|حیوان|Lions are animals.|شیرها حیوانند.|A2
-month|ماه|May is a month.|مه یک ماه است.|A2
-week|هفته|I work all week.|من تمام هفته کار می‌کنم.|A2
-hour|ساعت|One hour passed.|یک ساعت گذشت.|A2
-minute|دقیقه|Wait a minute.|یک دقیقه صبر کن.|A2
 computer|کامپیوتر|I use a computer.|من از کامپیوتر استفاده می‌کنم.|A2
 phone|تلفن|My phone is new.|گوشی من جدید است.|A2
 music|موسیقی|I love music.|من موسیقی دوست دارم.|A2
@@ -684,20 +1293,12 @@ understand|فهمیدن|I understand you.|من تو را می‌فهمم.|A2
 help|کمک کردن|Can you help me?|می‌تونی کمکم کنی؟|A2
 remember|به یاد آوردن|I remember your name.|اسمت یادمه.|A2
 forget|فراموش کردن|Don't forget your keys.|کلیدها را فراموش نکن.|A2
-believe|باور کردن|I believe in you.|به تو باور دارم.|A2
 travel|سفر کردن|We travel every year.|ما هر سال سفر می‌کنیم.|A2
 arrive|رسیدن|We arrived late.|دیر رسیدیم.|A2
-leave|ترک کردن|She leaves early.|او زود می‌رود.|A2
-return|بازگشت|I'll return tomorrow.|فردا برمی‌گردم.|A2
 choose|انتخاب کردن|Choose one.|یکی را انتخاب کن.|A2
-decide|تصمیم گرفتن|I decided to stay.|تصمیم گرفتم بمونم.|A2
 try|تلاش کردن|Try again.|دوباره تلاش کن.|A2
 begin|شروع کردن|Let's begin now.|حالا شروع کنیم.|A2
 finish|تمام کردن|I finished the work.|کار را تمام کردم.|A2
-start|شروع کردن|The movie starts soon.|فیلم به‌زودی شروع می‌شه.|A2
-stop|متوقف کردن|Stop talking.|حرف زدن را متوقف کن.|A2
-wait|منتظر ماندن|Wait for me.|منتظرم بمون.|A2
-
 journey|سفر|Our journey was long.|سفرمان طولانی بود.|B1
 adventure|ماجراجویی|It was a great adventure.|ماجراجویی بزرگی بود.|B1
 experience|تجربه|I have experience.|من تجربه دارم.|B1
@@ -723,21 +1324,13 @@ achieve|به دست آوردن|I achieved my goal.|به هدفم رسیدم.|B1
 consider|در نظر گرفتن|Consider the options.|گزینه‌ها را در نظر بگیر.|B1
 suggest|پیشنهاد کردن|I suggest waiting.|پیشنهاد می‌کنم صبر کنیم.|B1
 recommend|توصیه کردن|I recommend this book.|این کتاب را توصیه می‌کنم.|B1
-environment|محیط|The environment matters.|محیط مهم است.|B1
-condition|شرط|On one condition.|به یک شرط.|B1
 situation|موقعیت|The situation is complex.|موقعیت پیچیده است.|B1
 position|موقعیت|Hold your position.|موقعیتت را حفظ کن.|B1
-relation|رابطه|Family relations are important.|روابط خانوادگی مهمه.|B1
 purpose|هدف|What's the purpose?|هدف چیه؟|B1
 reason|دلیل|Give me a reason.|یک دلیل بیار.|B1
 result|نتیجه|The result was good.|نتیجه خوب بود.|B1
 effect|اثر|The effect was huge.|اثرش بزرگ بود.|B1
-cause|علت|What's the cause?|علتش چیه؟|B1
-advantage|مزیت|One big advantage.|یک مزیت بزرگ.|B1
-disadvantage|عیب|Every choice has disadvantages.|هر انتخابی عیب داره.|B1
-influence|تأثیر|Parents influence children.|والدین روی بچه‌ها تأثیر می‌گذارند.|B1
 solution|راه حل|Find a solution.|یه راه حل پیدا کن.|B1
-
 significant|قابل توجه|A significant change.|تغییر قابل توجهی.|B2
 establish|تأسیس کردن|They established a company.|آن‌ها یک شرکت تأسیس کردند.|B2
 demonstrate|نشان دادن|Let me demonstrate.|بذار نشونت بدم.|B2
@@ -746,7 +1339,6 @@ acknowledge|اذعان کردن|I acknowledge my mistake.|اشتباهم را م
 appreciate|قدردانی کردن|I appreciate your help.|از کمکت قدردانی می‌کنم.|B2
 contribute|مشارکت کردن|Everyone contributed.|همه مشارکت کردند.|B2
 encourage|تشویق کردن|Encourage your friends.|دوستانت را تشویق کن.|B2
-establish|برقرار کردن|Establish good habits.|عادت‌های خوب برقرار کن.|B2
 maintain|حفظ کردن|Maintain the balance.|تعادل را حفظ کن.|B2
 participate|شرکت کردن|I want to participate.|می‌خواهم شرکت کنم.|B2
 recognize|تشخیص دادن|I recognize her voice.|صدایش را تشخیص می‌دهم.|B2
@@ -763,22 +1355,12 @@ conduct|انجام دادن|They conducted research.|آن‌ها تحقیق کر
 confirm|تأیید کردن|Please confirm.|لطفاً تأیید کن.|B2
 consistent|سازگار|Be consistent.|سازگار باش.|B2
 context|زمینه|In this context…|در این زمینه…|B2
-constitute|تشکیل دادن|This constitutes a problem.|این یک مشکل را تشکیل می‌دهد.|B2
 crucial|حیاتی|Time is crucial.|زمان حیاتیه.|B2
-demonstrate|نمایش دادن|Let me demonstrate.|بذار نشون بدم.|B2
-derive|مشتق شدن|It derives from Latin.|از لاتین مشتق شده.|B2
 distinguish|تمایز قائل شدن|Distinguish right from wrong.|درست را از غلط تشخیص بده.|B2
 dominant|مسلط|The dominant group.|گروه مسلط.|B2
 economy|اقتصاد|The economy is growing.|اقتصاد در حال رشد است.|B2
 eliminate|حذف کردن|Eliminate the problem.|مشکل را حذف کن.|B2
 enhance|بهبود بخشیدن|Enhance the quality.|کیفیت را بهبود ببخش.|B2
-estimate|تخمین زدن|I estimate 10 dollars.|حدود ۱۰ دلار تخمین می‌زنم.|B2
-evaluate|ارزیابی کردن|Evaluate the results.|نتایج را ارزیابی کن.|B2
-eventually|سرانجام|Eventually we agreed.|سرانجام به توافق رسیدیم.|B2
-evidence|شواهد|Where's the evidence?|شواهد کجاست؟|B2
-exceed|فراتر رفتن|Don't exceed the limit.|از حد فراتر نرو.|B2
-generate|تولید کردن|Generate new ideas.|ایده‌های جدید تولید کن.|B2
-
 sophisticated|پیشرفته|A sophisticated system.|یک سیستم پیشرفته.|C1
 ambiguous|مبهم|The answer was ambiguous.|پاسخ مبهم بود.|C1
 comprehensive|جامع|A comprehensive guide.|راهنمای جامع.|C1
@@ -804,33 +1386,17 @@ perceive|درک کردن|How do you perceive it?|چطور درکش می‌کنی
 perspective|دیدگاه|From my perspective…|از دیدگاه من…|C1
 plausible|محتمل|A plausible explanation.|توضیح محتمل.|C1
 preliminary|مقدماتی|Preliminary results.|نتایج مقدماتی.|C1
-presume|فرض کردن|I presume you agree.|فرض می‌کنم موافقی.|C1
 profound|عمیق|A profound impact.|تأثیر عمیق.|C1
 prominent|برجسته|A prominent figure.|چهره برجسته.|C1
 rationale|منطق|What's the rationale?|منطقش چیه؟|C1
 reciprocal|دوطرفه|Reciprocal agreement.|توافق دوطرفه.|C1
 scrutiny|بررسی دقیق|Under scrutiny.|تحت بررسی دقیق.|C1
-subsequent|بعدی|Subsequent events.|اتفاقات بعدی.|C1
-subtle|ظریف|A subtle difference.|تفاوت ظریف.|C1
-sustainable|پایدار|Sustainable development.|توسعه پایدار.|C1
-tangible|ملموس|Tangible results.|نتایج ملموس.|C1
-transcend|فراتر رفتن|Transcend limits.|فراتر از محدودیت‌ها.|C1
-trivial|جزئی|A trivial matter.|موضوع جزئی.|C1
-undermine|تضعیف کردن|Don't undermine me.|منو تضعیف نکن.|C1
-unprecedented|بی‌سابقه|Unprecedented growth.|رشد بی‌سابقه.|C1
-versatile|چندکاره|A versatile tool.|ابزار چندکاره.|C1
-
 ubiquitous|همه‌جا حاضر|Smartphones are ubiquitous.|گوشی‌های هوشمند همه‌جا هستن.|C2
-paradigm shift|تغییر پارادایم|A paradigm shift occurred.|یک تغییر پارادایم رخ داد.|C2
-juxtaposition|هم‌نشینی|A clever juxtaposition.|هم‌نشینی هوشمندانه‌ای.|C2
-quintessential|نمونه کامل|The quintessential example.|نمونه کامل مثال.|C2
 ephemeral|زودگذر|Fame is ephemeral.|شهرت زودگذره.|C2
-idiosyncratic|خاص فردی|His idiosyncratic style.|سبک خاص خودش.|C2
-unprecedented|بی‌سابقه|An unprecedented event.|یک رخداد بی‌سابقه.|C2
+quintessential|نمونه کامل|The quintessential example.|نمونه کامل مثال.|C2
+juxtaposition|هم‌نشینی|A clever juxtaposition.|هم‌نشینی هوشمندانه‌ای.|C2
 proliferation|تکثیر|The proliferation of data.|تکثیر داده.|C2
 discrepancy|تناقض|A discrepancy in numbers.|تناقض در اعداد.|C2
-predominantly|عمدتاً|It's predominantly blue.|عمدتاً آبیه.|C2
-discretion|اختیار|Use your discretion.|از اختیارت استفاده کن.|C2
 exacerbate|بدتر کردن|Don't exacerbate the issue.|مسئله را بدتر نکن.|C2
 ameliorate|بهبود دادن|Ameliorate the conditions.|شرایط را بهبود ببخش.|C2
 obsolete|منسوخ|The tech is obsolete.|فناوری منسوخ شده.|C2
@@ -839,29 +1405,244 @@ mitigate|کاهش دادن|Mitigate the risks.|ریسک‌ها را کاهش ب�
 circumvent|دور زدن|Circumvent the rules.|قوانین را دور بزن.|C2
 disseminate|پراکندن|Disseminate information.|اطلاعات را پراکنده کن.|C2
 engender|به وجود آوردن|Trust engenders loyalty.|اعتماد وفاداری به وجود میاره.|C2
-extol|ستودن|Extol the virtues.|فضیلت‌ها را بستا.|C2
 formidable|مهیب|A formidable opponent.|حریف مهیبی.|C2
 gregarious|اجتماعی|He's gregarious.|او خوش‌مشربه.|C2
 hyperbole|اغراق|That's hyperbole.|این اغراقه.|C2
 impeccable|بی‌نقص|Impeccable manners.|رفتار بی‌نقص.|C2
 ineffable|توصیف‌ناپذیر|Ineffable joy.|شادی توصیف‌ناپذیر.|C2
 juxtapose|کنار هم گذاشتن|Juxtapose the ideas.|ایده‌ها را کنار هم بذار.|C2
-labyrinthine|پیچ‌درپیچ|A labyrinthine plot.|طرح پیچ‌درپیچ.|C2
 magnanimous|بزرگوار|A magnanimous gesture.|حرکت بزرگوارانه.|C2
 ostensible|ظاهری|His ostensible reason.|دلیل ظاهری‌اش.|C2
 paradoxical|متناقض|A paradoxical result.|نتیجه متناقض.|C2
-quell|سرکوب کردن|Quell the protests.|اعتراضات را سرکوب کن.|C2
 reiterate|تکرار کردن|Let me reiterate.|بذار تکرار کنم.|C2
-sanctimonious|مقدس‌نما|Don't be sanctimonious.|مقدس‌نما نباش.|C2
 tenacious|سرسخت|A tenacious fighter.|مبارز سرسختی.|C2
 vociferous|پرسروصدا|Vociferous complaints.|شکایت‌های پرسروصدا.|C2
 zealous|پرشور|A zealous supporter.|حامی پرشور.|C2
-ubiquity|همه‌جایی|The ubiquity of the internet.|همه‌جایی بودن اینترنت.|C2
 vicissitudes|تحولات|The vicissitudes of life.|تحولات زندگی.|C2
-wanton|بی‌پروا|Wanton destruction.|تخریب بی‌پروا.|C2
 yearn|مشتاق بودن|I yearn for peace.|مشتاق آرامشم.|C2
 `;
 
+/* ============================================================
+   GRAMMAR LESSONS
+   ============================================================ */
+const LESSONS = [
+  {level:'A1', title:'حروف تعریف a / an / the', sections:[
+    {h:'a و an',b:'<code>a</code> قبل از صامت — <code>an</code> قبل از صدادار (a,e,i,o,u)<span class="ex"><span class="en">I have <b>a</b> car. / She ate <b>an</b> apple.</span><span class="fa">من یک ماشین دارم. / او یک سیب خورد.</span></span>'},
+    {h:'the',b:'برای چیز مشخص یا منحصر به فرد<span class="ex"><span class="en"><b>The</b> sun is bright.</span><span class="fa">خورشید درخشانه.</span></span>'},
+    {h:'بدون حرف تعریف',b:'اسامی جمع و غیرقابل شمارش<span class="ex"><span class="en">I love <b>music</b>.</span><span class="fa">من موسیقی دوست دارم.</span></span>'}
+  ], exercises:[
+    {q:'I ate ___ orange.',correct:'an',wrongs:['a','the','—']},
+    {q:'She has ___ dog.',correct:'a',wrongs:['an','the','—']},
+    {q:'___ sun is bright.',correct:'The',wrongs:['A','An','—']}
+  ]},
+  {level:'A1', title:'فعل to be (am / is / are)', sections:[
+    {h:'سه شکل',b:'<ul><li><code>am</code> با I</li><li><code>is</code> با he/she/it</li><li><code>are</code> با you/we/they</li></ul>'},
+    {h:'مثال',b:'<span class="ex"><span class="en">I <b>am</b> a student. / He <b>is</b> a doctor. / We <b>are</b> friends.</span><span class="fa">من دانش‌آموزم. / او دکتره. / ما دوستیم.</span></span>'},
+    {h:'منفی',b:'<code>isn\'t</code> = is not / <code>aren\'t</code> = are not'}
+  ], exercises:[
+    {q:'I ___ happy.',correct:'am',wrongs:['is','are','be']},
+    {q:'She ___ a teacher.',correct:'is',wrongs:['am','are','be']},
+    {q:'They ___ my friends.',correct:'are',wrongs:['am','is','be']}
+  ]},
+  {level:'A1', title:'ضمایر فاعلی', sections:[
+    {h:'۷ ضمیر',b:'<ul><li><code>I</code>=من / <code>you</code>=تو / <code>he</code>=او (مرد)</li><li><code>she</code>=او (زن) / <code>it</code>=آن</li><li><code>we</code>=ما / <code>they</code>=آن‌ها</li></ul>'},
+    {h:'مثال',b:'<span class="ex"><span class="en"><b>She</b> is my sister. / <b>They</b> play football.</span><span class="fa">او خواهر منه. / آن‌ها فوتبال بازی می‌کنند.</span></span>'}
+  ], exercises:[
+    {q:'___ is my brother.',correct:'He',wrongs:['She','It','They']},
+    {q:'___ are students.',correct:'They',wrongs:['He','She','It']},
+    {q:'___ am a teacher.',correct:'I',wrongs:['He','She','We']}
+  ]},
+  {level:'A1', title:'جمع اسم‌ها', sections:[
+    {h:'قاعده',b:'<code>-s</code> <span class="ex"><span class="en">book → <b>books</b></span></span>'},
+    {h:'حالات خاص',b:'<ul><li>s,sh,ch,x → <code>-es</code></li><li>صامت+y → <code>-ies</code></li></ul>'},
+    {h:'بی‌قاعده',b:'man → <b>men</b> / child → <b>children</b>'}
+  ], exercises:[
+    {q:'جمع city:',correct:'cities',wrongs:['citys','cityes','city']},
+    {q:'جمع box:',correct:'boxes',wrongs:['boxs','boxies','box']},
+    {q:'جمع man:',correct:'men',wrongs:['mans','manes','man']}
+  ]},
+  {level:'A1', title:'ضمایر ملکی', sections:[
+    {h:'my, your, his, her...',b:'<ul><li><code>my</code>=مال من / <code>your</code>=مال تو</li><li><code>his</code>=مال او(مرد) / <code>her</code>=مال او(زن)</li></ul>'},
+    {h:'مثال',b:'<span class="ex"><span class="en">This is <b>my</b> book.</span><span class="fa">این کتاب منه.</span></span>'}
+  ], exercises:[
+    {q:'This is ___ book.',correct:'my',wrongs:['me','I','mine']},
+    {q:'___ car is red.',correct:'Her',wrongs:['His','She','Hers']},
+    {q:'___ house is big.',correct:'Our',wrongs:['Us','We','Ours']}
+  ]},
+  {level:'A2', title:'حال ساده', sections:[
+    {h:'کی؟',b:'کارهای روزمره، عادت‌ها'},
+    {h:'فرمول',b:'<ul><li>I/You/We/They + فعل ساده</li><li>He/She/It + فعل + <code>-s</code></li></ul>'},
+    {h:'منفی و سؤال',b:'<code>don\'t / doesn\'t</code> — <code>Do / Does</code>'}
+  ], exercises:[
+    {q:'She ___ tennis daily.',correct:'plays',wrongs:['play','playing','played']},
+    {q:'I ___ coffee.',correct:"don't like",wrongs:["doesn't like",'not like','no like']},
+    {q:'___ he speak English?',correct:'Does',wrongs:['Do','Is','Are']}
+  ]},
+  {level:'A2', title:'حال استمراری', sections:[
+    {h:'کی؟',b:'کارهایی که همین الان در حال انجامه'},
+    {h:'فرمول',b:'<code>am/is/are</code> + فعل + <code>-ing</code>'}
+  ], exercises:[
+    {q:'I ___ a book now.',correct:'am reading',wrongs:['read','reads','reading']},
+    {q:'They ___ football.',correct:'are playing',wrongs:['play','plays','played']},
+    {q:'She ___ TV now.',correct:'is watching',wrongs:['watch','watches','watched']}
+  ]},
+  {level:'A2', title:'گذشته ساده — باقاعده', sections:[
+    {h:'قاعده',b:'<code>-ed</code> <span class="ex"><span class="en">play → <b>played</b></span></span>'},
+    {h:'نکات',b:'<ul><li>مختوم به e → فقط <code>-d</code></li><li>صامت+y → y به i</li></ul>'}
+  ], exercises:[
+    {q:'Yesterday I ___ (work).',correct:'worked',wrongs:['work','working','works']},
+    {q:'She ___ (study).',correct:'studied',wrongs:['studyed','studing','study']},
+    {q:'We ___ (play).',correct:'played',wrongs:['play','plaied','playing']}
+  ]},
+  {level:'A2', title:'گذشته ساده — بی‌قاعده', sections:[
+    {h:'افعال مهم',b:'<ul><li>go → <b>went</b> / see → <b>saw</b> / eat → <b>ate</b></li></ul>'},
+    {h:'منفی',b:'بعد از <code>didn\'t</code> فعل ساده'}
+  ], exercises:[
+    {q:'I ___ to school yesterday.',correct:'went',wrongs:['go','goed','going']},
+    {q:'She ___ a movie.',correct:'saw',wrongs:['see','seed','seeing']},
+    {q:'He ___ his homework.',correct:'did',wrongs:['do','does','doing']}
+  ]},
+  {level:'A2', title:'some / any', sections:[
+    {h:'قاعده',b:'<ul><li><code>some</code> در جملات مثبت</li><li><code>any</code> در منفی و سؤال</li></ul>'}
+  ], exercises:[
+    {q:'I have ___ friends.',correct:'some',wrongs:['any','a','an']},
+    {q:'Do you have ___ questions?',correct:'any',wrongs:['some','a','an']},
+    {q:'I don\'t have ___ money.',correct:'any',wrongs:['some','a','an']}
+  ]},
+  {level:'B1', title:'آینده ساده (will)', sections:[
+    {h:'کی؟',b:'تصمیم آنی، پیش‌بینی'},
+    {h:'فرمول',b:'<code>will</code> + فعل ساده'}
+  ], exercises:[
+    {q:'I ___ call you tomorrow.',correct:'will',wrongs:['am','do','did']},
+    {q:'It ___ rain tonight.',correct:'will',wrongs:['is','was','did']},
+    {q:'She ___ come. (منفی)',correct:"won't",wrongs:["don't",'isn\'t','doesn\'t']}
+  ]},
+  {level:'B1', title:'going to', sections:[
+    {h:'کی؟',b:'قصد و برنامه قبلی'},
+    {h:'فرمول',b:'<code>am/is/are going to</code> + فعل ساده'}
+  ], exercises:[
+    {q:'I ___ travel next month.',correct:'am going to',wrongs:['will','going to','go to']},
+    {q:'They ___ buy a house.',correct:'are going to',wrongs:['is going to','will','go to']},
+    {q:'She ___ start a new job.',correct:'is going to',wrongs:['are going to','am going to','go to']}
+  ]},
+  {level:'B1', title:'صفت‌های مقایسه‌ای', sections:[
+    {h:'قاعده',b:'صفت کوتاه + <code>-er</code> + than'},
+    {h:'بلندها',b:'<code>more</code> + صفت'},
+    {h:'بی‌قاعده',b:'good → better / bad → worse'}
+  ], exercises:[
+    {q:'He is ___ than me.',correct:'taller',wrongs:['tall','tallest','more tall']},
+    {q:'This is ___ than that.',correct:'more expensive',wrongs:['expensive','expensiver','most expensive']},
+    {q:'My English is ___ now.',correct:'better',wrongs:['good','gooder','best']}
+  ]},
+  {level:'B1', title:'حال کامل (Present Perfect)', sections:[
+    {h:'ساختار',b:'<code>have/has</code> + past participle'},
+    {h:'کی؟',b:'کار گذشته با اثر حال / تجربه‌ها'},
+    {h:'قیدها',b:'ever / never / already / yet / just'}
+  ], exercises:[
+    {q:'I ___ my homework.',correct:'have finished',wrongs:['finish','finished','finishing']},
+    {q:'She ___ to London.',correct:'has gone',wrongs:['go','went','going']},
+    {q:'Have you ___ been to Paris?',correct:'ever',wrongs:['never','yet','already']}
+  ]},
+  {level:'B1', title:'can / could / should / must', sections:[
+    {h:'can',b:'توانستن (حال)'},
+    {h:'could',b:'توانستن (گذشته)'},
+    {h:'should',b:'توصیه'},
+    {h:'must',b:'اجبار'},
+    {h:'نکته',b:'بعد از همه فعل ساده'}
+  ], exercises:[
+    {q:'I ___ swim when I was 5.',correct:'could',wrongs:['can','should','must']},
+    {q:'You ___ see a doctor.',correct:'should',wrongs:['can','could','mustn\'t']},
+    {q:'Students ___ wear uniforms.',correct:'must',wrongs:['can','could','shouldn\'t']}
+  ]},
+  {level:'B2', title:'گذشته استمراری', sections:[
+    {h:'ساختار',b:'<code>was/were</code> + فعل + <code>-ing</code>'}
+  ], exercises:[
+    {q:'I ___ TV when you called.',correct:'was watching',wrongs:['watched','watch','were watching']},
+    {q:'They ___ football at 5 PM.',correct:'were playing',wrongs:['was playing','played','play']},
+    {q:'She ___ when I saw her.',correct:'was crying',wrongs:['cried','were crying','cry']}
+  ]},
+  {level:'B2', title:'مجهول (Passive)', sections:[
+    {h:'ساختار',b:'<code>be</code> + past participle'}
+  ], exercises:[
+    {q:'The letter ___ yesterday.',correct:'was written',wrongs:['wrote','is written','written']},
+    {q:'This book ___ by many.',correct:'is read',wrongs:['reads','is reading','read']},
+    {q:'The house ___ next year.',correct:'will be built',wrongs:['will build','is building','built']}
+  ]},
+  {level:'B2', title:'شرطی نوع اول', sections:[
+    {h:'ساختار',b:'<code>If</code> + حال ساده , <code>will</code> + فعل ساده'},
+    {h:'نکته',b:'بعد از if هرگز will نمیاد'}
+  ], exercises:[
+    {q:'If it ___, I will stay home.',correct:'rains',wrongs:['will rain','rained','raining']},
+    {q:'If you ___, you will pass.',correct:'study',wrongs:['will study','studied','studying']},
+    {q:'I will call if I ___ time.',correct:'have',wrongs:['will have','had','having']}
+  ]},
+  {level:'B2', title:'گزارش گفتار', sections:[
+    {h:'قاعده',b:'فعل یک زمان عقب میره'},
+    {h:'جدول',b:'<ul><li>حال ساده → گذشته ساده</li><li>will → would / can → could</li></ul>'}
+  ], exercises:[
+    {q:'"I like coffee." → He said he ___ coffee.',correct:'liked',wrongs:['likes','like','liking']},
+    {q:'"I will come." → She said she ___ come.',correct:'would',wrongs:['will','can','is']},
+    {q:'"I can swim." → He said he ___ swim.',correct:'could',wrongs:['can','will','is']}
+  ]},
+  {level:'C1', title:'حال کامل استمراری', sections:[
+    {h:'ساختار',b:'<code>have/has been</code> + فعل + <code>-ing</code>'}
+  ], exercises:[
+    {q:'I ___ English for 3 years.',correct:'have been learning',wrongs:['learn','learned','am learning']},
+    {q:'She ___ since morning.',correct:'has been working',wrongs:['works','worked','is working']},
+    {q:'They ___ for hours.',correct:'have been waiting',wrongs:['wait','waited','are waiting']}
+  ]},
+  {level:'C1', title:'شرطی نوع دوم', sections:[
+    {h:'ساختار',b:'<code>If</code> + گذشته ساده , <code>would</code> + فعل ساده'},
+    {h:'نکته',b:'were به جای was برای همه ضمایر'}
+  ], exercises:[
+    {q:'If I ___ rich, I would travel.',correct:'were',wrongs:['am','will be','be']},
+    {q:'If she ___ more, she would pass.',correct:'studied',wrongs:['studies','will study','study']},
+    {q:'I would buy it if I ___ money.',correct:'had',wrongs:['have','will have','has']}
+  ]},
+  {level:'C1', title:'شرطی نوع سوم', sections:[
+    {h:'ساختار',b:'<code>If</code> + had + p.p. , <code>would have</code> + p.p.'}
+  ], exercises:[
+    {q:'If I ___ harder, I would have passed.',correct:'had studied',wrongs:['studied','study','have studied']},
+    {q:'She ___ if she had known.',correct:'would have come',wrongs:['would come','came','will come']},
+    {q:'If they ___ earlier, they wouldn\'t have missed.',correct:'had left',wrongs:['left','leave','have left']}
+  ]},
+  {level:'C1', title:'Modal پیشرفته', sections:[
+    {h:'must have',b:'احتمال قوی در گذشته'},
+    {h:'can\'t have',b:'غیرممکن در گذشته'},
+    {h:'should have',b:'پشیمانی'}
+  ], exercises:[
+    {q:'He ___ forgotten.',correct:"can't have",wrongs:["must have",'should have','might have']},
+    {q:'She ___ left; car is gone.',correct:'must have',wrongs:["can't have",'should have','might not have']},
+    {q:'I ___ studied more.',correct:'should have',wrongs:['must have',"can't have",'would have']}
+  ]},
+  {level:'C2', title:'Inversion', sections:[
+    {h:'ساختار',b:'قید منفی در ابتدای جمله → جابه‌جایی فعل و فاعل'},
+    {h:'قیدها',b:'never, rarely, hardly, not only'}
+  ], exercises:[
+    {q:'Never ___ such a thing.',correct:'have I seen',wrongs:['I have seen','I saw','did I saw']},
+    {q:'Rarely ___ she late.',correct:'is',wrongs:['she is','does','was']},
+    {q:'Not only ___ he late, but he also forgot.',correct:'was',wrongs:['he was','did','is']}
+  ]},
+  {level:'C2', title:'Subjunctive', sections:[
+    {h:'ساختار',b:'بعد از suggest, insist, recommend فعل ساده (بدون s)'}
+  ], exercises:[
+    {q:'I suggest that he ___ careful.',correct:'be',wrongs:['is','was','being']},
+    {q:'She insisted that he ___.',correct:'leave',wrongs:['leaves','left','leaving']},
+    {q:'It\'s important that she ___ present.',correct:'be',wrongs:['is','was','be being']}
+  ]},
+  {level:'C2', title:'Cleft Sentences', sections:[
+    {h:'It-cleft',b:'<code>It is/was ... that</code>'},
+    {h:'What-cleft',b:'<code>What ... is/was</code>'}
+  ], exercises:[
+    {q:'___ was John that broke it.',correct:'It',wrongs:['That','This','There']},
+    {q:'___ I need is a break.',correct:'What',wrongs:['That','It','Which']},
+    {q:'___ was yesterday that I saw him.',correct:'It',wrongs:['That','This','There']}
+  ]}
+];
+
+/* ============================================================
+   PARSE + SETUP
+   ============================================================ */
 function parseWords(raw){
   const seen = new Set();
   return raw.trim().split('\n').map(line => {
@@ -876,502 +1657,95 @@ function parseWords(raw){
   }).filter(Boolean);
 }
 const WORDS = parseWords(WORDS_RAW);
-
-/* =========================================================
-   GRAMMAR LESSONS — 36 درس در ۶ سطح
-   هر درس: title, level, sections, exercises
-   ========================================================= */
-const LESSONS = [
-  /* ===== سطح A1 ===== */
-  {level:'A1', title:'حروف تعریف a / an / the',
-   sections:[
-     {h:'a و an — نامعین',b:'وقتی برای اولین بار چیزی رو معرفی می‌کنیم.<ul><li><code>a</code> قبل از صامت</li><li><code>an</code> قبل از صدادار (a, e, i, o, u)</li></ul><span class="ex-block"><span class="en">I have <b>a</b> car. / She ate <b>an</b> apple.</span><span class="fa">من یک ماشین دارم. / او یک سیب خورد.</span></span>'},
-     {h:'the — معین',b:'برای چیز مشخص یا منحصر به فرد.<span class="ex-block"><span class="en"><b>The</b> sun is bright.</span><span class="fa">خورشید درخشانه.</span><span class="nt">خورشید منحصر به فرده</span></span>'},
-     {h:'بدون حرف تعریف',b:'اسامی جمع و غیرقابل شمارش معمولاً بدون حرف تعریف می‌آن.<span class="ex-block"><span class="en">I love <b>music</b>.</span><span class="fa">من موسیقی دوست دارم.</span></span>'}
-   ],
-   exercises:[
-     {q:'I ate ___ orange.',correct:'an',wrongs:['a','the','—']},
-     {q:'She has ___ dog.',correct:'a',wrongs:['an','the','—']},
-     {q:'___ sun is very bright.',correct:'The',wrongs:['A','An','—']},
-     {q:'I want ___ water.',correct:'—',wrongs:['a','an','the']}
-   ]},
-  {level:'A1', title:'فعل to be (am / is / are)',
-   sections:[
-     {h:'سه شکل',b:'<ul><li><code>am</code> با I</li><li><code>is</code> با he / she / it</li><li><code>are</code> با you / we / they</li></ul>'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en">I <b>am</b> a student. / He <b>is</b> a doctor. / We <b>are</b> friends.</span><span class="fa">من دانش‌آموزم. / او دکتره. / ما دوستیم.</span></span>'},
-     {h:'منفی و کوتاه',b:'<code>isn\'t = is not</code> / <code>aren\'t = are not</code> / <code>I\'m not</code><span class="ex-block"><span class="en">She <b>isn\'t</b> here. / I\'m <b>not</b> tired.</span><span class="fa">او اینجا نیست. / خسته نیستم.</span></span>'}
-   ],
-   exercises:[
-     {q:'I ___ happy.',correct:'am',wrongs:['is','are','be']},
-     {q:'She ___ a teacher.',correct:'is',wrongs:['am','are','be']},
-     {q:'They ___ my friends.',correct:'are',wrongs:['am','is','be']},
-     {q:'It ___ cold today.',correct:'is',wrongs:['am','are','be']}
-   ]},
-  {level:'A1', title:'ضمایر فاعلی',
-   sections:[
-     {h:'۷ ضمیر',b:'<ul><li><code>I</code>=من / <code>you</code>=تو / <code>he</code>=او(مرد)</li><li><code>she</code>=او(زن) / <code>it</code>=آن / <code>we</code>=ما / <code>they</code>=آن‌ها</li></ul>'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en"><b>She</b> is my sister. / <b>They</b> play football.</span><span class="fa">او خواهر منه. / آن‌ها فوتبال بازی می‌کنند.</span></span>'}
-   ],
-   exercises:[
-     {q:'___ is my brother. (مرد)',correct:'He',wrongs:['She','It','They']},
-     {q:'___ are students.',correct:'They',wrongs:['He','She','It']},
-     {q:'___ am a teacher.',correct:'I',wrongs:['He','She','We']}
-   ]},
-  {level:'A1', title:'جمع اسم‌ها',
-   sections:[
-     {h:'قاعده',b:'معمولاً <code>-s</code> <span class="ex-block"><span class="en">book → <b>books</b> / cat → <b>cats</b></span></span>'},
-     {h:'حالات خاص',b:'<ul><li>s, sh, ch, x → <code>-es</code></li><li>صامت + y → <code>-ies</code></li></ul><span class="ex-block"><span class="en">box → <b>boxes</b> / city → <b>cities</b></span></span>'},
-     {h:'بی‌قاعده',b:'<span class="ex-block"><span class="en">man → <b>men</b> / child → <b>children</b> / foot → <b>feet</b></span></span>'}
-   ],
-   exercises:[
-     {q:'جمع city:',correct:'cities',wrongs:['citys','cityes','city']},
-     {q:'جمع box:',correct:'boxes',wrongs:['boxs','boxies','box']},
-     {q:'جمع man:',correct:'men',wrongs:['mans','manes','man']}
-   ]},
-  {level:'A1', title:'ضمایر ملکی',
-   sections:[
-     {h:'my, your, his, her...',b:'<ul><li><code>my</code>=مال من / <code>your</code>=مال تو</li><li><code>his</code>=مال او(مرد) / <code>her</code>=مال او(زن)</li><li><code>its</code>=مال آن / <code>our</code>=مال ما / <code>their</code>=مال آن‌ها</li></ul>'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en">This is <b>my</b> book. / <b>Her</b> car is red.</span><span class="fa">این کتاب منه. / ماشینش قرمزه.</span></span>'}
-   ],
-   exercises:[
-     {q:'This is ___ book. (مال من)',correct:'my',wrongs:['me','I','mine']},
-     {q:'___ car is red. (مال او - زن)',correct:'Her',wrongs:['His','She','Hers']},
-     {q:'___ house is big. (مال ما)',correct:'Our',wrongs:['Us','We','Ours']}
-   ]},
-  {level:'A1', title:'فعل have (داشتن)',
-   sections:[
-     {h:'have / has',b:'<code>have</code> با I/You/We/They — <code>has</code> با He/She/It'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en">I <b>have</b> a car. / She <b>has</b> a cat.</span><span class="fa">ماشین دارم. / گربه داره.</span></span>'}
-   ],
-   exercises:[
-     {q:'I ___ a new phone.',correct:'have',wrongs:['has','am','do']},
-     {q:'She ___ two brothers.',correct:'has',wrongs:['have','is','does']},
-     {q:'They ___ a big house.',correct:'have',wrongs:['has','is','are']}
-   ]},
-  {level:'A1', title:'there is / there are',
-   sections:[
-     {h:'معنی',b:'«وجود دارد» — برای معرفی چیز جدید'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en"><b>There is</b> a book on the table. / <b>There are</b> two cats.</span><span class="fa">یک کتاب روی میزه. / دو گربه هستن.</span></span>'},
-     {h:'منفی و سؤال',b:'<span class="ex-block"><span class="en"><b>There isn\'t</b> any milk. / <b>Is there</b> a bank?</span><span class="fa">شیر نیست. / بانکی هست؟</span></span>'}
-   ],
-   exercises:[
-     {q:'___ a book on the table.',correct:'There is',wrongs:['There are','It is','They are']},
-     {q:'___ many people here.',correct:'There are',wrongs:['There is','It is','He is']},
-     {q:'___ any milk?',correct:'Is there',wrongs:['Are there','It is','They are']}
-   ]},
-
-  /* ===== سطح A2 ===== */
-  {level:'A2', title:'حال ساده (Simple Present)',
-   sections:[
-     {h:'کی استفاده می‌شه؟',b:'کارهای روزمره، عادت‌ها، حقایق'},
-     {h:'فرمول',b:'<ul><li>I/You/We/They + فعل ساده</li><li>He/She/It + فعل + <code>-s</code></li></ul><span class="ex-block"><span class="en">I <b>play</b>. / She <b>plays</b>.</span></span>'},
-     {h:'منفی و سؤال',b:'<code>don\'t / doesn\'t</code> — <code>Do / Does</code><span class="ex-block"><span class="en">I <b>don\'t</b> like coffee. / <b>Does</b> he work here?</span></span>'}
-   ],
-   exercises:[
-     {q:'She ___ tennis daily.',correct:'plays',wrongs:['play','playing','played']},
-     {q:'I ___ coffee.',correct:"don't like",wrongs:["doesn't like",'not like','no like']},
-     {q:'___ he speak English?',correct:'Does',wrongs:['Do','Is','Are']},
-     {q:'They ___ to school.',correct:'go',wrongs:['goes','going','gone']}
-   ]},
-  {level:'A2', title:'حال استمراری',
-   sections:[
-     {h:'کی استفاده می‌شه؟',b:'کارهایی که <strong>همین الان</strong> در حال انجامه'},
-     {h:'فرمول',b:'<code>am / is / are</code> + فعل + <code>-ing</code><span class="ex-block"><span class="en">I <b>am reading</b>. / They <b>are playing</b>.</span></span>'},
-     {h:'تفاوت با حال ساده',b:'<span class="ex-block"><span class="en">I <b>read</b> every night. (عادت) — I <b>am reading</b> now. (الان)</span></span>'}
-   ],
-   exercises:[
-     {q:'I ___ a book right now.',correct:'am reading',wrongs:['read','reads','reading']},
-     {q:'They ___ football.',correct:'are playing',wrongs:['play','plays','played']},
-     {q:'She ___ TV at the moment.',correct:'is watching',wrongs:['watch','watches','watched']}
-   ]},
-  {level:'A2', title:'گذشته ساده — باقاعده',
-   sections:[
-     {h:'قاعده',b:'کافیه <code>-ed</code> اضافه کنی'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en">play → <b>played</b> / work → <b>worked</b> / talk → <b>talked</b></span></span>'},
-     {h:'نکات املایی',b:'<ul><li>مختوم به e → فقط <code>-d</code> (like → liked)</li><li>مختوم به صامت+y → y به i، <code>-ed</code> (study → studied)</li></ul>'}
-   ],
-   exercises:[
-     {q:'Yesterday I ___ (work) hard.',correct:'worked',wrongs:['work','working','works']},
-     {q:'She ___ (study) all night.',correct:'studied',wrongs:['studyed','studing','study']},
-     {q:'We ___ (play) football.',correct:'played',wrongs:['play','plaied','playing']}
-   ]},
-  {level:'A2', title:'گذشته ساده — بی‌قاعده',
-   sections:[
-     {h:'افعال مهم',b:'<ul><li>go → <b>went</b> / see → <b>saw</b> / eat → <b>ate</b></li><li>come → <b>came</b> / have → <b>had</b> / do → <b>did</b></li><li>get → <b>got</b> / make → <b>made</b> / take → <b>took</b></li></ul>'},
-     {h:'منفی و سؤال',b:'بعد از <code>didn\'t / Did</code> فعل <strong>ساده</strong> میاد:<span class="ex-block"><span class="en">I <b>didn\'t go</b>. / <b>Did</b> you see him?</span><span class="fa">نرفتم. / او را دیدی؟</span><span class="nt">نه didn\'t went ❌</span></span>'}
-   ],
-   exercises:[
-     {q:'I ___ to school yesterday.',correct:'went',wrongs:['go','goed','going']},
-     {q:'She ___ a movie.',correct:'saw',wrongs:['see','seed','seeing']},
-     {q:'He ___ his homework.',correct:'did',wrongs:['do','does','doing']}
-   ]},
-  {level:'A2', title:'some / any',
-   sections:[
-     {h:'قاعده',b:'<ul><li><code>some</code> در جملات مثبت</li><li><code>any</code> در منفی و سؤال</li></ul>'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en">I have <b>some</b> money. / I don\'t have <b>any</b>. / Do you have <b>any</b>?</span><span class="fa">کمی پول دارم. / پول ندارم. / پول داری؟</span></span>'},
-     {h:'نکته',b:'در درخواست‌های مؤدبانه از <code>some</code> استفاده می‌کنیم:<span class="ex-block"><span class="en">Would you like <b>some</b> tea?</span></span>'}
-   ],
-   exercises:[
-     {q:'I have ___ friends.',correct:'some',wrongs:['any','a','an']},
-     {q:'Do you have ___ questions?',correct:'any',wrongs:['some','a','an']},
-     {q:'I don\'t have ___ money.',correct:'any',wrongs:['some','a','an']}
-   ]},
-  {level:'A2', title:'حروف اضافه مکان (in / on / at)',
-   sections:[
-     {h:'in — داخل',b:'<span class="ex-block"><span class="en"><b>in</b> the room / <b>in</b> the box / <b>in</b> the car</span></span>'},
-     {h:'on — روی سطح',b:'<span class="ex-block"><span class="en"><b>on</b> the table / <b>on</b> the wall / <b>on</b> the floor</span></span>'},
-     {h:'at — نقطه مشخص',b:'<span class="ex-block"><span class="en"><b>at</b> the door / <b>at</b> the bus stop / <b>at</b> home</span></span>'}
-   ],
-   exercises:[
-     {q:'The book is ___ the table.',correct:'on',wrongs:['in','at','by']},
-     {q:'She lives ___ Tehran.',correct:'in',wrongs:['on','at','by']},
-     {q:'Wait for me ___ the door.',correct:'at',wrongs:['in','on','by']}
-   ]},
-  {level:'A2', title:'حروف اضافه زمان (in / on / at)',
-   sections:[
-     {h:'in — دوره‌های طولانی',b:'<span class="ex-block"><span class="en"><b>in</b> May / <b>in</b> 2024 / <b>in</b> summer / <b>in</b> the morning</span></span>'},
-     {h:'on — روزها و تاریخ',b:'<span class="ex-block"><span class="en"><b>on</b> Monday / <b>on</b> May 5th / <b>on</b> my birthday</span></span>'},
-     {h:'at — ساعت و لحظه دقیق',b:'<span class="ex-block"><span class="en"><b>at</b> 7 o\'clock / <b>at</b> noon / <b>at</b> midnight / <b>at</b> night</span></span>'}
-   ],
-   exercises:[
-     {q:'I was born ___ May.',correct:'in',wrongs:['on','at','by']},
-     {q:'The meeting is ___ Monday.',correct:'on',wrongs:['in','at','by']},
-     {q:'Class starts ___ 8 o\'clock.',correct:'at',wrongs:['in','on','by']}
-   ]},
-
-  /* ===== سطح B1 ===== */
-  {level:'B1', title:'آینده ساده (will)',
-   sections:[
-     {h:'کی استفاده می‌شه؟',b:'تصمیم آنی، پیش‌بینی، وعده'},
-     {h:'فرمول',b:'<code>will</code> + فعل ساده (برای همه ضمایر یکسانه)'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en">I <b>will call</b> you. / She <b>will come</b>. / I <b>won\'t forget</b>.</span></span>'}
-   ],
-   exercises:[
-     {q:'I ___ call you tomorrow.',correct:'will',wrongs:['am','do','did']},
-     {q:'It ___ rain tonight.',correct:'will',wrongs:['is','was','did']},
-     {q:'She ___ come. (منفی)',correct:"won't",wrongs:["don't",'isn\'t','doesn\'t']}
-   ]},
-  {level:'B1', title:'going to (برنامه آینده)',
-   sections:[
-     {h:'کی استفاده می‌شه؟',b:'برای قصد و برنامه‌ای که قبلاً تصمیم گرفته شده'},
-     {h:'فرمول',b:'<code>am / is / are going to</code> + فعل ساده'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en">I <b>am going to</b> travel. / They <b>are going to</b> move.</span><span class="fa">قصد دارم سفر کنم. / آن‌ها قصد دارند نقل مکان کنند.</span></span>'},
-     {h:'تفاوت با will',b:'will = تصمیم آنی / going to = برنامه قبلی'}
-   ],
-   exercises:[
-     {q:'I ___ travel next month.',correct:'am going to',wrongs:['will','going to','go to']},
-     {q:'They ___ buy a house.',correct:'are going to',wrongs:['is going to','will','go to']},
-     {q:'She ___ start a new job.',correct:'is going to',wrongs:['are going to','am going to','go to']}
-   ]},
-  {level:'B1', title:'صفت‌های مقایسه‌ای',
-   sections:[
-     {h:'قاعده',b:'صفت کوتاه + <code>-er</code> + <strong>than</strong>'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en">tall → <b>taller than</b> / fast → <b>faster than</b></span></span>'},
-     {h:'صفت‌های بلند',b:'از <code>more</code> استفاده می‌کنیم:<span class="ex-block"><span class="en"><b>more</b> expensive / <b>more</b> beautiful</span></span>'},
-     {h:'بی‌قاعده',b:'<span class="ex-block"><span class="en">good → <b>better</b> / bad → <b>worse</b> / far → <b>further</b></span></span>'}
-   ],
-   exercises:[
-     {q:'He is ___ than me.',correct:'taller',wrongs:['tall','tallest','more tall']},
-     {q:'This is ___ than that.',correct:'more expensive',wrongs:['expensive','expensiver','most expensive']},
-     {q:'My English is ___ now.',correct:'better',wrongs:['good','gooder','best']}
-   ]},
-  {level:'B1', title:'برترین (Superlative)',
-   sections:[
-     {h:'قاعده',b:'<code>the</code> + صفت + <code>-est</code> برای صفات کوتاه'},
-     {h:'بلندها',b:'<code>the most</code> + صفت'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en">the <b>tallest</b> / the <b>most beautiful</b></span><span class="fa">بلندترین / زیباترین</span></span>'},
-     {h:'بی‌قاعده',b:'good → <b>the best</b> / bad → <b>the worst</b>'}
-   ],
-   exercises:[
-     {q:'She is ___ in class.',correct:'the tallest',wrongs:['tallest','taller','the taller']},
-     {q:'It\'s ___ book I\'ve read.',correct:'the most interesting',wrongs:['most interesting','the interestingest','interestingest']},
-     {q:'That was ___ day of my life.',correct:'the best',wrongs:['the goodest','the better','goodest']}
-   ]},
-  {level:'B1', title:'can / could / should / must',
-   sections:[
-     {h:'can — توانستن (حال)',b:'<span class="ex-block"><span class="en">I <b>can</b> swim.</span></span>'},
-     {h:'could — توانستن (گذشته)',b:'<span class="ex-block"><span class="en">I <b>could</b> run fast when I was young.</span></span>'},
-     {h:'should — باید (توصیه)',b:'<span class="ex-block"><span class="en">You <b>should</b> rest.</span></span>'},
-     {h:'must — باید (اجبار)',b:'<span class="ex-block"><span class="en">You <b>must</b> stop.</span></span>'},
-     {h:'نکته',b:'بعد از همه این‌ها فعل <strong>ساده</strong> میاد'}
-   ],
-   exercises:[
-     {q:'I ___ swim when I was 5.',correct:'could',wrongs:['can','should','must']},
-     {q:'You ___ see a doctor.',correct:'should',wrongs:['can','could','mustn\'t']},
-     {q:'Students ___ wear uniforms.',correct:'must',wrongs:['can','could','shouldn\'t']}
-   ]},
-  {level:'B1', title:'شرطی نوع اول (If + present)',
-   sections:[
-     {h:'ساختار',b:'<code>If</code> + حال ساده , <code>will</code> + فعل ساده'},
-     {h:'معنی',b:'اگر شرطی محقق شه، نتیجه‌اش این می‌شه'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en"><b>If</b> it rains, I <b>will stay</b> home.</span><span class="fa">اگر باران بیاد، خونه می‌مونم.</span></span>'},
-     {h:'نکته مهم',b:'بعد از if <strong>هرگز</strong> will نمیاد ❌<span class="ex-block"><span class="en">If it <b>rains</b>... ✅ / If it <b>will rain</b>... ❌</span></span>'}
-   ],
-   exercises:[
-     {q:'If it ___, I will stay home.',correct:'rains',wrongs:['will rain','rained','raining']},
-     {q:'If you ___, you will pass.',correct:'study',wrongs:['will study','studied','studying']},
-     {q:'I will call you if I ___ time.',correct:'have',wrongs:['will have','had','having']}
-   ]},
-
-  /* ===== سطح B2 ===== */
-  {level:'B2', title:'حال کامل (Present Perfect)',
-   sections:[
-     {h:'ساختار',b:'<code>have / has</code> + past participle (شکل سوم فعل)'},
-     {h:'کی استفاده می‌شه؟',b:'<ul><li>کاری که در گذشته شروع شده و اثرش تا حالاست</li><li>تجربه‌های زندگی</li><li>کارهایی که زمانشون مهم نیست</li></ul>'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en">I <b>have finished</b> my homework. / She <b>has gone</b> to London. / I <b>have been</b> to Paris.</span><span class="fa">تکالیفم را تمام کرده‌ام. / او به لندن رفته. / من به پاریس رفته‌ام.</span></span>'},
-     {h:'قیدهای رایج',b:'<code>ever</code>, <code>never</code>, <code>already</code>, <code>yet</code>, <code>just</code>, <code>since</code>, <code>for</code>'},
-     {h:'تفاوت با گذشته ساده',b:'<span class="ex-block"><span class="en">I <b>have seen</b> that movie. (زمان مهم نیست) — I <b>saw</b> it yesterday. (زمان مهم است)</span></span>'}
-   ],
-   exercises:[
-     {q:'I ___ my homework.',correct:'have finished',wrongs:['finish','finished','finishing']},
-     {q:'She ___ to London.',correct:'has gone',wrongs:['go','went','going']},
-     {q:'Have you ___ been to Paris?',correct:'ever',wrongs:['never','yet','already']}
-   ]},
-  {level:'B2', title:'گذشته استمراری',
-   sections:[
-     {h:'ساختار',b:'<code>was / were</code> + فعل + <code>-ing</code>'},
-     {h:'کی استفاده می‌شه؟',b:'کاری که در گذشته در حال انجام بود و یه کار دیگه اون رو قطع کرد'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en">I <b>was reading</b> when he called.</span><span class="fa">وقتی زنگ زد، داشتم می‌خوندم.</span></span>'},
-     {h:'was یا were؟',b:'<ul><li><code>was</code> با I / He / She / It</li><li><code>were</code> با You / We / They</li></ul>'}
-   ],
-   exercises:[
-     {q:'I ___ TV when you called.',correct:'was watching',wrongs:['watched','watch','were watching']},
-     {q:'They ___ football at 5 PM.',correct:'were playing',wrongs:['was playing','played','play']},
-     {q:'She ___ when I saw her.',correct:'was crying',wrongs:['cried','were crying','cry']}
-   ]},
-  {level:'B2', title:'مجهول (Passive Voice)',
-   sections:[
-     {h:'ساختار',b:'<code>be</code> + past participle'},
-     {h:'کی استفاده می‌شه؟',b:'وقتی فاعل مهم نیست یا نمی‌خوایم بگیم'},
-     {h:'مثال‌ها در زمان‌های مختلف',b:'<span class="ex-block"><span class="en">Present: The letter <b>is written</b>. / Past: The letter <b>was written</b>. / Future: The letter <b>will be written</b>.</span></span>'},
-     {h:'با by',b:'اگر بخوایم فاعل رو بگیم: <span class="ex-block"><span class="en">The letter was written <b>by</b> John.</span></span>'}
-   ],
-   exercises:[
-     {q:'The letter ___ yesterday.',correct:'was written',wrongs:['wrote','is written','written']},
-     {q:'This book ___ by many people.',correct:'is read',wrongs:['reads','is reading','read']},
-     {q:'The house ___ next year.',correct:'will be built',wrongs:['will build','is building','built']}
-   ]},
-  {level:'B2', title:'گزارش گفتار (Reported Speech)',
-   sections:[
-     {h:'قاعده کلی',b:'وقتی حرف کسی را نقل می‌کنیم، فعل یک زمان به عقب میره'},
-     {h:'جدول تغییر زمان',b:'<ul><li>حال ساده → گذشته ساده</li><li>حال استمراری → گذشته استمراری</li><li>will → would / can → could</li></ul>'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en">"I am tired." → He said he <b>was</b> tired.</span><span class="fa">«خسته‌ام» → گفت خسته است.</span></span>'}
-   ],
-   exercises:[
-     {q:'"I like coffee." → He said he ___ coffee.',correct:'liked',wrongs:['likes','like','liking']},
-     {q:'"I will come." → She said she ___ come.',correct:'would',wrongs:['will','can','is']},
-     {q:'"I can swim." → He said he ___ swim.',correct:'could',wrongs:['can','will','is']}
-   ]},
-  {level:'B2', title:'حروف ربط (although / because / so)',
-   sections:[
-     {h:'because — زیرا',b:'دلیل رو می‌گه<span class="ex-block"><span class="en">I\'m tired <b>because</b> I worked all day.</span></span>'},
-     {h:'so — بنابراین',b:'نتیجه رو می‌گه<span class="ex-block"><span class="en">It was raining, <b>so</b> we stayed home.</span></span>'},
-     {h:'although — اگرچه',b:'تضاد رو می‌گه<span class="ex-block"><span class="en"><b>Although</b> he\'s rich, he\'s unhappy.</span></span>'}
-   ],
-   exercises:[
-     {q:'I\'m tired ___ I worked hard.',correct:'because',wrongs:['so','although','but']},
-     {q:'It was raining, ___ we stayed home.',correct:'so',wrongs:['because','although','but']},
-     {q:'___ he\'s rich, he isn\'t happy.',correct:'Although',wrongs:['Because','So','But']}
-   ]},
-  {level:'B2', title:'قیدهای تکرار (always, never...)',
-   sections:[
-     {h:'قیدهای رایج',b:'<ul><li><code>always</code>=همیشه / <code>usually</code>=معمولاً</li><li><code>often</code>=غالباً / <code>sometimes</code>=گاهی</li><li><code>rarely</code>=به‌ندرت / <code>never</code>=هرگز</li></ul>'},
-     {h:'جای قید',b:'<ul><li>قبل از فعل اصلی: I <b>always</b> eat breakfast.</li><li>بعد از فعل to be: She <b>is</b> <b>always</b> late.</li></ul>'}
-   ],
-   exercises:[
-     {q:'I ___ eat breakfast.',correct:'always',wrongs:['am always','always am','be always']},
-     {q:'She is ___ late.',correct:'always',wrongs:['always is','be','am']},
-     {q:'He ___ goes to the gym.',correct:'never',wrongs:['is never','never is','be never']}
-   ]},
-
-  /* ===== سطح C1 ===== */
-  {level:'C1', title:'حال کامل استمراری',
-   sections:[
-     {h:'ساختار',b:'<code>have / has been</code> + فعل + <code>-ing</code>'},
-     {h:'کی استفاده می‌شه؟',b:'کاری که در گذشته شروع شده، ادامه داشته، و هنوز ادامه داره یا تازه تموم شده'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en">I <b>have been learning</b> English for 2 years.</span><span class="fa">۲ ساله دارم انگلیسی یاد می‌گیرم.</span></span>'},
-     {h:'تفاوت',b:'حال کامل تمرکز روی نتیجه / حال کامل استمراری تمرکز روی مدت زمان'}
-   ],
-   exercises:[
-     {q:'I ___ English for 3 years.',correct:'have been learning',wrongs:['learn','learned','am learning']},
-     {q:'She ___ since morning.',correct:'has been working',wrongs:['works','worked','is working']},
-     {q:'They ___ for hours.',correct:'have been waiting',wrongs:['wait','waited','are waiting']}
-   ]},
-  {level:'C1', title:'شرطی نوع دوم (If + past)',
-   sections:[
-     {h:'ساختار',b:'<code>If</code> + گذشته ساده , <code>would</code> + فعل ساده'},
-     {h:'معنی',b:'شرط غیرواقعی در حال یا آینده (تصوری)'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en"><b>If</b> I <b>were</b> rich, I <b>would</b> travel the world.</span><span class="fa">اگه پولدار بودم، دنیا رو می‌گشتم.</span><span class="nt">were به جای was برای همه ضمایر</span></span>'}
-   ],
-   exercises:[
-     {q:'If I ___ rich, I would travel.',correct:'were',wrongs:['am','will be','be']},
-     {q:'If she ___ more, she would pass.',correct:'studied',wrongs:['studies','will study','study']},
-     {q:'I would buy it if I ___ money.',correct:'had',wrongs:['have','will have','has']}
-   ]},
-  {level:'C1', title:'شرطی نوع سوم (If + had + p.p.)',
-   sections:[
-     {h:'ساختار',b:'<code>If</code> + had + past participle , <code>would have</code> + p.p.'},
-     {h:'معنی',b:'حسرت گذشته — کاری که انجام نشده'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en"><b>If</b> I <b>had studied</b>, I <b>would have passed</b>.</span><span class="fa">اگه درس خونده بودم، قبول می‌شدم.</span></span>'}
-   ],
-   exercises:[
-     {q:'If I ___ harder, I would have passed.',correct:'had studied',wrongs:['studied','study','have studied']},
-     {q:'She ___ if she had known.',correct:'would have come',wrongs:['would come','came','will come']},
-     {q:'If they ___ earlier, they wouldn\'t have missed it.',correct:'had left',wrongs:['left','leave','have left']}
-   ]},
-  {level:'C1', title:'افعال Modal پیشرفته',
-   sections:[
-     {h:'might / may — احتمال',b:'<span class="ex-block"><span class="en">It <b>might</b> rain. / She <b>may</b> come.</span></span>'},
-     {h:'must have — احتمال قوی در گذشته',b:'<span class="ex-block"><span class="en">He <b>must have</b> forgotten. (قطعاً فراموش کرده)</span></span>'},
-     {h:'can\'t have — غیرممکن در گذشته',b:'<span class="ex-block"><span class="en">She <b>can\'t have</b> said that.</span></span>'},
-     {h:'should have — پشیمانی',b:'<span class="ex-block"><span class="en">I <b>should have</b> studied. (باید درس می‌خوندم)</span></span>'}
-   ],
-   exercises:[
-     {q:'He ___ forgotten — he always remembers.',correct:"can't have",wrongs:["must have",'should have','might have']},
-     {q:'She ___ left already; her car is gone.',correct:'must have',wrongs:["can't have",'should have','might not have']},
-     {q:'I ___ studied more.',correct:'should have',wrongs:['must have',"can't have",'would have']}
-   ]},
-  {level:'C1', title:'افعال عبارتی (Phrasal Verbs)',
-   sections:[
-     {h:'get up / give up',b:'<span class="ex-block"><span class="en">I <b>get up</b> at 7. / Don\'t <b>give up</b>.</span><span class="fa">ساعت ۷ بلند می‌شم. / تسلیم نشو.</span></span>'},
-     {h:'look for / look after',b:'<span class="ex-block"><span class="en">I\'m <b>looking for</b> my keys. / She <b>looks after</b> her mom.</span><span class="fa">دنبال کلیدها می‌گردم. / از مامانش مراقبت می‌کنه.</span></span>'},
-     {h:'put off / turn on',b:'<span class="ex-block"><span class="en">Don\'t <b>put off</b> your work. / <b>Turn on</b> the light.</span><span class="fa">کارت رو عقب ننداز. / چراغ رو روشن کن.</span></span>'}
-   ],
-   exercises:[
-     {q:'Don\'t ___ — you can do it!',correct:'give up',wrongs:['give in','give out','give away']},
-     {q:'I\'m ___ my phone.',correct:'looking for',wrongs:['looking at','looking after','looking up']},
-     {q:'Please ___ the light.',correct:'turn on',wrongs:['turn off','turn up','turn down']}
-   ]},
-
-  /* ===== سطح C2 ===== */
-  {level:'C2', title:'Inversion (وارونگی)',
-   sections:[
-     {h:'ساختار',b:'با قیدهای منفی در ابتدای جمله، فعل و فاعل جابه‌جا می‌شن'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en"><b>Never have I seen</b> such beauty.</span><span class="fa">هرگز چنین زیبایی ندیده‌ام.</span></span>'},
-     {h:'قیدهای رایج',b:'<code>never</code>, <code>rarely</code>, <code>hardly</code>, <code>not only</code>, <code>no sooner</code>'},
-     {h:'مثال بیشتر',b:'<span class="ex-block"><span class="en"><b>Rarely does</b> she complain. / <b>Not only did</b> he lie, but he also stole.</span></span>'}
-   ],
-   exercises:[
-     {q:'Never ___ such a thing.',correct:'have I seen',wrongs:['I have seen','I saw','did I saw']},
-     {q:'Rarely ___ she late.',correct:'is',wrongs:['she is','does','was']},
-     {q:'Not only ___ he late, but he also forgot.',correct:'was',wrongs:['he was','did','is']}
-   ]},
-  {level:'C2', title:'Subjunctive (وجه التزامی)',
-   sections:[
-     {h:'ساختار',b:'بعد از افعالی مثل <code>suggest</code>, <code>insist</code>, <code>recommend</code>, <code>demand</code> از شکل ساده فعل استفاده می‌کنیم (بدون s)'},
-     {h:'مثال',b:'<span class="ex-block"><span class="en">I suggest that he <b>be</b> more careful.</span><span class="fa">پیشنهاد می‌کنم او بیشتر مراقب باشد.</span><span class="nt">نه he is / he was</span></span>'},
-     {h:'بیشتر',b:'<span class="ex-block"><span class="en">She insisted that he <b>leave</b>. / It\'s essential that you <b>be</b> on time.</span></span>'}
-   ],
-   exercises:[
-     {q:'I suggest that he ___ more careful.',correct:'be',wrongs:['is','was','being']},
-     {q:'She insisted that he ___.',correct:'leave',wrongs:['leaves','left','leaving']},
-     {q:'It\'s important that she ___ present.',correct:'be',wrongs:['is','was','be being']}
-   ]},
-  {level:'C2', title:'Cleft Sentences (تأکید ساختاری)',
-   sections:[
-     {h:'It-cleft',b:'<code>It is / was ... that</code> برای تأکید<span class="ex-block"><span class="en"><b>It was</b> John <b>that</b> broke the window.</span><span class="fa">جان بود که پنجره را شکست.</span></span>'},
-     {h:'What-cleft',b:'<code>What ... is / was</code> برای تأکید<span class="ex-block"><span class="en"><b>What</b> I need <b>is</b> a vacation.</span><span class="fa">چیزی که لازم دارم یک تعطیلاته.</span></span>'},
-     {h:'کاربرد',b:'برای جلب توجه شنونده به بخش خاصی از جمله'}
-   ],
-   exercises:[
-     {q:'___ was John that broke it.',correct:'It',wrongs:['That','This','There']},
-     {q:'___ I need is a break.',correct:'What',wrongs:['That','It','Which']},
-     {q:'___ was yesterday that I saw him.',correct:'It',wrongs:['That','This','There']}
-   ]},
-  {level:'C2', title:'Participle Clauses',
-   sections:[
-     {h:'ساختار',b:'می‌تونیم جمله رو با participle کوتاه کنیم'},
-     {h:'Present Participle (-ing)',b:'برای همزمانی<span class="ex-block"><span class="en"><b>Walking</b> home, I saw a friend.</span><span class="fa">در حالی که به خانه می‌رفتم، دوستی را دیدم.</span></span>'},
-     {h:'Past Participle (-ed)',b:'برای مجهول<span class="ex-block"><span class="en"><b>Written</b> in 1920, the book is now famous.</span><span class="fa">کتابی که در ۱۹۲۰ نوشته شد، الان معروفه.</span></span>'},
-     {h:'Perfect Participle',b:'<span class="ex-block"><span class="en"><b>Having finished</b> work, she went home.</span><span class="fa">بعد از اینکه کارش رو تمام کرد، به خانه رفت.</span></span>'}
-   ],
-   exercises:[
-     {q:'___ home, I saw a friend.',correct:'Walking',wrongs:['Walked','To walk','Walk']},
-     {q:'___ in 1920, the book is famous.',correct:'Written',wrongs:['Writing','Write','Wrote']},
-     {q:'___ work, she went home.',correct:'Having finished',wrongs:['Finished','Finishing','Have finished']}
-   ]}
-];
-
-/* =========================================================
-   LEVELS CONFIG
-   ========================================================= */
 const LEVEL_ORDER = ['A1','A2','B1','B2','C1','C2'];
 const LEVEL_INFO = {
-  'A1':{name:'مبتدی',icon:'🟢',color:'#10b981'},
-  'A2':{name:'پایه',icon:'🔵',color:'#3b82f6'},
-  'B1':{name:'متوسط',icon:'🟠',color:'#f59e0b'},
-  'B2':{name:'بالاتر از متوسط',icon:'🔴',color:'#ef4444'},
-  'C1':{name:'پیشرفته',icon:'🟣',color:'#a855f7'},
-  'C2':{name:'حرفه‌ای',icon:'⚫',color:'#64748b'}
+  'A1':{name:'مبتدی',icon:'🟢',planet:'🪐'},
+  'A2':{name:'پایه',icon:'🔵',planet:'🌍'},
+  'B1':{name:'متوسط',icon:'🟠',planet:'🌕'},
+  'B2':{name:'بالاتر',icon:'🔴',planet:'🔥'},
+  'C1':{name:'پیشرفته',icon:'🟣',planet:'💫'},
+  'C2':{name:'حرفه‌ای',icon:'⚫',planet:'⭐'}
 };
-
-/* مرتب‌سازی کلمات بر اساس سطح (A1 → C2) */
 WORDS.sort((a,b) => LEVEL_ORDER.indexOf(a.level) - LEVEL_ORDER.indexOf(b.level));
-
 const WORDS_PER_STAGE = 10;
 const TOTAL_STAGES = Math.ceil(WORDS.length / WORDS_PER_STAGE);
-const STORAGE_KEY = 'englishMasterV5';
+const STORAGE_KEY = 'englishMasterProV7_users';
 
-/* درس هر مرحله: بر اساس سطح کلمات همون مرحله */
+function getStageWords(i){ return WORDS.slice(i*WORDS_PER_STAGE, i*WORDS_PER_STAGE + WORDS_PER_STAGE); }
 function getLessonForStage(stageIdx){
-  const stageWords = getStageWords(stageIdx);
-  const stageLevel = stageWords[0]?.level || 'A1';
-  // درس‌های همون سطح
-  const levelLessons = LESSONS.filter(l => l.level === stageLevel);
-  // انتخاب چرخشی از درس‌های اون سطح
-  const lessonIdx = Math.floor(stageIdx / 1) % levelLessons.length;
-  return levelLessons[lessonIdx] || LESSONS[0];
+  const sw = getStageWords(stageIdx);
+  const lvl = sw[0]?.level || 'A1';
+  const levelLessons = LESSONS.filter(l => l.level === lvl);
+  return levelLessons[Math.floor(stageIdx / 1) % levelLessons.length] || LESSONS[0];
+}
+function getCurrentLevel(){
+  const w = getStageWords(state.data.currentStage);
+  return w[0]?.level || 'A1';
+}
+function todayKey(){ return new Date().toISOString().slice(0,10); }
+function calcStreak(){
+  const days = state.data?.activeDays || [];
+  if (!days.length) return 0;
+  let streak = 0;
+  const d = new Date();
+  for (let i=0; i<365; i++){
+    const k = d.toISOString().slice(0,10);
+    if (days.includes(k)) streak++;
+    else if (i > 0) break;
+    d.setDate(d.getDate() - 1);
+  }
+  return streak;
 }
 
-/* =========================================================
+/* ============================================================
    STATE
-   ========================================================= */
+   ============================================================ */
 const state = {
   user:null, data:null,
   stageWords:[], cardIdx:0, cardFlipped:false,
-  mode:'card', searchQ:'',
   quiz:[], qIdx:0, qCorrect:0, qActive:false, qLocked:false
 };
 
-/* =========================================================
-   DOM
-   ========================================================= */
+/* ============================================================
+   DOM SHORTCUT
+   ============================================================ */
 const $ = id => document.getElementById(id);
 const D = {
-  loginPage:$('loginPage'), app:$('app'),
+  loginScreen:$('loginScreen'), app:$('app'),
   uname:$('uname'), loginBtn:$('loginBtn'),
+  usersList:$('usersList'), usersGrid:$('usersGrid'),
   uav:$('uav'), unm:$('unm'),
-  stg:$('stg'), tstg:$('tstg'), lrn:$('lrn'), scr:$('scr'),
-  cmp:$('cmp'), fav:$('fav'), acc:$('acc'),
-  ppct:$('ppct'), pfill:$('pfill'),
-  lvlProg:$('lvlProg'),
-  cstg:$('cstg'), swc:$('swc'),
-  srn:$('srn'), srt:$('srt'), srs:$('srs'),
-  lvlBadge:$('lvlBadge'),
-  gt:$('gt'), gc:$('gc'), gbody:$('gbody'), inex:$('inex'), exList:$('exList'),
-  flashcard:$('flashcard'), fcc:$('fcc'), fcStar:$('fcStar'),
-  fcWord:$('fcWord'), fcPhon:$('fcPhon'), fcSpeak:$('fcSpeak'),
+  xpVal:$('xpVal'), xpVal2:$('xpVal2'), streakVal:$('streakVal'), lvlChip:$('lvlChip'),
+  themeBtn:$('themeBtn'),
+  heroGreeting:$('heroGreeting'), heroSub:$('heroSub'), continueTxt:$('continueTxt'),
+  stgVal:$('stgVal'), tstgVal:$('tstgVal'), lrnVal:$('lrnVal'),
+  cmpVal:$('cmpVal'), favVal:$('favVal'), accVal:$('accVal'),
+  ringFg:$('ringFg'), ringPct:$('ringPct'), ringStage:$('ringStage'), ringTotal:$('ringTotal'), ringLevel:$('ringLevel'),
+  weekChart:$('weekChart'), actCal:$('actCal'),
+  mapLevelBadge:$('mapLevelBadge'), mapGrid:$('mapGrid'),
+  cstgVal:$('cstgVal'), swcVal:$('swcVal'),
+  gTitle:$('gTitle'), gBody:$('gBody'), exList:$('exList'),
+  flashcard:$('flashcard'), fcCounter:$('fcCounter'), fcStar:$('fcStar'),
+  fcWord:$('fcWord'), fcSpeak:$('fcSpeak'),
   fcHint:$('fcHint'), fcBack:$('fcBack'), fcMeaning:$('fcMeaning'),
   fcExEn:$('fcExEn'), fcExFa:$('fcExFa'),
   fcPrev:$('fcPrev'), fcFlip:$('fcFlip'), fcNext:$('fcNext'), fcLearned:$('fcLearned'),
-  cardMode:$('cardMode'), listMode:$('listMode'), starMode:$('starMode'),
-  searchIn:$('searchIn'), wlist:$('wlist'), starlist:$('starlist'),
-  qstg:$('qstg'), qstatus:$('qstatus'),
-  qinfo:$('qinfo'), qtype:$('qtype'), qcount:$('qcount'),
-  qlabel:$('qlabel'), qtext:$('qtext'),
-  qSpeak:$('qSpeak'), gtip:$('gtip'), gtipText:$('gtipText'),
-  qopts:$('qopts'), qBtns:$('qBtns'), qmsg:$('qmsg'),
-  themeBtn:$('themeBtn'), favBtn:$('favBtn'),
-  resetStageBtn:$('resetStageBtn'), resetAllBtn:$('resetAllBtn'),
+  qstgVal:$('qstgVal'), qStatus:$('qStatus'),
+  quizTop:$('quizTop'), qType:$('qType'), qProgress:$('qProgress'), qCount:$('qCount'),
+  qLabel:$('qLabel'), qText:$('qText'), qSpeak:$('qSpeak'),
+  qOpts:$('qOpts'), qBtns:$('qBtns'), qMsg:$('qMsg'),
+  profAv:$('profAv'), profName:$('profName'), profLevel:$('profLevel'), profSince:$('profSince'),
+  profStages:$('profStages'), profWords:$('profWords'), profXP:$('profXP'), profAcc:$('profAcc'),
+  achGrid:$('achGrid'),
+  favCountQuick:$('favCountQuick'),
   toast:$('toast'), mo:$('mo'), moIc:$('moIc'), moT:$('moT'),
-  moM:$('moM'), moC:$('moC'), moOk:$('moOk'),
-  fw:$('fw'), fg:$('fg')
+  moM:$('moM'), moC:$('moC'), moOk:$('moOk')
 };
 
-/* =========================================================
+/* ============================================================
    UTILS
-   ========================================================= */
-function toast(msg, ic='✨', dur=2200){
+   ============================================================ */
+function toast(msg, ic='✨', dur=2400){
   D.toast.innerHTML = `<span>${ic}</span><span>${msg}</span>`;
   D.toast.classList.add('show');
   clearTimeout(toast._t);
@@ -1381,59 +1755,77 @@ function modal({ic='⚠️', title, msg, ok='تأیید', cancel='لغو', onOk}
   D.moIc.textContent = ic; D.moT.textContent = title; D.moM.textContent = msg;
   D.mo.classList.add('show');
   const nc = D.moOk.cloneNode(true);
-  const ncancel = D.moC.cloneNode(true);
-  nc.textContent = ok; ncancel.textContent = cancel;
-  D.moOk.replaceWith(nc); D.moC.replaceWith(ncancel);
-  D.moOk = nc; D.moC = ncancel;
+  const ncan = D.moC.cloneNode(true);
+  nc.textContent = ok; ncan.textContent = cancel;
+  D.moOk.replaceWith(nc); D.moC.replaceWith(ncan);
+  D.moOk = nc; D.moC = ncan;
   nc.onclick = () => { D.mo.classList.remove('show'); onOk && onOk(); };
-  ncancel.onclick = () => D.mo.classList.remove('show');
+  ncan.onclick = () => D.mo.classList.remove('show');
 }
 function esc(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
-function getStageWords(i){ return WORDS.slice(i*WORDS_PER_STAGE, i*WORDS_PER_STAGE + WORDS_PER_STAGE); }
 function getProgress(){ return Math.min(100, Math.round((state.data.currentStage / TOTAL_STAGES) * 100)); }
 function getAccuracy(){
   const d = state.data; if (!d || !d.totalAnswers) return 0;
   return Math.round((d.correctAnswers / d.totalAnswers) * 100);
 }
-function getCurrentLevel(){
-  const w = getStageWords(state.data.currentStage);
-  return w[0]?.level || 'A1';
-}
 
-/* =========================================================
-   STORAGE
-   ========================================================= */
-function getAllUsers(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
-function saveUsers(u){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(u)); } catch(e){} }
+/* ============================================================
+   STORAGE — Multi-user
+   ============================================================ */
+function getAllUsers(){
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch { return {}; }
+}
+function saveAllUsers(u){
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(u)); } catch(e){ console.error(e); }
+}
 function createUser(name){
-  return { name, currentStage:0, learnedWords:[], favorites:[], score:0, completedStages:0, totalAnswers:0, correctAnswers:0, theme:'dark', createdAt:Date.now() };
+  return {
+    name, currentStage:0, learnedWords:[], favorites:[],
+    score:0, completedStages:0, totalAnswers:0, correctAnswers:0,
+    theme:'dark', activeDays:[todayKey()], createdAt:Date.now()
+  };
 }
 function loadUser(name){
   const users = getAllUsers();
-  if (!users[name]) { users[name] = createUser(name); saveUsers(users); }
+  if (!users[name]) { users[name] = createUser(name); saveAllUsers(users); }
   const u = users[name];
   if (!u.favorites) u.favorites = [];
   if (!u.totalAnswers) u.totalAnswers = 0;
   if (!u.correctAnswers) u.correctAnswers = 0;
   if (!u.theme) u.theme = 'dark';
+  if (!u.activeDays) u.activeDays = [todayKey()];
+  if (!u.createdAt) u.createdAt = Date.now();
   return u;
 }
 function saveUser(){
   if (!state.user || !state.data) return;
   const users = getAllUsers();
   users[state.user] = state.data;
-  saveUsers(users);
+  saveAllUsers(users);
+}
+function deleteUser(name){
+  const users = getAllUsers();
+  delete users[name];
+  saveAllUsers(users);
+}
+function markActiveToday(){
+  const k = todayKey();
+  if (!state.data.activeDays.includes(k)){
+    state.data.activeDays.push(k);
+    saveUser();
+  }
 }
 
-/* =========================================================
+/* ============================================================
    SPEECH
-   ========================================================= */
+   ============================================================ */
 const synth = window.speechSynthesis;
 function speak(text, btn){
   if (!synth) { toast('مرورگر تلفظ پشتیبانی نمی‌کنه', '🔇'); return; }
   synth.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'en-US'; u.rate = 0.85; u.pitch = 1;
+  u.lang = 'en-US'; u.rate = 0.85;
   if (btn){
     btn.classList.add('playing');
     u.onend = () => btn.classList.remove('playing');
@@ -1442,9 +1834,9 @@ function speak(text, btn){
   synth.speak(u);
 }
 
-/* =========================================================
+/* ============================================================
    THEME
-   ========================================================= */
+   ============================================================ */
 function applyTheme(){
   const th = state.data?.theme || 'dark';
   document.documentElement.setAttribute('data-theme', th);
@@ -1454,89 +1846,171 @@ D.themeBtn.onclick = () => {
   if (!state.data) return;
   state.data.theme = state.data.theme === 'dark' ? 'light' : 'dark';
   saveUser(); applyTheme();
-  toast(state.data.theme === 'dark' ? 'حالت شب' : 'حالت روز', state.data.theme === 'dark' ? '🌙' : '☀️');
 };
 
-/* =========================================================
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.onclick = () => goPage(item.dataset.page);
+});
+function goPage(page){
+  document.querySelectorAll('.nav-item').forEach(x => x.classList.toggle('active', x.dataset.page === page));
+  document.querySelectorAll('.page').forEach(x => x.classList.toggle('active', x.id === 'page-'+page));
+  window.scrollTo({top:0, behavior:'smooth'});
+  if (page === 'dash') renderDashboard();
+  if (page === 'map') renderMap();
+  if (page === 'lesson') renderStage();
+  if (page === 'profile') renderProfile();
+  if (page === 'quiz') D.favCountQuick.textContent = state.data.favorites.length;
+}
+
+/* ============================================================
    DASHBOARD
-   ========================================================= */
+   ============================================================ */
 function updateDash(){
   const d = state.data; if (!d) return;
   D.unm.textContent = d.name;
   D.uav.textContent = d.name.charAt(0).toUpperCase();
-  D.stg.textContent = d.currentStage + 1;
-  D.tstg.textContent = TOTAL_STAGES;
-  D.lrn.textContent = d.learnedWords.length;
-  D.scr.textContent = d.score;
-  D.cmp.textContent = d.completedStages;
-  D.fav.textContent = d.favorites.length;
-  D.acc.textContent = getAccuracy() + '%';
-  const p = getProgress();
-  D.ppct.textContent = p;
-  D.pfill.style.width = p + '%';
-  renderLevelProgress();
+  D.xpVal.textContent = d.score;
+  D.xpVal2.textContent = d.score;
+  D.streakVal.textContent = calcStreak();
+  const lvl = getCurrentLevel();
+  D.lvlChip.textContent = `${LEVEL_INFO[lvl].icon} ${lvl}`;
+  D.stgVal.textContent = d.currentStage + 1;
+  D.tstgVal.textContent = TOTAL_STAGES;
+  D.lrnVal.textContent = d.learnedWords.length;
+  D.cmpVal.textContent = d.completedStages;
+  D.favVal.textContent = d.favorites.length;
+  D.accVal.textContent = getAccuracy() + '%';
 }
 
-function renderLevelProgress(){
-  const curLevel = getCurrentLevel();
-  const curLevelIdx = LEVEL_ORDER.indexOf(curLevel);
-  D.lvlProg.innerHTML = LEVEL_ORDER.map((lv, i) => {
-    const info = LEVEL_INFO[lv];
-    const cls = i < curLevelIdx ? 'done' : (i === curLevelIdx ? 'active' : '');
-    return `<div class="lvl-step ${cls} ${lv.toLowerCase()}">
-      ${info.icon} ${lv}<br><span style="font-size:.6rem;">${info.name}</span>
+function renderDashboard(){
+  updateDash();
+  const d = state.data;
+  const hour = new Date().getHours();
+  D.heroGreeting.textContent = `سلام ${d.name}! 👋`;
+  D.heroSub.textContent = hour < 12 ? 'صبح بخیر! آماده شروع؟' : hour < 18 ? 'روز خوبی داشته باشی!' : 'شب بخیر! وقت تمرینه.';
+  D.continueTxt.textContent = `ادامه — مرحله ${d.currentStage + 1}`;
+
+  const pct = getProgress();
+  D.ringPct.textContent = pct;
+  D.ringStage.textContent = d.currentStage + 1;
+  D.ringTotal.textContent = TOTAL_STAGES;
+  const lvl = getCurrentLevel();
+  D.ringLevel.textContent = `${LEVEL_INFO[lvl].icon} ${lvl}`;
+  const circ = 2 * Math.PI * 50;
+  D.ringFg.style.strokeDashoffset = circ * (1 - pct/100);
+
+  // Week chart
+  const dayNames = ['ی','د','س','چ','پ','ج','ش'];
+  let maxVal = 0;
+  const weekData = [];
+  for (let i=6; i>=0; i--){
+    const d2 = new Date();
+    d2.setDate(d2.getDate() - i);
+    const k = d2.toISOString().slice(0,10);
+    const done = d.activeDays.includes(k) ? 100 : 0;
+    weekData.push({val:done, day:dayNames[d2.getDay()], today:i===0, raw:done});
+    if (done > maxVal) maxVal = done;
+  }
+  D.weekChart.innerHTML = weekData.map(w =>
+    `<div class="bar-wrap">
+      <div class="bar ${w.today?'today':''}" style="height:${w.val?Math.max(w.val*0.9,30):8}px;">
+        ${w.raw?`<span class="value">${w.raw}%</span>`:''}
+      </div>
+      <div class="day">${w.day}</div>
+    </div>`
+  ).join('');
+
+  // Activity calendar
+  let cal = '';
+  for (let i=29; i>=0; i--){
+    const d3 = new Date();
+    d3.setDate(d3.getDate() - i);
+    const k = d3.toISOString().slice(0,10);
+    const done = d.activeDays.includes(k);
+    const isToday = i === 0;
+    const bg = done ? 'linear-gradient(135deg,#10b981,#059669)' : (isToday ? 'linear-gradient(135deg,#fbbf24,#f59e0b)' : 'rgba(10,14,26,.6)');
+    const color = done ? '#fff' : (isToday ? '#451a03' : 'var(--text-3)');
+    cal += `<div style="aspect-ratio:1;border-radius:8px;background:${bg};border:1px solid ${done?'#10b981':(isToday?'#fbbf24':'var(--border)')};display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;color:${color};">${d3.getDate()}</div>`;
+  }
+  D.actCal.innerHTML = cal;
+}
+
+/* ============================================================
+   MAP
+   ============================================================ */
+function renderMap(){
+  const d = state.data;
+  const curLvl = getCurrentLevel();
+  D.mapLevelBadge.textContent = `${LEVEL_INFO[curLvl].icon} ${curLvl}`;
+  const curIdx = LEVEL_ORDER.indexOf(curLvl);
+  D.mapLevelBadge.style.background = ['linear-gradient(135deg,#10b981,#059669)','linear-gradient(135deg,#3b82f6,#2563eb)','linear-gradient(135deg,#f59e0b,#d97706)','linear-gradient(135deg,#ef4444,#b91c1c)','linear-gradient(135deg,#a855f7,#7c3aed)','linear-gradient(135deg,#64748b,#334155)'][curIdx];
+  D.mapLevelBadge.style.color = '#fff';
+
+  let html = '';
+  for (let i=0; i<TOTAL_STAGES; i++){
+    const sw = getStageWords(i);
+    const lvl = sw[0]?.level || 'A1';
+    const info = LEVEL_INFO[lvl];
+    const isDone = i < d.currentStage;
+    const isCur = i === d.currentStage;
+    const isLocked = i > d.currentStage;
+    const cls = isDone ? 'done' : isCur ? 'current' : isLocked ? 'locked' : '';
+    html += `<div class="map-node ${cls}" data-stage="${i}">
+      <span class="planet">${info.planet}</span>
+      <span class="num">مرحله ${i+1}</span>
     </div>`;
-  }).join('');
+  }
+  D.mapGrid.innerHTML = html;
+
+  D.mapGrid.querySelectorAll('.map-node').forEach(n => {
+    n.onclick = () => {
+      const stage = parseInt(n.dataset.stage);
+      if (stage <= d.currentStage){
+        d.currentStage = stage;
+        saveUser();
+        toast(`رفتی به مرحله ${stage+1}`, '🚀');
+        goPage('lesson');
+      } else {
+        toast('اول مراحل قبل رو کامل کن!', '🔒');
+      }
+    };
+  });
 }
 
-/* =========================================================
-   RENDER STAGE
-   ========================================================= */
+/* ============================================================
+   STAGE / FLASHCARD
+   ============================================================ */
 function renderStage(){
   const d = state.data;
   if (d.currentStage >= TOTAL_STAGES){
-    D.gbody.innerHTML = '<div class="empty"><div class="i">🏆</div><h3>همه مراحل تموم شد!</h3></div>';
+    D.gBody.innerHTML = '<div class="empty"><div class="i">🏆</div><h3>همه مراحل تموم شد!</h3></div>';
     return;
   }
   state.stageWords = getStageWords(d.currentStage);
   state.cardIdx = 0; state.cardFlipped = false;
   const n = d.currentStage + 1;
   const lesson = getLessonForStage(d.currentStage);
-  const level = state.stageWords[0]?.level || 'A1';
-  const lvlInfo = LEVEL_INFO[level];
 
-  D.cstg.textContent = n;
-  D.qstg.textContent = n;
-  D.srn.textContent = n;
-  D.swc.textContent = state.stageWords.length;
-  D.srt.textContent = lesson.title;
-  D.srs.textContent = `مرحله ${n} از ${TOTAL_STAGES}`;
-  D.gt.textContent = lesson.title;
-  D.gc.textContent = `درس ${n}/${TOTAL_STAGES}`;
-
-  D.lvlBadge.textContent = `${lvlInfo.icon} ${level} — ${lvlInfo.name}`;
-  D.lvlBadge.className = 'level-badge ' + level.toLowerCase();
+  D.cstgVal.textContent = n;
+  D.qstgVal.textContent = n;
+  D.swcVal.textContent = state.stageWords.length + ' کلمه';
+  D.gTitle.textContent = lesson.title;
 
   renderGrammar(lesson);
   renderFlashcard();
-  renderWordList();
-  renderStarList();
   resetQuizUI();
   updateDash();
 }
 
-/* =========================================================
-   GRAMMAR
-   ========================================================= */
 function renderGrammar(lesson){
-  D.gbody.innerHTML = lesson.sections.map(s =>
-    `<h4>${esc(s.h)}</h4><p>${s.b}</p>`
-  ).join('');
-
+  D.gBody.innerHTML = lesson.sections.map(s => `<h4>${esc(s.h)}</h4><p>${s.b}</p>`).join('');
   D.exList.innerHTML = '';
   lesson.exercises.forEach(ex => {
     const item = document.createElement('div');
-    item.className = 'ex-q';
+    item.className = 'ex-item';
     const opts = [ex.correct, ...ex.wrongs].sort(() => Math.random() - 0.5);
     item.innerHTML = `
       <div class="q"><code>${esc(ex.q)}</code></div>
@@ -1547,12 +2021,12 @@ function renderGrammar(lesson){
     item.querySelectorAll('.ex-opt').forEach(btn => {
       btn.onclick = () => {
         if (btn.disabled) return;
-        const isCorrect = btn.dataset.ans === btn.dataset.correct;
+        const ok = btn.dataset.ans === btn.dataset.correct;
         item.querySelectorAll('.ex-opt').forEach(b => {
           b.disabled = true;
           if (b.dataset.ans === b.dataset.correct) b.classList.add('correct');
         });
-        if (!isCorrect) btn.classList.add('wrong');
+        if (!ok) btn.classList.add('wrong');
         else toast('درست بود! ✅', '🎉', 1200);
       };
     });
@@ -1560,18 +2034,14 @@ function renderGrammar(lesson){
   });
 }
 
-/* =========================================================
-   FLASHCARD
-   ========================================================= */
 function renderFlashcard(){
   const w = state.stageWords[state.cardIdx]; if (!w) return;
   const key = w.en.toLowerCase();
   const learned = state.data.learnedWords.includes(key);
   const isFav = state.data.favorites.includes(key);
 
-  D.fcc.textContent = `${state.cardIdx + 1} / ${state.stageWords.length}`;
+  D.fcCounter.textContent = `${state.cardIdx + 1} / ${state.stageWords.length}`;
   D.fcWord.textContent = w.en;
-  D.fcPhon.textContent = learned ? '✓ یاد گرفته شده' : '';
   D.fcStar.textContent = isFav ? '★' : '☆';
   D.fcStar.classList.toggle('on', isFav);
 
@@ -1585,22 +2055,24 @@ function renderFlashcard(){
   } else {
     D.flashcard.classList.remove('flipped');
     D.fcHint.classList.remove('hidden');
-    D.fcHint.textContent = '👆 کلیک کن تا معنی رو ببینی';
     D.fcBack.classList.add('hidden');
   }
-  D.fcLearned.textContent = learned ? '✅ یاد گرفته‌ام' : '✅ یاد گرفتم';
+  D.fcLearned.textContent = learned ? '✅ یاد گرفته‌ام' : '✅ یاد گرفتم (+2 XP)';
   D.fcLearned.style.opacity = learned ? '.7' : '1';
 }
+
 function nextCard(){ if (state.cardIdx < state.stageWords.length-1){ state.cardIdx++; state.cardFlipped=false; renderFlashcard(); } else toast('آخرین کلمه', '📖'); }
 function prevCard(){ if (state.cardIdx > 0){ state.cardIdx--; state.cardFlipped=false; renderFlashcard(); } else toast('اولین کلمه', '📖'); }
 function flipCard(){ state.cardFlipped = !state.cardFlipped; renderFlashcard(); }
 function learnWord(){
   const w = state.stageWords[state.cardIdx]; if (!w) return;
   const key = w.en.toLowerCase();
+  markActiveToday();
   if (!state.data.learnedWords.includes(key)){
     state.data.learnedWords.push(key);
-    saveUser(); updateDash(); renderWordList();
-    toast('یاد گرفته شد!', '✅');
+    state.data.score += 2;
+    saveUser(); updateDash();
+    toast('یاد گرفته شد! +2 XP', '✅');
   }
   renderFlashcard();
 }
@@ -1608,98 +2080,26 @@ function toggleFav(){
   const w = state.stageWords[state.cardIdx]; if (!w) return;
   const key = w.en.toLowerCase();
   const idx = state.data.favorites.indexOf(key);
-  if (idx === -1){ state.data.favorites.push(key); toast('ستاره شد', '⭐'); }
+  if (idx === -1){ state.data.favorites.push(key); toast('ستاره شد ⭐', '⭐'); }
   else { state.data.favorites.splice(idx, 1); toast('حذف شد', '☆'); }
-  saveUser(); renderFlashcard(); renderStarList(); updateDash();
+  saveUser(); renderFlashcard(); updateDash();
 }
 
-/* =========================================================
-   WORD LIST
-   ========================================================= */
-function renderWordList(){
-  const d = state.data;
-  const q = state.searchQ.toLowerCase();
-  const frag = document.createDocumentFragment();
-  state.stageWords.forEach(w => {
-    if (q && !w.en.toLowerCase().includes(q) && !w.fa.includes(q)) return;
-    const key = w.en.toLowerCase();
-    const learned = d.learnedWords.includes(key);
-    const isFav = d.favorites.includes(key);
-    const el = document.createElement('div');
-    el.className = 'witem' + (learned ? ' learned' : '');
-    el.innerHTML = `
-      <div class="witem-top">
-        <div style="flex:1;min-width:0;">
-          <div class="en">${esc(w.en)} ${isFav?'<span class="wstar">★</span>':''}</div>
-          <div class="fa">${esc(w.fa)}</div>
-        </div>
-        <div class="wcheck">${learned?'✓':''}</div>
-      </div>
-      <div class="ex">${esc(w.exEn)}</div>
-    `;
-    el.onclick = () => {
-      speak(w.en);
-      if (!d.learnedWords.includes(key)){
-        d.learnedWords.push(key);
-        saveUser(); updateDash(); renderWordList();
-      }
-    };
-    frag.appendChild(el);
-  });
-  D.wlist.innerHTML = '';
-  D.wlist.appendChild(frag);
-}
-function renderStarList(){
-  const d = state.data;
-  const favWords = WORDS.filter(w => d.favorites.includes(w.en.toLowerCase()));
-  if (!favWords.length){
-    D.starlist.innerHTML = '<div class="empty"><div class="i">⭐</div><p>هنوز کلمه‌ای ستاره نکردی</p></div>';
-    return;
-  }
-  const frag = document.createDocumentFragment();
-  favWords.forEach(w => {
-    const key = w.en.toLowerCase();
-    const learned = d.learnedWords.includes(key);
-    const el = document.createElement('div');
-    el.className = 'witem' + (learned?' learned':'');
-    el.innerHTML = `
-      <div class="witem-top">
-        <div style="flex:1;min-width:0;">
-          <div class="en">${esc(w.en)} <span class="wstar">★</span></div>
-          <div class="fa">${esc(w.fa)}</div>
-        </div>
-        <button class="tool-btn" style="width:30px;height:30px;font-size:.85rem;" data-rm>🗑️</button>
-      </div>
-      <div class="ex">${esc(w.exEn)}</div>
-    `;
-    el.onclick = (e) => { if (e.target.dataset.rm !== undefined) return; speak(w.en); };
-    el.querySelector('[data-rm]').onclick = (e) => {
-      e.stopPropagation();
-      d.favorites = d.favorites.filter(f => f !== key);
-      saveUser(); renderStarList(); renderFlashcard(); updateDash();
-    };
-    frag.appendChild(el);
-  });
-  D.starlist.innerHTML = '';
-  D.starlist.appendChild(frag);
-}
-
-/* =========================================================
+/* ============================================================
    QUIZ
-   ========================================================= */
+   ============================================================ */
 function resetQuizUI(){
   state.qActive = false; state.qLocked = false;
   state.qIdx = 0; state.qCorrect = 0;
-  D.qinfo.classList.add('hidden');
+  D.quizTop.classList.add('hidden');
   D.qSpeak.classList.add('hidden');
-  D.gtip.classList.add('hidden');
-  D.qlabel.textContent = 'آزمون';
-  D.qtext.textContent = 'برای شروع دکمه زیر را بزن';
-  D.qopts.innerHTML = '';
+  D.qLabel.textContent = 'آزمون';
+  D.qText.textContent = 'برای شروع دکمه زیر را بزن';
+  D.qOpts.innerHTML = '';
   D.qBtns.innerHTML = '';
-  D.qstatus.textContent = 'آماده';
-  D.qmsg.className = 'msg info';
-  D.qmsg.textContent = '💡 ابتدا درس رو یاد بگیر، بعد امتحان بده!';
+  D.qStatus.textContent = 'آماده';
+  D.qMsg.className = 'msg info';
+  D.qMsg.textContent = '💡 ابتدا درس رو یاد بگیر، بعد امتحان بده!';
 
   const btn = document.createElement('button');
   btn.className = 'btn btn-s btn-block';
@@ -1713,26 +2113,21 @@ function buildQuiz(){
   const words = state.stageWords;
   const lesson = getLessonForStage(state.data.currentStage);
 
-  // کلمه (50%)
   const shuf = [...words].sort(() => Math.random() - 0.5);
   shuf.slice(0, Math.max(4, Math.floor(words.length * 0.5))).forEach(w => {
     const wrongs = [];
-    const pool = WORDS.filter(x => x.fa !== w.fa && x.level === w.level);
-    const poolFallback = WORDS.filter(x => x.fa !== w.fa);
+    const pool = WORDS.filter(x => x.fa !== w.fa);
     while (wrongs.length < 3){
-      const src = pool.length > 3 ? pool : poolFallback;
-      const r = src[Math.floor(Math.random() * src.length)];
+      const r = pool[Math.floor(Math.random() * pool.length)];
       if (!wrongs.includes(r.fa) && r.fa !== w.fa) wrongs.push(r.fa);
     }
     qs.push({type:'word', prompt:w.en, correct:w.fa, options:[w.fa, ...wrongs].sort(() => Math.random() - 0.5)});
   });
 
-  // گرامر — از درس همون مرحله
   lesson.exercises.slice(0, 3).forEach(ex => {
-    qs.push({type:'grammar', prompt: ex.q, correct: ex.correct, options: [ex.correct, ...ex.wrongs].sort(() => Math.random() - 0.5), tip: lesson.title});
+    qs.push({type:'grammar', prompt: ex.q, correct: ex.correct, options: [ex.correct, ...ex.wrongs].sort(() => Math.random() - 0.5)});
   });
 
-  // لیسنینگ (1-2)
   const shufL = [...words].sort(() => Math.random() - 0.5);
   shufL.slice(0, Math.min(2, words.length)).forEach(w => {
     const wrongs = [];
@@ -1751,9 +2146,9 @@ function startQuiz(){
   if (!state.stageWords.length) return;
   state.qActive = true; state.qIdx = 0; state.qCorrect = 0; state.qLocked = false;
   state.quiz = buildQuiz();
-  D.qinfo.classList.remove('hidden');
+  D.quizTop.classList.remove('hidden');
   D.qBtns.innerHTML = '';
-  D.qstatus.textContent = 'در حال آزمون';
+  D.qStatus.textContent = 'در حال آزمون';
   showQuestion();
 }
 
@@ -1763,47 +2158,45 @@ function showQuestion(){
   const total = state.quiz.length;
   const n = state.qIdx + 1;
 
-  D.qtype.textContent = q.type === 'grammar' ? 'گرامر' : (q.type === 'listening' ? 'گوش دادن' : 'کلمه');
-  D.qtype.className = 'qtype ' + (q.type === 'grammar' ? 'grammar' : (q.type === 'listening' ? 'listen' : 'word'));
-  D.qcount.textContent = `سؤال ${n} / ${total}`;
+  D.qType.textContent = q.type === 'grammar' ? 'گرامر' : (q.type === 'listening' ? '🎧' : 'کلمه');
+  D.qType.className = 'qtype ' + (q.type === 'grammar' ? 'grammar' : (q.type === 'listening' ? 'listen' : 'word'));
+  D.qCount.textContent = `${n} / ${total}`;
+  D.qProgress.style.width = ((n-1)/total*100) + '%';
 
   D.qSpeak.classList.add('hidden');
-  D.gtip.classList.add('hidden');
 
   if (q.type === 'word'){
-    D.qlabel.textContent = 'معنی چیه؟';
-    D.qtext.innerHTML = `<span class="qword">"${esc(q.prompt)}"</span>`;
+    D.qLabel.textContent = 'معنی چیه؟';
+    D.qText.innerHTML = `<span class="qword">"${esc(q.prompt)}"</span>`;
   } else if (q.type === 'listening'){
-    D.qlabel.textContent = 'چی شنیدی؟';
-    D.qtext.innerHTML = `<span style="color:var(--text-2);font-size:1.05rem;">🔊 به صدا گوش کن...</span>`;
+    D.qLabel.textContent = 'چی شنیدی؟';
+    D.qText.innerHTML = `<span style="color:var(--text-2);font-size:1.05rem;">🔊 به صدا گوش کن...</span>`;
     D.qSpeak.classList.remove('hidden');
     setTimeout(() => speak(q.audio), 350);
   } else {
-    D.qlabel.textContent = 'سؤال گرامر';
-    D.qtext.innerHTML = q.prompt.replace(/___/g, '<span class="qfill">___</span>');
-    D.gtip.classList.remove('hidden');
-    D.gtipText.innerHTML = `<strong>یادآوری:</strong> این سؤال از درس «${esc(q.tip)}» هست.`;
+    D.qLabel.textContent = 'سؤال گرامر';
+    D.qText.innerHTML = q.prompt.replace(/___/g, '<span class="qfill">___</span>');
   }
 
-  D.qopts.innerHTML = '';
+  D.qOpts.innerHTML = '';
   const letters = ['الف','ب','پ','ت'];
   q.options.forEach((opt, i) => {
     const btn = document.createElement('button');
     btn.className = 'qopt';
     btn.innerHTML = `<span class="num">${letters[i]||i+1}</span><span>${opt}</span>`;
     btn.onclick = () => answer(btn, opt, q);
-    D.qopts.appendChild(btn);
+    D.qOpts.appendChild(btn);
   });
 
-  D.qmsg.className = 'msg info';
-  D.qmsg.textContent = `⏳ سؤال ${n} از ${total}`;
+  D.qMsg.className = 'msg info';
+  D.qMsg.textContent = `⏳ سؤال ${n} از ${total}`;
   state.qLocked = false;
 }
 
 function answer(btn, selected, q){
   if (!state.qActive || state.qLocked) return;
   state.qLocked = true;
-  const all = D.qopts.querySelectorAll('.qopt');
+  const all = D.qOpts.querySelectorAll('.qopt');
   all.forEach(b => b.disabled = true);
   state.data.totalAnswers++;
 
@@ -1812,21 +2205,22 @@ function answer(btn, selected, q){
     state.qCorrect++;
     state.data.correctAnswers++;
     state.data.score += 10;
-    D.qmsg.className = 'msg ok';
-    D.qmsg.textContent = '✅ آفرین! (+10)';
+    markActiveToday();
+    D.qMsg.className = 'msg ok';
+    D.qMsg.textContent = '✅ آفرین! (+10 XP)';
     saveUser(); updateDash();
     setTimeout(() => { state.qIdx++; showQuestion(); }, 700);
   } else {
     btn.classList.add('wrong');
     all.forEach(b => { if (b.textContent.includes(q.correct)) b.classList.add('correct'); });
-    D.qmsg.className = 'msg err';
-    D.qmsg.textContent = '❌ اشتباه!';
-    D.qstatus.textContent = 'شکست';
+    D.qMsg.className = 'msg err';
+    D.qMsg.textContent = '❌ اشتباه!';
+    D.qStatus.textContent = 'شکست';
     saveUser();
     setTimeout(() => {
       modal({
         ic:'💔', title:'رد شدی!',
-        msg:'مرحله فعلی ریست می‌شه اما مراحل قبلی، امتیاز، و علاقه‌مندی‌هات حفظ می‌شن.',
+        msg:'مرحله فعلی ریست می‌شه اما مراحل قبلی، امتیاز و علاقه‌مندی‌هات حفظ می‌شن.',
         ok:'تلاش دوباره', onOk: () => resetCurrentStage()
       });
     }, 900);
@@ -1844,19 +2238,18 @@ function finishQuiz(){
     saveUser();
     const newLevel = getCurrentLevel();
     updateDash();
-    D.qstatus.textContent = '✅ قبول';
-    D.qmsg.className = 'msg ok';
-    D.qmsg.textContent = `🏆 عالی! ${c}/${total} — مرحله کامل شد (+50)`;
-    D.qopts.innerHTML = '';
+    D.qStatus.textContent = '✅ قبول';
+    D.qMsg.className = 'msg ok';
+    D.qMsg.textContent = `🏆 عالی! ${c}/${total} (+50 XP)`;
+    D.qOpts.innerHTML = '';
     D.qBtns.innerHTML = '';
 
-    // چک تغییر سطح
     if (newLevel !== prevLevel && LEVEL_ORDER.indexOf(newLevel) > LEVEL_ORDER.indexOf(prevLevel)){
       setTimeout(() => {
         modal({
           ic: LEVEL_INFO[newLevel].icon,
           title: `🎉 سطح جدید: ${newLevel}`,
-          msg: `تبریک! به سطح «${LEVEL_INFO[newLevel].name}» رسیدی! از این به بعد کلمات و گرامر سخت‌تر می‌شن.`,
+          msg: `تبریک! به سطح «${LEVEL_INFO[newLevel].name}» رسیدی! کلمات و گرامر سخت‌تر می‌شن.`,
           ok:'بزن بریم!'
         });
       }, 500);
@@ -1866,13 +2259,13 @@ function finishQuiz(){
       const b = document.createElement('button');
       b.className = 'btn btn-s btn-block';
       b.textContent = '🎉 مشاهده پایان';
-      b.onclick = () => modal({ic:'🏆',title:'تبریک قهرمان!',msg:'همه ۶ سطح رو کامل کردی!',ok:'عالی!',onOk:()=>renderStage()});
+      b.onclick = () => modal({ic:'🏆',title:'تبریک قهرمان!',msg:'همه ۶ سطح رو کامل کردی!',ok:'عالی!'});
       D.qBtns.appendChild(b);
     } else {
       const b = document.createElement('button');
       b.className = 'btn btn-s btn-block';
       b.textContent = `➡️ مرحله بعد (${d.currentStage + 1})`;
-      b.onclick = () => { renderStage(); toast(`به مرحله ${d.currentStage + 1} خوش اومدی!`, '🚀'); };
+      b.onclick = () => { renderStage(); toast(`مرحله ${d.currentStage + 1}`, '🚀'); };
       D.qBtns.appendChild(b);
     }
   } else {
@@ -1880,28 +2273,177 @@ function finishQuiz(){
   }
 }
 
-/* =========================================================
-   RESET
-   ========================================================= */
+function quickQuiz(level){
+  const levelWords = WORDS.filter(w => w.level === level);
+  if (!levelWords.length) { toast('کلمه‌ای برای این سطح نیست', '⚠️'); return; }
+  const sample = [...levelWords].sort(() => Math.random() - 0.5).slice(0, 10);
+  state.stageWords = sample;
+  state.quiz = sample.map(w => {
+    const wrongs = [];
+    const pool = WORDS.filter(x => x.fa !== w.fa && x.level === level);
+    const fallback = WORDS.filter(x => x.fa !== w.fa);
+    while (wrongs.length < 3){
+      const src = pool.length > 3 ? pool : fallback;
+      const r = src[Math.floor(Math.random() * src.length)];
+      if (!wrongs.includes(r.fa) && r.fa !== w.fa) wrongs.push(r.fa);
+    }
+    return {type:'word', prompt:w.en, correct:w.fa, options:[w.fa, ...wrongs].sort(() => Math.random() - 0.5)};
+  }).sort(() => Math.random() - 0.5);
+  state.qActive = true; state.qIdx = 0; state.qCorrect = 0; state.qLocked = false;
+  goPage('lesson');
+  D.quizTop.classList.remove('hidden');
+  D.qBtns.innerHTML = '';
+  D.qStatus.textContent = 'آزمون ' + level;
+  showQuestion();
+}
+
+function practiceFavorites(){
+  const fav = state.data.favorites;
+  if (!fav.length){ toast('هنوز کلمه‌ای ستاره نکردی!', '⭐'); return; }
+  const favWords = WORDS.filter(w => fav.includes(w.en.toLowerCase()));
+  state.stageWords = favWords.slice(0, 15);
+  state.quiz = favWords.slice(0, 15).map(w => {
+    const wrongs = [];
+    const pool = WORDS.filter(x => x.fa !== w.fa);
+    while (wrongs.length < 3){
+      const r = pool[Math.floor(Math.random() * pool.length)];
+      if (!wrongs.includes(r.fa) && r.fa !== w.fa) wrongs.push(r.fa);
+    }
+    return {type:'word', prompt:w.en, correct:w.fa, options:[w.fa, ...wrongs].sort(() => Math.random() - 0.5)};
+  }).sort(() => Math.random() - 0.5);
+  state.qActive = true; state.qIdx = 0; state.qCorrect = 0; state.qLocked = false;
+  goPage('lesson');
+  D.quizTop.classList.remove('hidden');
+  D.qBtns.innerHTML = '';
+  D.qStatus.textContent = '⭐ تمرین ستاره‌دارها';
+  showQuestion();
+}
+
+/* ============================================================
+   PROFILE
+   ============================================================ */
+function renderProfile(){
+  const d = state.data;
+  D.profAv.textContent = d.name.charAt(0).toUpperCase();
+  D.profName.textContent = d.name;
+  const lvl = getCurrentLevel();
+  D.profLevel.textContent = `${LEVEL_INFO[lvl].icon} ${lvl} — ${LEVEL_INFO[lvl].name}`;
+  const date = new Date(d.createdAt);
+  D.profSince.textContent = date.toLocaleDateString('fa-IR');
+  D.profStages.textContent = d.completedStages;
+  D.profWords.textContent = d.learnedWords.length;
+  D.profXP.textContent = d.score;
+  D.profAcc.textContent = getAccuracy() + '%';
+
+  const achs = [
+    {ic:'🚀', nm:'شروع', done: d.learnedWords.length >= 1},
+    {ic:'📚', nm:'۱۰ کلمه', done: d.learnedWords.length >= 10},
+    {ic:'📖', nm:'۵۰ کلمه', done: d.learnedWords.length >= 50},
+    {ic:'⭐', nm:'۵ مرحله', done: d.completedStages >= 5},
+    {ic:'🏅', nm:'۱۰ مرحله', done: d.completedStages >= 10},
+    {ic:'🏆', nm:'۲۰ مرحله', done: d.completedStages >= 20},
+    {ic:'💯', nm:'۵۰ پاسخ درست', done: d.correctAnswers >= 50},
+    {ic:'⭐', nm:'اولین ستاره', done: d.favorites.length >= 1},
+    {ic:'🔥', nm:'۳ روز پیاپی', done: calcStreak() >= 3},
+    {ic:'🔥', nm:'۷ روز پیاپی', done: calcStreak() >= 7},
+    {ic:'🔵', nm:'رسیدن به A2', done: LEVEL_ORDER.indexOf(lvl) >= 1},
+    {ic:'🟠', nm:'رسیدن به B1', done: LEVEL_ORDER.indexOf(lvl) >= 2},
+    {ic:'🔴', nm:'رسیدن به B2', done: LEVEL_ORDER.indexOf(lvl) >= 3},
+    {ic:'🟣', nm:'رسیدن به C1', done: LEVEL_ORDER.indexOf(lvl) >= 4},
+    {ic:'⚫', nm:'رسیدن به C2', done: LEVEL_ORDER.indexOf(lvl) >= 5}
+  ];
+  D.achGrid.innerHTML = achs.map(a =>
+    `<div class="ach ${a.done?'unlocked':'locked'}">
+      <span class="ic">${a.ic}</span>
+      <div class="nm">${a.nm}</div>
+    </div>`
+  ).join('');
+}
+
+/* ============================================================
+   RESET / LOGOUT
+   ============================================================ */
 function resetCurrentStage(){
   const d = state.data;
   const keys = state.stageWords.map(w => w.en.toLowerCase());
   d.learnedWords = d.learnedWords.filter(k => !keys.includes(k));
   saveUser(); renderStage();
-  toast('مرحله ریست شد — دوباره تلاش کن!', '🔄');
+  toast('مرحله ریست شد', '🔄');
 }
 function resetAllProgress(){
-  const name = state.user;
-  const theme = state.data.theme;
-  state.data = createUser(name);
-  state.data.theme = theme;
-  saveUser(); updateDash(); renderStage();
-  toast('همه چیز ریست شد', '💣');
+  modal({
+    ic:'💣', title:'ریست کامل',
+    msg:'تمام پیشرفتت پاک می‌شه (کلمات، امتیاز، ستاره‌ها). مطمئنی؟',
+    ok:'بله، ریست کن',
+    onOk: () => {
+      const name = state.user;
+      const theme = state.data.theme;
+      state.data = createUser(name);
+      state.data.theme = theme;
+      saveUser(); updateDash(); renderStage(); renderDashboard();
+      toast('همه چیز ریست شد', '💣');
+    }
+  });
+}
+function logout(){
+  modal({
+    ic:'🚪', title:'خروج از حساب',
+    msg:'از حسابت خارج می‌شی. پیشرفتت ذخیره می‌مونه.',
+    ok:'خروج', onOk: () => {
+      saveUser();
+      state.user = null; state.data = null;
+      D.app.classList.add('hidden');
+      D.loginScreen.classList.remove('hidden');
+      D.uname.value = '';
+      renderUsersList();
+    }
+  });
 }
 
-/* =========================================================
+/* ============================================================
    LOGIN
-   ========================================================= */
+   ============================================================ */
+function renderUsersList(){
+  const users = getAllUsers();
+  const names = Object.keys(users);
+  if (!names.length){ D.usersList.classList.add('hidden'); return; }
+  D.usersList.classList.remove('hidden');
+  D.usersGrid.innerHTML = names.map(n => {
+    const u = users[n];
+    const lvl = u.currentStage !== undefined ? getStageWordsForLevel(u.currentStage) : 'A1';
+    return `<div class="user-bubble" data-name="${esc(n)}">
+      <span class="av">${esc(n.charAt(0).toUpperCase())}</span>
+      <span>${esc(n)}</span>
+      <span class="del" data-del="${esc(n)}">✕</span>
+    </div>`;
+  }).join('');
+  D.usersGrid.querySelectorAll('.user-bubble').forEach(b => {
+    b.onclick = (e) => {
+      if (e.target.dataset.del) {
+        e.stopPropagation();
+        const name = e.target.dataset.del;
+        modal({
+          ic:'🗑️', title:'حذف کاربر',
+          msg:`می‌خوای کاربر «${name}» رو کاملاً حذف کنی؟ پیشرفتش پاک می‌شه.`,
+          ok:'حذف کن',
+          onOk: () => {
+            deleteUser(name);
+            renderUsersList();
+            toast('کاربر حذف شد', '🗑️');
+          }
+        });
+        return;
+      }
+      D.uname.value = b.dataset.name;
+      login();
+    };
+  });
+}
+function getStageWordsForLevel(stage){
+  const sw = getStageWords(stage);
+  return sw[0]?.level || 'A1';
+}
+
 function login(){
   const name = D.uname.value.trim();
   if (!name){
@@ -1912,43 +2454,31 @@ function login(){
   }
   state.user = name;
   state.data = loadUser(name);
+  markActiveToday();
 
   const w = document.createElement('div');
-  w.className = 'welcome';
+  w.className = 'welcome-anim';
   w.innerHTML = `<div class="txt">خوش اومدی ${esc(name)}! 🎉</div>`;
   document.body.appendChild(w);
-  setTimeout(() => w.remove(), 1400);
+  setTimeout(() => w.remove(), 1500);
 
-  D.loginPage.classList.add('hidden');
+  D.loginScreen.classList.add('hidden');
   D.app.classList.remove('hidden');
   applyTheme();
   setTimeout(() => {
-    renderStage(); updateDash();
+    renderStage(); updateDash(); renderDashboard();
     toast(`سلام ${name}! آماده‌ای؟`, '👋');
-  }, 400);
+  }, 500);
 }
 
-/* =========================================================
-   EVENTS
-   ========================================================= */
 D.loginBtn.onclick = login;
 D.uname.onkeydown = e => { if (e.key === 'Enter') login(); };
 
-document.querySelectorAll('.tab').forEach(t => {
-  t.onclick = () => {
-    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-    t.classList.add('active');
-    const m = t.dataset.mode;
-    state.mode = m;
-    D.cardMode.classList.toggle('hidden', m !== 'card');
-    D.listMode.classList.toggle('hidden', m !== 'list');
-    D.starMode.classList.toggle('hidden', m !== 'star');
-    if (m === 'star') renderStarList();
-  };
-});
-
+/* ============================================================
+   FLASHCARD EVENTS
+   ============================================================ */
 D.flashcard.onclick = e => {
-  if (e.target.closest('.fc-star') || e.target.closest('.speak-b')) return;
+  if (e.target.closest('.fc-star') || e.target.closest('.speak-btn')) return;
   flipCard();
 };
 D.fcFlip.onclick = flipCard;
@@ -1961,62 +2491,48 @@ D.fcSpeak.onclick = e => {
   const w = state.stageWords[state.cardIdx];
   if (w) speak(w.en, D.fcSpeak);
 };
-
-D.searchIn.oninput = e => { state.searchQ = e.target.value.trim(); renderWordList(); };
 D.qSpeak.onclick = () => {
   const q = state.quiz[state.qIdx];
   if (q && q.audio) speak(q.audio, D.qSpeak);
 };
-D.favBtn.onclick = () => {
-  const tab = document.querySelector('.tab[data-mode="star"]');
-  if (tab) tab.click();
-};
 
-D.resetStageBtn.onclick = () => modal({
-  ic:'🔄', title:'ریست مرحله فعلی',
-  msg:'کلمات یادگرفته‌شده این مرحله پاک می‌شن. علاقه‌مندی‌ها حفظ می‌شن.',
-  ok:'بله', onOk: resetCurrentStage
-});
-D.resetAllBtn.onclick = () => modal({
-  ic:'💣', title:'ریست کامل',
-  msg:'همه مراحل، امتیاز و علاقه‌مندی‌ها پاک می‌شن. مطمئنی؟',
-  ok:'بله، ریست کن', onOk: resetAllProgress
-});
-
+/* ============================================================
+   KEYBOARD
+   ============================================================ */
 document.addEventListener('keydown', e => {
   if (!state.data) return;
   if (e.target.tagName === 'INPUT') return;
   if (state.qActive && !state.qLocked){
     const n = parseInt(e.key);
     if (n >= 1 && n <= 4){
-      const btns = D.qopts.querySelectorAll('.qopt');
+      const btns = D.qOpts.querySelectorAll('.qopt');
       if (btns[n-1]) btns[n-1].click();
     }
-  }
-  if (!state.qActive && state.mode === 'card'){
-    if (e.key === 'ArrowRight') prevCard();
-    if (e.key === 'ArrowLeft') nextCard();
-    if (e.key === ' '){ e.preventDefault(); flipCard(); }
-    if (e.key === 's' || e.key === 'S') toggleFav();
   }
 });
 
 window.addEventListener('beforeunload', () => { if (state.user && state.data) saveUser(); });
 
-/* =========================================================
+/* ============================================================
+   EXPOSE GLOBAL FUNCS (for inline onclick)
+   ============================================================ */
+window.goPage = goPage;
+window.resetCurrentStage = resetCurrentStage;
+window.resetAllProgress = resetAllProgress;
+window.quickQuiz = quickQuiz;
+window.practiceFavorites = practiceFavorites;
+window.logout = logout;
+
+/* ============================================================
    INIT
-   ========================================================= */
+   ============================================================ */
 (function(){
-  const users = getAllUsers();
-  const names = Object.keys(users);
-  if (names.length) D.uname.placeholder = `مثلاً: ${names[0]}`;
-  D.tstg.textContent = TOTAL_STAGES;
-  D.fw.textContent = WORDS.length;
-  D.fg.textContent = LESSONS.length;
+  D.tstgVal.textContent = TOTAL_STAGES;
+  renderUsersList();
   D.uname.focus();
 })();
 
-console.log(`⚡ English Master Pro v5 | ${WORDS.length} کلمه | ${TOTAL_STAGES} مرحله | ${LESSONS.length} درس گرامر در ۶ سطح`);
+console.log(`⚡ English Master Pro v7 | ${WORDS.length} کلمه | ${TOTAL_STAGES} مرحله | ${LESSONS.length} درس گرامر`);
 console.log(`ساخته شده توسط محمد مهدی شهسواری (BitVolt) با عشق ❤️`);
 
 })();
