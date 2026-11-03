@@ -1,2662 +1,348 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#0f0f14">
-<title>English Master Pro</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مدیریت آقای عرفان بالایی | برنامه‌ریز درسی</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --accent:#6366f1;
-  --accent-2:#8b5cf6;
-  --accent-soft:rgba(99,102,241,.1);
-  --success:#10b981;
-  --success-soft:rgba(16,185,129,.1);
-  --danger:#ef4444;
-  --danger-soft:rgba(239,68,68,.1);
-  --gold:#fbbf24;
-  --gold-soft:rgba(251,191,36,.1);
-  --bg:#0a0a0f;
-  --bg-2:#13131a;
-  --bg-3:#1c1c26;
-  --bg-4:#26262f;
-  --text-1:#ffffff;
-  --text-2:#a1a1aa;
-  --text-3:#71717a;
-  --border:rgba(255,255,255,.07);
-  --border-hi:rgba(255,255,255,.14);
-}
-[data-theme="light"]{
-  --bg:#fafafa;
-  --bg-2:#ffffff;
-  --bg-3:#f4f4f5;
-  --bg-4:#e4e4e7;
-  --text-1:#09090b;
-  --text-2:#52525b;
-  --text-3:#a1a1aa;
-  --border:rgba(0,0,0,.06);
-  --border-hi:rgba(0,0,0,.12);
-  --accent-soft:rgba(99,102,241,.08);
-  --success-soft:rgba(16,185,129,.08);
-  --danger-soft:rgba(239,68,68,.08);
-  --gold-soft:rgba(251,191,36,.1);
-}
-
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{overflow-x:hidden;}
-body{
-  font-family:'Vazirmatn',-apple-system,system-ui,sans-serif;
-  background:var(--bg);
-  color:var(--text-1);
-  line-height:1.6;
-  min-height:100vh;
-  -webkit-font-smoothing:antialiased;
-  transition:background .25s,color .25s;
-}
-button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
-input{font-family:inherit;}
-.hidden{display:none!important;}
-
-/* ============================================================
-   LOGIN
-   ============================================================ */
-.login-screen{
-  min-height:100vh;
-  display:flex;align-items:center;justify-content:center;
-  padding:24px;
-}
-.login-box{
-  max-width:420px;width:100%;
-  text-align:center;
-}
-.logo-circle{
-  width:88px;height:88px;margin:0 auto 28px;
-  border-radius:26px;
-  background:linear-gradient(135deg,var(--accent),var(--accent-2));
-  display:flex;align-items:center;justify-content:center;
-  font-size:2.6rem;
-  box-shadow:0 24px 48px rgba(99,102,241,.4);
-  animation:floatY 3.5s ease-in-out infinite;
-}
-@keyframes floatY{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-8px);}
-}
-.login-box h1{
-  font-size:1.9rem;
-  font-weight:800;
-  margin-bottom:10px;
-  letter-spacing:-.5px;
-}
-.login-box .sub{
-  color:var(--text-2);
-  font-size:.95rem;
-  margin-bottom:40px;
-  line-height:1.7;
-}
-.login-input{
-  width:100%;
-  padding:16px 20px;
-  background:var(--bg-3);
-  border:1.5px solid var(--border);
-  border-radius:14px;
-  color:var(--text-1);
-  font-size:1rem;
-  font-weight:600;
-  outline:none;
-  text-align:center;
-  transition:all .2s;
-  margin-bottom:12px;
-}
-.login-input:focus{
-  border-color:var(--accent);
-  background:var(--bg-2);
-  box-shadow:0 0 0 4px var(--accent-soft);
-}
-.login-input::placeholder{color:var(--text-3);font-weight:400;}
-
-.btn-main{
-  width:100%;
-  padding:16px;
-  background:var(--accent);
-  color:#fff;
-  font-size:1rem;
-  font-weight:700;
-  border-radius:14px;
-  transition:all .2s;
-  letter-spacing:.2px;
-}
-.btn-main:hover{background:var(--accent-2);}
-.btn-main:active{transform:scale(.98);}
-
-.recent-users{
-  margin-top:32px;
-  padding-top:28px;
-  border-top:1px solid var(--border);
-}
-.recent-users .lbl{
-  color:var(--text-3);
-  font-size:.78rem;
-  margin-bottom:14px;
-  font-weight:600;
-}
-.ru-list{
-  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
-}
-.ru-chip{
-  padding:9px 16px;
-  background:var(--bg-3);
-  border:1px solid var(--border);
-  border-radius:30px;
-  font-size:.82rem;
-  font-weight:600;
-  color:var(--text-2);
-  display:flex;align-items:center;gap:8px;
-  transition:all .2s;
-  cursor:pointer;
-}
-.ru-chip:hover{
-  background:var(--bg-4);
-  border-color:var(--border-hi);
-  color:var(--text-1);
-}
-.ru-chip .dot{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--accent);
-}
-.ru-chip .x{
-  color:var(--text-3);
-  font-size:.85rem;
-  padding:0 2px;
-  transition:color .15s;
-}
-.ru-chip .x:hover{color:var(--danger);}
-
-.creator-mark{
-  margin-top:48px;
-  font-size:.78rem;
-  color:var(--text-3);
-  line-height:2;
-}
-.creator-mark .nm{
-  color:var(--text-2);
-  font-weight:700;
-}
-.creator-mark .br{
-  color:var(--accent);
-  font-weight:800;
-  letter-spacing:.5px;
-}
-
-/* ============================================================
-   APP LAYOUT
-   ============================================================ */
-.app{
-  max-width:680px;
-  margin:0 auto;
-  padding:16px 20px 100px;
-}
-@media(max-width:480px){
-  .app{padding:14px 16px 100px;}
-}
-
-/* Top bar */
-.top{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:12px 0 20px;
-  margin-bottom:12px;
-}
-.top-user{
-  display:flex;align-items:center;gap:10px;
-  cursor:pointer;
-}
-.top-avatar{
-  width:38px;height:38px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),var(--accent-2));
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-weight:700;font-size:.9rem;
-}
-.top-name{
-  font-weight:700;
-  font-size:.9rem;
-}
-.top-sub{
-  font-size:.72rem;
-  color:var(--text-3);
-  margin-top:-2px;
-}
-.top-actions{display:flex;gap:8px;}
-.icon-btn{
-  width:38px;height:38px;
-  border-radius:12px;
-  background:var(--bg-3);
-  border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1rem;
-  transition:all .2s;
-  color:var(--text-2);
-}
-.icon-btn:hover{background:var(--bg-4);color:var(--text-1);}
-.icon-btn:active{transform:scale(.94);}
-
-/* Pages */
-.page{display:none;animation:fadeIn .3s;}
-.page.active{display:block;}
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(8px);}
-  to{opacity:1;transform:translateY(0);}
-}
-
-/* ============================================================
-   HOME PAGE
-   ============================================================ */
-.greeting{
-  margin-bottom:28px;
-}
-.greeting h1{
-  font-size:1.5rem;
-  font-weight:800;
-  letter-spacing:-.4px;
-  margin-bottom:6px;
-}
-.greeting p{
-  color:var(--text-2);
-  font-size:.9rem;
-}
-
-/* Main continue card */
-.continue-card{
-  background:linear-gradient(135deg,var(--accent),var(--accent-2));
-  border-radius:24px;
-  padding:28px;
-  margin-bottom:16px;
-  position:relative;
-  overflow:hidden;
-  box-shadow:0 20px 40px rgba(99,102,241,.3);
-}
-.continue-card::before{
-  content:'';
-  position:absolute;
-  top:-50%;right:-30%;
-  width:80%;height:200%;
-  background:radial-gradient(circle,rgba(255,255,255,.15),transparent 60%);
-  pointer-events:none;
-}
-.continue-card-inner{position:relative;}
-.continue-card .label{
-  font-size:.75rem;
-  font-weight:700;
-  color:rgba(255,255,255,.85);
-  text-transform:uppercase;
-  letter-spacing:1px;
-  margin-bottom:8px;
-}
-.continue-card h2{
-  font-size:1.5rem;
-  font-weight:800;
-  color:#fff;
-  margin-bottom:6px;
-  letter-spacing:-.3px;
-}
-.continue-card .desc{
-  color:rgba(255,255,255,.8);
-  font-size:.85rem;
-  margin-bottom:20px;
-}
-.continue-btn{
-  padding:12px 24px;
-  background:rgba(255,255,255,.95);
-  color:var(--accent);
-  font-weight:800;
-  font-size:.9rem;
-  border-radius:30px;
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  transition:all .2s;
-}
-.continue-btn:hover{
-  background:#fff;
-  transform:translateY(-2px);
-  box-shadow:0 8px 20px rgba(0,0,0,.15);
-}
-.continue-btn:active{transform:translateY(0);}
-
-/* Stats */
-.stats-row{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-  margin-bottom:16px;
-}
-.stat{
-  background:var(--bg-2);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:18px 14px;
-  text-align:center;
-  transition:all .2s;
-}
-.stat:hover{
-  border-color:var(--border-hi);
-  transform:translateY(-2px);
-}
-.stat .ic{
-  font-size:1.5rem;
-  margin-bottom:8px;
-  display:block;
-}
-.stat .val{
-  font-size:1.4rem;
-  font-weight:800;
-  letter-spacing:-.5px;
-  display:block;
-}
-.stat .lbl{
-  font-size:.72rem;
-  color:var(--text-3);
-  font-weight:600;
-  margin-top:2px;
-}
-
-/* Progress */
-.progress-block{
-  background:var(--bg-2);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:20px;
-  margin-bottom:16px;
-}
-.progress-block .hdr{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:14px;
-}
-.progress-block .hdr .t{
-  font-size:.9rem;
-  font-weight:700;
-}
-.progress-block .hdr .v{
-  font-size:.9rem;
-  font-weight:800;
-  color:var(--accent);
-}
-.progress-track{
-  height:8px;
-  background:var(--bg-4);
-  border-radius:10px;
-  overflow:hidden;
-}
-.progress-fill{
-  height:100%;
-  background:linear-gradient(90deg,var(--accent),var(--accent-2));
-  border-radius:10px;
-  transition:width .6s cubic-bezier(.16,1,.3,1);
-}
-
-/* Quick actions */
-.quick-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-bottom:16px;
-}
-.qa-card{
-  background:var(--bg-2);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:20px 16px;
-  text-align:center;
-  cursor:pointer;
-  transition:all .2s;
-}
-.qa-card:hover{
-  border-color:var(--accent);
-  transform:translateY(-3px);
-  background:var(--bg-3);
-}
-.qa-card .ic{
-  font-size:1.8rem;
-  margin-bottom:10px;
-  display:block;
-}
-.qa-card .t{
-  font-size:.88rem;
-  font-weight:700;
-}
-.qa-card .s{
-  font-size:.72rem;
-  color:var(--text-3);
-  margin-top:2px;
-}
-
-/* ============================================================
-   LESSON PAGE
-   ============================================================ */
-.lesson-header{
-  margin-bottom:20px;
-}
-.lesson-header .lvl-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:5px 14px;
-  background:var(--accent-soft);
-  color:var(--accent);
-  border-radius:20px;
-  font-size:.75rem;
-  font-weight:800;
-  margin-bottom:10px;
-}
-.lesson-header h2{
-  font-size:1.3rem;
-  font-weight:800;
-  letter-spacing:-.3px;
-  margin-bottom:4px;
-}
-.lesson-header .meta{
-  color:var(--text-3);
-  font-size:.82rem;
-}
-
-/* Grammar card */
-.grammar{
-  background:var(--bg-2);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:22px;
-  margin-bottom:16px;
-}
-.grammar .hdr{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:16px;
-  padding-bottom:14px;
-  border-bottom:1px solid var(--border);
-}
-.grammar .hdr .ic{
-  width:36px;height:36px;
-  border-radius:10px;
-  background:var(--accent-soft);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1rem;
-}
-.grammar .hdr .t{
-  font-size:.95rem;
-  font-weight:800;
-}
-.grammar .body{
-  color:var(--text-2);
-  font-size:.9rem;
-  line-height:1.9;
-  max-height:300px;
-  overflow-y:auto;
-  padding-left:4px;
-}
-.grammar .body::-webkit-scrollbar{width:4px;}
-.grammar .body::-webkit-scrollbar-thumb{background:var(--border-hi);border-radius:2px;}
-.grammar .body h4{
-  color:var(--text-1);
-  font-size:.88rem;
-  font-weight:800;
-  margin-top:14px;
-  margin-bottom:6px;
-}
-.grammar .body h4:first-child{margin-top:0;}
-.grammar .body strong{color:var(--accent);}
-.grammar .body code{
-  background:var(--bg-4);
-  color:var(--text-1);
-  padding:2px 8px;
-  border-radius:5px;
-  font-family:'Courier New',monospace;
-  font-size:.82rem;
-  direction:ltr;
-  display:inline-block;
-}
-.grammar .body ul{
-  list-style:none;
-  padding-right:0;
-  margin:6px 0;
-}
-.grammar .body ul li{
-  position:relative;
-  padding-right:18px;
-  margin-bottom:4px;
-}
-.grammar .body ul li::before{
-  content:'';
-  position:absolute;
-  right:6px;top:11px;
-  width:5px;height:5px;
-  border-radius:50%;
-  background:var(--accent);
-}
-.grammar .body .ex{
-  display:block;
-  background:var(--bg-3);
-  border-right:3px solid var(--accent);
-  border-radius:10px;
-  padding:12px 14px;
-  margin-top:8px;
-}
-.grammar .body .ex .en{
-  color:var(--text-1);
-  font-family:'Courier New',monospace;
-  direction:ltr;
-  display:block;
-  text-align:left;
-  font-size:.85rem;
-  font-weight:600;
-}
-.grammar .body .ex .fa{
-  color:var(--text-3);
-  display:block;
-  text-align:right;
-  font-size:.8rem;
-  margin-top:3px;
-}
-
-/* Flashcard */
-.flashcard{
-  background:var(--bg-2);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:28px 22px;
-  margin-bottom:16px;
-  text-align:center;
-  cursor:pointer;
-  min-height:280px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  gap:16px;
-  position:relative;
-  transition:all .3s;
-}
-.flashcard:hover{
-  border-color:var(--border-hi);
-}
-.flashcard .top-bar{
-  position:absolute;
-  top:14px;left:14px;right:14px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.fc-counter{
-  font-size:.72rem;
-  color:var(--text-3);
-  font-weight:700;
-}
-.fc-star{
-  font-size:1.2rem;
-  color:var(--text-3);
-  width:32px;height:32px;
-  display:flex;align-items:center;justify-content:center;
-  border-radius:50%;
-  transition:all .2s;
-}
-.fc-star:hover{background:var(--bg-3);}
-.fc-star.on{color:var(--gold);}
-.fc-word{
-  font-size:2.4rem;
-  font-weight:800;
-  letter-spacing:-.5px;
-  direction:ltr;
-  color:var(--text-1);
-}
-.fc-word-sub{
-  font-size:.85rem;
-  color:var(--text-3);
-  direction:ltr;
-}
-.fc-hint{
-  font-size:.78rem;
-  color:var(--text-3);
-}
-.fc-meaning{
-  font-size:1.5rem;
-  font-weight:800;
-  color:var(--accent);
-}
-.fc-example{
-  background:var(--bg-3);
-  border-radius:12px;
-  padding:14px;
-  width:100%;
-  text-align:left;
-  direction:ltr;
-}
-.fc-example .en{
-  color:var(--text-1);
-  font-family:'Courier New',monospace;
-  font-size:.88rem;
-  font-weight:600;
-}
-.fc-example .fa{
-  color:var(--text-3);
-  font-size:.82rem;
-  margin-top:4px;
-  direction:rtl;
-  text-align:right;
-  font-family:'Vazirmatn',sans-serif;
-}
-
-.speak-btn{
-  padding:9px 18px;
-  background:var(--accent-soft);
-  color:var(--accent);
-  border-radius:30px;
-  font-size:.82rem;
-  font-weight:700;
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  transition:all .2s;
-}
-.speak-btn:hover{background:var(--accent);color:#fff;}
-.speak-btn.playing{
-  background:var(--accent);
-  color:#fff;
-  animation:pulse 1s infinite;
-}
-@keyframes pulse{
-  0%,100%{transform:scale(1);}
-  50%{transform:scale(1.05);}
-}
-
-.fc-controls{
-  display:flex;
-  gap:10px;
-  margin-bottom:16px;
-}
-.fc-controls .btn{flex:1;}
-
-/* Buttons */
-.btn{
-  padding:13px 20px;
-  border-radius:14px;
-  font-size:.9rem;
-  font-weight:700;
-  transition:all .2s;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-}
-.btn:disabled{opacity:.4;cursor:not-allowed;}
-.btn-primary{background:var(--accent);color:#fff;}
-.btn-primary:hover:not(:disabled){background:var(--accent-2);}
-.btn-primary:active:not(:disabled){transform:scale(.98);}
-.btn-secondary{
-  background:var(--bg-3);
-  color:var(--text-1);
-  border:1px solid var(--border);
-}
-.btn-secondary:hover:not(:disabled){
-  background:var(--bg-4);
-  border-color:var(--border-hi);
-}
-.btn-success{background:var(--success);color:#fff;}
-.btn-success:hover:not(:disabled){opacity:.9;}
-.btn-block{width:100%;}
-.btn-row{display:flex;gap:10px;}
-
-/* Quiz */
-.quiz-box{
-  background:var(--bg-2);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:24px;
-  margin-bottom:16px;
-}
-.quiz-progress{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:20px;
-}
-.quiz-progress-track{
-  flex:1;
-  height:5px;
-  background:var(--bg-4);
-  border-radius:10px;
-  overflow:hidden;
-}
-.quiz-progress-fill{
-  height:100%;
-  background:var(--accent);
-  border-radius:10px;
-  transition:width .4s;
-}
-.quiz-counter{
-  font-size:.75rem;
-  color:var(--text-3);
-  font-weight:700;
-}
-.quiz-question{
-  text-align:center;
-  margin-bottom:24px;
-  min-height:80px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:8px;
-}
-.quiz-question .lbl{
-  font-size:.72rem;
-  color:var(--text-3);
-  font-weight:700;
-  text-transform:uppercase;
-  letter-spacing:1px;
-}
-.quiz-question .q-word{
-  font-size:1.9rem;
-  font-weight:800;
-  letter-spacing:-.5px;
-  direction:ltr;
-}
-.quiz-question .q-text{
-  font-size:1.1rem;
-  font-weight:700;
-  line-height:1.6;
-}
-.quiz-question .q-text code{
-  background:var(--accent-soft);
-  color:var(--accent);
-  padding:3px 10px;
-  border-radius:6px;
-  font-family:'Courier New',monospace;
-  direction:ltr;
-  display:inline-block;
-}
-
-.quiz-options{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.option{
-  padding:16px 20px;
-  background:var(--bg-3);
-  border:1.5px solid var(--border);
-  border-radius:14px;
-  font-size:.95rem;
-  font-weight:600;
-  text-align:right;
-  transition:all .2s;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  cursor:pointer;
-}
-.option:hover:not(:disabled){
-  border-color:var(--accent);
-  background:var(--bg-4);
-}
-.option .bullet{
-  width:26px;height:26px;
-  border-radius:8px;
-  background:var(--bg-4);
-  border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:.75rem;
-  font-weight:800;
-  color:var(--text-3);
-  flex-shrink:0;
-}
-.option:hover:not(:disabled) .bullet{
-  background:var(--accent-soft);
-  color:var(--accent);
-  border-color:var(--accent);
-}
-.option.correct{
-  background:var(--success-soft);
-  border-color:var(--success);
-  color:var(--success);
-}
-.option.correct .bullet{
-  background:var(--success);
-  color:#fff;
-  border-color:var(--success);
-}
-.option.wrong{
-  background:var(--danger-soft);
-  border-color:var(--danger);
-  color:var(--danger);
-}
-.option.wrong .bullet{
-  background:var(--danger);
-  color:#fff;
-  border-color:var(--danger);
-}
-.option:disabled{cursor:not-allowed;}
-
-.quiz-feedback{
-  margin-top:16px;
-  padding:14px 16px;
-  border-radius:12px;
-  font-size:.88rem;
-  font-weight:700;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.quiz-feedback.ok{
-  background:var(--success-soft);
-  color:var(--success);
-}
-.quiz-feedback.err{
-  background:var(--danger-soft);
-  color:var(--danger);
-}
-.quiz-feedback.info{
-  background:var(--accent-soft);
-  color:var(--accent);
-}
-
-/* ============================================================
-   PROGRESS PAGE
-   ============================================================ */
-.section-title{
-  font-size:1.15rem;
-  font-weight:800;
-  margin-bottom:16px;
-  letter-spacing:-.3px;
-}
-
-.levels-list{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  margin-bottom:24px;
-}
-.level-card{
-  background:var(--bg-2);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:18px;
-  display:flex;
-  align-items:center;
-  gap:16px;
-  transition:all .2s;
-  cursor:pointer;
-}
-.level-card:hover{
-  border-color:var(--border-hi);
-  background:var(--bg-3);
-}
-.level-card.active{
-  border-color:var(--accent);
-  background:var(--accent-soft);
-}
-.level-card.locked{
-  opacity:.5;
-  cursor:not-allowed;
-}
-.level-badge{
-  width:56px;height:56px;
-  border-radius:16px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:900;
-  font-size:1.1rem;
-  color:#fff;
-  flex-shrink:0;
-}
-.lb-a1{background:linear-gradient(135deg,#10b981,#059669);}
-.lb-a2{background:linear-gradient(135deg,#3b82f6,#2563eb);}
-.lb-b1{background:linear-gradient(135deg,#f59e0b,#d97706);}
-.lb-b2{background:linear-gradient(135deg,#ef4444,#b91c1c);}
-.lb-c1{background:linear-gradient(135deg,#a855f7,#7c3aed);}
-.lb-c2{background:linear-gradient(135deg,#64748b,#334155);}
-.level-info{flex:1;}
-.level-info .t{
-  font-weight:800;
-  font-size:.95rem;
-  margin-bottom:2px;
-}
-.level-info .s{
-  color:var(--text-3);
-  font-size:.8rem;
-}
-.level-arrow{
-  color:var(--text-3);
-  font-size:1.2rem;
-}
-
-/* Achievements */
-.achievements{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
-  gap:10px;
-  margin-bottom:24px;
-}
-.ach{
-  background:var(--bg-2);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px 8px;
-  text-align:center;
-  transition:all .2s;
-}
-.ach.unlocked{
-  background:var(--gold-soft);
-  border-color:var(--gold);
-}
-.ach:hover{transform:translateY(-2px);}
-.ach .ic{
-  font-size:1.6rem;
-  display:block;
-  margin-bottom:6px;
-}
-.ach.locked .ic{opacity:.3;filter:grayscale(1);}
-.ach .nm{
-  font-size:.7rem;
-  font-weight:700;
-  color:var(--text-2);
-}
-
-/* Week chart */
-.week-bars{
-  display:flex;
-  align-items:flex-end;
-  justify-content:space-between;
-  height:100px;
-  gap:8px;
-  margin-bottom:8px;
-}
-.wb{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
-  height:100%;
-  justify-content:flex-end;
-}
-.wb .bar{
-  width:100%;
-  max-width:32px;
-  border-radius:8px;
-  background:var(--bg-4);
-  transition:all .4s;
-  min-height:6px;
-}
-.wb .bar.active{background:var(--accent);}
-.wb .bar.today{background:var(--accent-2);}
-.wb .day{
-  font-size:.7rem;
-  color:var(--text-3);
-  font-weight:700;
-}
-
-/* ============================================================
-   PROFILE PAGE
-   ============================================================ */
-.profile-top{
-  text-align:center;
-  padding:24px 0;
-  margin-bottom:20px;
-}
-.profile-av{
-  width:80px;height:80px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),var(--accent-2));
-  display:flex;align-items:center;justify-content:center;
-  font-size:2rem;
-  font-weight:800;
-  color:#fff;
-  margin:0 auto 14px;
-  box-shadow:0 12px 24px rgba(99,102,241,.3);
-}
-.profile-top h2{
-  font-size:1.35rem;
-  font-weight:800;
-  margin-bottom:4px;
-}
-.profile-top p{
-  color:var(--text-3);
-  font-size:.82rem;
-}
-
-.settings-list{
-  background:var(--bg-2);
-  border:1px solid var(--border);
-  border-radius:18px;
-  overflow:hidden;
-  margin-bottom:20px;
-}
-.setting-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:16px 18px;
-  border-bottom:1px solid var(--border);
-  gap:12px;
-}
-.setting-row:last-child{border-bottom:none;}
-.setting-row .l{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-.setting-row .l .ic{
-  width:36px;height:36px;
-  border-radius:10px;
-  background:var(--bg-3);
-  display:flex;align-items:center;justify-content:center;
-  font-size:.95rem;
-}
-.setting-row .l .t{
-  font-weight:700;
-  font-size:.9rem;
-}
-
-.switch{
-  width:46px;height:26px;
-  background:var(--bg-4);
-  border-radius:20px;
-  position:relative;
-  cursor:pointer;
-  transition:background .2s;
-}
-.switch::after{
-  content:'';
-  position:absolute;
-  top:3px;right:3px;
-  width:20px;height:20px;
-  border-radius:50%;
-  background:#fff;
-  transition:transform .2s;
-  box-shadow:0 2px 4px rgba(0,0,0,.2);
-}
-.switch.on{background:var(--accent);}
-.switch.on::after{transform:translateX(-20px);}
-
-.btn-text{
-  color:var(--accent);
-  font-weight:700;
-  font-size:.85rem;
-  padding:6px 12px;
-  border-radius:8px;
-  transition:all .15s;
-}
-.btn-text:hover{background:var(--accent-soft);}
-.btn-text.danger{color:var(--danger);}
-.btn-text.danger:hover{background:var(--danger-soft);}
-
-/* ============================================================
-   BOTTOM NAV
-   ============================================================ */
-.bottom-nav{
-  position:fixed;
-  bottom:16px;
-  left:50%;
-  transform:translateX(-50%);
-  background:var(--bg-2);
-  border:1px solid var(--border);
-  border-radius:22px;
-  padding:8px;
-  display:flex;
-  gap:4px;
-  box-shadow:0 20px 40px rgba(0,0,0,.4);
-  z-index:100;
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-}
-[data-theme="light"] .bottom-nav{background:rgba(255,255,255,.95);}
-.nav-item{
-  padding:10px 18px;
-  border-radius:16px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:3px;
-  font-size:.65rem;
-  font-weight:700;
-  color:var(--text-3);
-  transition:all .2s;
-  min-width:60px;
-}
-.nav-item .ic{
-  font-size:1.25rem;
-  transition:transform .2s;
-}
-.nav-item:hover{color:var(--text-1);}
-.nav-item.active{
-  background:var(--accent);
-  color:#fff;
-}
-.nav-item.active .ic{transform:scale(1.08);}
-
-/* ============================================================
-   MODAL
-   ============================================================ */
-.modal-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.7);
-  backdrop-filter:blur(6px);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:9998;
-  padding:24px;
-}
-.modal-overlay.show{display:flex;animation:fadeIn .2s;}
-.modal{
-  background:var(--bg-2);
-  border:1px solid var(--border-hi);
-  border-radius:22px;
-  padding:28px 24px;
-  max-width:400px;
-  width:100%;
-  text-align:center;
-  animation:modalIn .3s cubic-bezier(.16,1,.3,1);
-}
-@keyframes modalIn{
-  from{opacity:0;transform:scale(.92);}
-  to{opacity:1;transform:scale(1);}
-}
-.modal .ic{
-  font-size:3rem;
-  margin-bottom:14px;
-  display:block;
-}
-.modal h2{
-  font-size:1.15rem;
-  font-weight:800;
-  margin-bottom:10px;
-}
-.modal p{
-  color:var(--text-2);
-  font-size:.9rem;
-  margin-bottom:22px;
-  line-height:1.7;
-}
-.modal-actions{
-  display:flex;
-  gap:10px;
-}
-.modal-actions .btn{flex:1;}
-
-/* Toast */
-.toast{
-  position:fixed;
-  bottom:100px;
-  left:50%;
-  transform:translateX(-50%) translateY(150px);
-  background:var(--bg-2);
-  border:1px solid var(--border-hi);
-  border-radius:30px;
-  padding:12px 22px;
-  font-size:.85rem;
-  font-weight:700;
-  box-shadow:0 12px 24px rgba(0,0,0,.4);
-  z-index:9999;
-  transition:transform .35s cubic-bezier(.16,1,.3,1);
-  display:flex;
-  align-items:center;
-  gap:8px;
-  white-space:nowrap;
-  max-width:calc(100vw - 40px);
-}
-.toast.show{transform:translateX(-50%) translateY(0);}
-
-/* Empty */
-.empty{
-  text-align:center;
-  padding:40px 20px;
-  color:var(--text-3);
-}
-.empty .ic{font-size:3rem;opacity:.4;margin-bottom:10px;}
+:root{--bg:#06080c;--p:#0d1118;--p2:#141a25;--ln:#283042;--gold:#d8b45f;--gold2:#f3dc9e;--tx:#ebe7da;--mu:#8a93a5;--ok:#5fd6a0;--bad:#e5645a;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:'Vazirmatn',Tahoma,sans-serif;line-height:1.8;min-height:100vh}
+#rain{position:fixed;inset:0;width:100%;height:100%;opacity:.16;z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:16px}
+.brand{text-align:center;padding:26px 10px 14px;border-bottom:1px solid var(--ln);margin-bottom:18px}
+.term{font-family:ui-monospace,Consolas,monospace;color:var(--ok);font-size:.8rem;direction:ltr;min-height:1.4em}
+.term:after{content:"▌";animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:0}}
+h1{margin:6px 0 0;font-weight:800;font-size:clamp(1.5rem,5vw,2.6rem);background:linear-gradient(100deg,#9c7a2c,var(--gold2) 45%,var(--gold) 70%,#9c7a2c);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.5px;text-shadow:0 0 30px #d8b45f22}
+.sub{color:var(--mu);font-weight:300;margin:0}
+.card{background:linear-gradient(160deg,var(--p2),var(--p));border:1px solid var(--ln);border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 10px 40px #0008,inset 0 1px 0 #ffffff0a}
+.card h3{margin:0 0 10px;color:var(--gold2);font-weight:500;font-size:1.05rem}
+.auth{max-width:420px;margin:0 auto}
+input,select,textarea,button{font-family:inherit;font-size:.95rem}
+input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--ln);color:var(--tx);padding:10px 12px;border-radius:9px;margin:5px 0 10px;outline:none}
+input:focus,select:focus,textarea:focus,button:focus-visible{border-color:var(--gold);box-shadow:0 0 0 2px #d8b45f44}
+label{font-size:.85rem;color:var(--mu)}
+.btn{background:linear-gradient(135deg,#f3dc9e,#c79d3f);color:#171002;border:0;padding:10px 18px;border-radius:9px;font-weight:800;cursor:pointer}
+.btn.g{background:transparent;color:var(--gold2);border:1px solid var(--gold)}
+.btn.s{padding:4px 10px;font-size:.8rem}.btn.r{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.row>.btn{flex:0 0 auto}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px}
+.tabs button{flex:0 0 auto;background:var(--p);color:var(--mu);border:1px solid var(--ln);padding:8px 16px;border-radius:30px;cursor:pointer}
+.tabs button.on{color:#171002;background:var(--gold);border-color:var(--gold);font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.kpi{text-align:center}.kpi b{display:block;font-size:2rem;color:var(--gold2);font-weight:800}.kpi span{color:var(--mu);font-size:.85rem}
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.85rem}.bar i{display:block;height:10px;border-radius:6px;background:linear-gradient(90deg,#8a6a22,var(--gold2))}.bar div{flex:1;background:var(--bg);border-radius:6px}.bar span:first-child{width:96px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid var(--ln);padding:5px 12px;border-radius:30px;cursor:pointer;background:var(--p);color:var(--tx)}.chip.on{border-color:var(--gold);background:#d8b45f22;color:var(--gold2)}
+.it{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--ln)}.it:last-child{border:0}.it input[type=checkbox]{width:auto;margin:0;accent-color:var(--gold)}.it .g1{flex:1}
+.it.dn .g1{text-decoration:line-through;color:var(--mu)}
+.day{border:1px solid var(--ln);border-radius:12px;padding:12px;background:var(--p)}.day.today{border-color:var(--gold);box-shadow:0 0 18px #d8b45f2a}
+.big{font-size:3.4rem;text-align:center;font-weight:800;color:var(--gold2);font-variant-numeric:tabular-nums;direction:ltr}
+.mu{color:var(--mu);font-size:.85rem}.ok{color:var(--ok)}.bad{color:var(--bad)}
+#toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--gold);color:#171002;padding:9px 18px;border-radius:30px;font-weight:800;opacity:0;transition:.3s;z-index:9;pointer-events:none}
+#toast.show{opacity:1}
+[data-th=light]{--bg:#f6f1e6;--p:#fffdf8;--p2:#f1eadb;--ln:#d9ccb0;--gold:#a67c1e;--gold2:#6d4f0f;--tx:#2a2418;--mu:#6f6652;--ok:#1f8f5f;--bad:#c0392b;color-scheme:light}
+[data-th=light] h1{background:linear-gradient(100deg,#6d4f0f,#b48a2c 50%,#6d4f0f);-webkit-background-clip:text;background-clip:text}
+[data-th=light] #rain{display:none}
+[data-th=light] .card{box-shadow:0 8px 24px #6d4f0f18}
+#thb{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:10px;z-index:5}
+.cht{display:flex;gap:8px;align-items:flex-end;height:130px}.cht>div{flex:1;text-align:center;display:flex;flex-direction:column;justify-content:flex-end;height:100%}.cht i{display:block;min-height:3px;border-radius:6px 6px 0 0;background:linear-gradient(0deg,#8a6a22,var(--gold2))}
+.tip{border-right:3px solid var(--gold);padding:4px 12px;margin:0 0 14px;color:var(--tx)}
+@media (prefers-reduced-motion:reduce){.term:after{animation:none}}
 </style>
 </head>
 <body>
-
-<!-- ============ LOGIN ============ -->
-<div class="login-screen" id="loginScreen">
-  <div class="login-box">
-    <div class="logo-circle">⚡</div>
-    <h1>English Master</h1>
-    <p class="sub">پلتفرم حرفه‌ای آموزش زبان انگلیسی<br>۶ سطح، گرامر ساختاریافته، تمرین روزانه</p>
-
-    <input id="uname" class="login-input" type="text" placeholder="اسمت رو بنویس" maxlength="20" autocomplete="off">
-    <button class="btn-main" id="loginBtn">شروع یادگیری</button>
-
-    <div class="recent-users hidden" id="recentUsers">
-      <div class="lbl">حساب‌های قبلی</div>
-      <div class="ru-list" id="ruList"></div>
-    </div>
-
-    <div class="creator-mark">
-      <div>ساخته شده توسط <span class="nm">محمد مهدی شهسواری</span></div>
-      <div class="br">BitVolt</div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ APP ============ -->
-<div class="app hidden" id="app">
-  <header class="top">
-    <div class="top-user" onclick="goPage('profile')">
-      <div class="top-avatar" id="topAv">U</div>
-      <div>
-        <div class="top-name" id="topName">-</div>
-        <div class="top-sub" id="topSub">سطح A1</div>
-      </div>
-    </div>
-    <div class="top-actions">
-      <button class="icon-btn" id="themeBtn" title="تم">🌙</button>
-    </div>
+<canvas id="rain" aria-hidden="true"></canvas>
+<button id="thb" class="btn g s" onclick="thm()" aria-label="تغییر پوسته">☀</button>
+<div class="wrap">
+  <header class="brand">
+    <div class="term" id="term"></div>
+    <h1>مدیریت آقای عرفان بالایی</h1>
+    <p class="sub">سامانه هوشمند برنامه‌ریزی و مدیریت مطالعه</p>
   </header>
-
-  <!-- ========== HOME ========== -->
-  <div class="page active" id="page-home">
-    <div class="greeting">
-      <h1 id="helloText">سلام! 👋</h1>
-      <p id="helloSub">آماده‌ای امروز پیشرفت کنی؟</p>
-    </div>
-
-    <div class="continue-card">
-      <div class="continue-card-inner">
-        <div class="label">ادامه بده</div>
-        <h2 id="continueTitle">مرحله ۱</h2>
-        <div class="desc" id="continueDesc">۱۰ کلمه جدید و درس گرامر</div>
-        <button class="continue-btn" onclick="goPage('lesson')">
-          شروع
-          <span>←</span>
-        </button>
-      </div>
-    </div>
-
-    <div class="stats-row">
-      <div class="stat">
-        <span class="ic">💎</span>
-        <span class="val" id="statXP">0</span>
-        <span class="lbl">امتیاز</span>
-      </div>
-      <div class="stat">
-        <span class="ic">🔥</span>
-        <span class="val" id="statStreak">0</span>
-        <span class="lbl">روز پیاپی</span>
-      </div>
-      <div class="stat">
-        <span class="ic">✅</span>
-        <span class="val" id="statWords">0</span>
-        <span class="lbl">کلمه</span>
-      </div>
-    </div>
-
-    <div class="progress-block">
-      <div class="hdr">
-        <div class="t">پیشرفت کلی</div>
-        <div class="v"><span id="progPct">0</span>%</div>
-      </div>
-      <div class="progress-track">
-        <div class="progress-fill" id="progFill"></div>
-      </div>
-    </div>
-
-    <div class="quick-actions">
-      <div class="qa-card" onclick="goPage('lesson')">
-        <span class="ic">📖</span>
-        <div class="t">درس جدید</div>
-        <div class="s">یادگیری</div>
-      </div>
-      <div class="qa-card" onclick="goPage('progress')">
-        <span class="ic">📊</span>
-        <div class="t">پیشرفت</div>
-        <div class="s">آمار و دستاورد</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========== LESSON ========== -->
-  <div class="page" id="page-lesson">
-    <div class="lesson-header">
-      <div class="lvl-badge" id="lessonLvlBadge">🟢 A1</div>
-      <h2 id="lessonTitle">درس گرامر</h2>
-      <div class="meta">مرحله <span id="lessonStage">1</span> از <span id="lessonTotal">30</span></div>
-    </div>
-
-    <div class="grammar">
-      <div class="hdr">
-        <div class="ic">📘</div>
-        <div class="t" id="grammarTitle">گرامر</div>
-      </div>
-      <div class="body" id="grammarBody"></div>
-    </div>
-
-    <div class="flashcard" id="flashcard">
-      <div class="top-bar">
-        <div class="fc-counter" id="fcCounter">1 / 10</div>
-        <button class="fc-star" id="fcStar">☆</button>
-      </div>
-      <div id="fcFront">
-        <div class="fc-word" id="fcWord">-</div>
-        <div class="fc-word-sub" id="fcWordSub"></div>
-        <div class="fc-hint" id="fcHint" style="margin-top:14px;">برای دیدن معنی کلیک کن</div>
-      </div>
-      <div id="fcBack" class="hidden">
-        <div class="fc-meaning" id="fcMeaning">-</div>
-        <div class="fc-example" style="margin-top:16px;">
-          <div class="en" id="fcExEn"></div>
-          <div class="fa" id="fcExFa"></div>
-        </div>
-      </div>
-      <button class="speak-btn" id="fcSpeak">🔊 پخش تلفظ</button>
-    </div>
-
-    <div class="fc-controls">
-      <button class="btn btn-secondary" id="fcPrev">قبلی</button>
-      <button class="btn btn-secondary" id="fcNext">بعدی</button>
-    </div>
-
-    <button class="btn btn-primary btn-block" id="fcLearned" style="margin-bottom:16px;">یاد گرفتم</button>
-
-    <div class="quiz-box">
-      <div class="quiz-progress">
-        <div class="quiz-progress-track">
-          <div class="quiz-progress-fill" id="quizProgressFill" style="width:0;"></div>
-        </div>
-        <div class="quiz-counter" id="quizCounter">آماده</div>
-      </div>
-
-      <div class="quiz-question" id="quizQuestion">
-        <div class="lbl">آزمون مرحله</div>
-        <div class="q-text">وقتی آماده بودی شروع کن</div>
-      </div>
-
-      <div class="quiz-options" id="quizOptions"></div>
-
-      <div class="quiz-feedback info hidden" id="quizFeedback"></div>
-
-      <button class="btn btn-primary btn-block" id="startQuizBtn" style="margin-top:16px;">شروع آزمون</button>
-    </div>
-  </div>
-
-  <!-- ========== PROGRESS ========== -->
-  <div class="page" id="page-progress">
-    <h2 class="section-title">سطح‌های یادگیری</h2>
-    <div class="levels-list" id="levelsList"></div>
-
-    <h2 class="section-title">فعالیت هفته</h2>
-    <div class="progress-block" style="margin-bottom:24px;">
-      <div class="week-bars" id="weekBars"></div>
-    </div>
-
-    <h2 class="section-title">دستاوردها</h2>
-    <div class="achievements" id="achievementsList"></div>
-  </div>
-
-  <!-- ========== PROFILE ========== -->
-  <div class="page" id="page-profile">
-    <div class="profile-top">
-      <div class="profile-av" id="profileAv">U</div>
-      <h2 id="profileName">کاربر</h2>
-      <p id="profileMeta">عضو از امروز</p>
-    </div>
-
-    <div class="stats-row" style="margin-bottom:20px;">
-      <div class="stat">
-        <span class="ic">🏆</span>
-        <span class="val" id="profStages">0</span>
-        <span class="lbl">مراحل</span>
-      </div>
-      <div class="stat">
-        <span class="ic">📚</span>
-        <span class="val" id="profWords">0</span>
-        <span class="lbl">کلمات</span>
-      </div>
-      <div class="stat">
-        <span class="ic">🎯</span>
-        <span class="val" id="profAcc">0%</span>
-        <span class="lbl">دقت</span>
-      </div>
-    </div>
-
-    <div class="settings-list">
-      <div class="setting-row">
-        <div class="l">
-          <div class="ic">🌙</div>
-          <div class="t">تم شب</div>
-        </div>
-        <div class="switch" id="themeSwitch"></div>
-      </div>
-      <div class="setting-row">
-        <div class="l">
-          <div class="ic">🔊</div>
-          <div class="t">پخش خودکار تلفظ</div>
-        </div>
-        <div class="switch" id="autoSpeakSwitch"></div>
-      </div>
-    </div>
-
-    <div class="settings-list">
-      <div class="setting-row">
-        <div class="l">
-          <div class="ic">🔄</div>
-          <div class="t">ریست مرحله فعلی</div>
-        </div>
-        <button class="btn-text" onclick="resetStage()">ریست</button>
-      </div>
-      <div class="setting-row">
-        <div class="l">
-          <div class="ic">🚪</div>
-          <div class="t">خروج از حساب</div>
-        </div>
-        <button class="btn-text" onclick="logout()">خروج</button>
-      </div>
-      <div class="setting-row">
-        <div class="l">
-          <div class="ic" style="background:var(--danger-soft);">⚠️</div>
-          <div class="t" style="color:var(--danger);">ریست کامل</div>
-        </div>
-        <button class="btn-text danger" onclick="resetAll()">ریست</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========== BOTTOM NAV ========== -->
-  <nav class="bottom-nav">
-    <button class="nav-item active" data-page="home">
-      <span class="ic">🏠</span>
-      <span>خانه</span>
-    </button>
-    <button class="nav-item" data-page="lesson">
-      <span class="ic">📖</span>
-      <span>درس</span>
-    </button>
-    <button class="nav-item" data-page="progress">
-      <span class="ic">📊</span>
-      <span>پیشرفت</span>
-    </button>
-    <button class="nav-item" data-page="profile">
-      <span class="ic">👤</span>
-      <span>پروفایل</span>
-    </button>
-  </nav>
+  <main id="app"></main>
 </div>
-
-<div class="toast" id="toast"></div>
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <span class="ic" id="modalIcon">⚠️</span>
-    <h2 id="modalTitle">هشدار</h2>
-    <p id="modalText">متن پیام</p>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" id="modalCancel">لغو</button>
-      <button class="btn btn-primary" id="modalConfirm">تأیید</button>
-    </div>
-  </div>
-</div>
-
+<div id="toast" role="status"></div>
 <script>
+const $=s=>document.querySelector(s),fa=n=>Number(n).toLocaleString('fa-IR',{maximumFractionDigits:2});
+const P={e:['ریاضی','فارسی','علوم','مطالعات اجتماعی','قرآن','هدیه‌های آسمان','املا','هنر'],m:['ریاضی','علوم','فارسی','عربی','انگلیسی','مطالعات اجتماعی','دین و زندگی','قرآن'],h:['ریاضی','فیزیک','شیمی','زیست‌شناسی','ادبیات فارسی','عربی','دین و زندگی','زبان انگلیسی','زمین‌شناسی','هندسه']};
+const DAYS=['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'];
+const Q=['هر روز کمی، بهتر از یک شب زیاد.','تمرکز ۲۵ دقیقه‌ای، نتیجه‌ی یک ساعت.','درس سخت را اول بخوان، سبک‌ها را آخر.','خواب کافی هم بخشی از برنامه‌ی درسی است.'];
+let U=null,S=null,tab='dash',setup=null,tm={left:1500,run:false,mode:'work',id:null,sub:''};
+const ST={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast('ذخیره‌سازی مرورگر در دسترس نیست')}}};
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2200)}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+async function hs(p,s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+const sv=()=>ST.set('ev_d_'+U,S);
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const tIdx=()=>(new Date().getDay()+1)%7;
+
+/* ---------- auth ---------- */
+function authView(reg){
+  $('#app').innerHTML=`<div class="card auth"><h3>${reg?'ثبت‌نام':'ورود به حساب'}</h3>
+  <label>نام کاربری</label><input id="un" autocomplete="username" autocapitalize="none">
+  <label>رمز عبور</label><input id="pw" type="password" autocomplete="${reg?'new-password':'current-password'}">
+  ${reg?'<label>تکرار رمز عبور</label><input id="pw2" type="password" autocomplete="new-password">':''}
+  <div class="row"><button class="btn" onclick="${reg?'doReg()':'doLogin()'}">${reg?'ساخت حساب':'ورود'}</button>
+  <button class="btn g" onclick="authView(${!reg})">${reg?'حساب دارم':'ثبت‌نام'}</button></div>
+  <p class="mu">اطلاعات روی همین مرورگر ذخیره می‌شود. برای نگهداری در گوگل، از بخش «پشتیبان» استفاده کن.</p></div>`;
+}
+async function doReg(){
+  const n=$('#un').value.trim().toLowerCase(),p=$('#pw').value;
+  if(n.length<3)return toast('نام کاربری حداقل ۳ حرف');
+  if(p.length<6)return toast('رمز حداقل ۶ کاراکتر');
+  if(p!==$('#pw2').value)return toast('رمزها یکی نیستند');
+  const us=ST.get('ev_users')||{};
+  if(us[n])return toast('این نام کاربری گرفته شده');
+  const s=crypto.getRandomValues(new Uint32Array(2)).join('-');
+  us[n]={s,h:await hs(p,s)};ST.set('ev_users',us);
+  enter(n);
+}
+async function doLogin(){
+  const n=$('#un').value.trim().toLowerCase(),p=$('#pw').value,us=ST.get('ev_users')||{};
+  if(!us[n]||us[n].h!==await hs(p,us[n].s))return toast('نام کاربری یا رمز اشتباه است');
+  enter(n);
+}
+function enter(n){
+  U=n;try{sessionStorage.setItem('ev_cur',n)}catch(e){}
+  S=ST.get('ev_d_'+n);
+  if(!S){S={grade:0,subjects:[],hours:3,plan:[],done:{},log:[],tasks:[],exams:[]};setup={step:1}}
+  render();
+}
+function logout(){U=S=null;try{sessionStorage.removeItem('ev_cur')}catch(e){}authView(false)}
+
+/* ---------- setup ---------- */
+function setupView(){
+  if(setup.step===1){
+    const g=setup.grade||S.grade||7,band=g<=6?'e':g<=9?'m':'h',list=P[band];
+    setup.sel=setup.sel||(S.subjects.map(x=>x.n));
+    $('#app').innerHTML=`<div class="card"><h3>مرحله ۱ از ۲ — پایه و درس‌ها</h3>
+    <label>کلاس چندمی؟</label><select id="gr" onchange="setup.grade=+this.value;setup.sel=[];setupView()">${Array.from({length:12},(_,i)=>`<option value="${i+1}" ${i+1===g?'selected':''}>پایه ${fa(i+1)}</option>`).join('')}</select>
+    <label>درس‌هایت را انتخاب کن</label><div class="chips" id="ch">${list.concat(setup.sel.filter(x=>!list.includes(x))).map(x=>`<span class="chip ${setup.sel.includes(x)?'on':''}" onclick="tg(this)">${esc(x)}</span>`).join('')}</div>
+    <div class="row" style="margin-top:12px"><input id="cu" placeholder="درس دلخواه اضافه کن"><button class="btn g" onclick="addCu()">افزودن</button></div>
+    <label>ساعت مطالعه‌ی روزانه</label><input id="hr" type="number" min="1" max="12" step="0.5" value="${S.hours}">
+    <button class="btn" onclick="toStep2()">مرحله بعد</button></div>`;
+  }else{
+    $('#app').innerHTML=`<div class="card"><h3>مرحله ۲ از ۲ — نمره‌ها</h3><p class="mu">آخرین نمره‌ی هر درس را از ۲۰ وارد کن. برنامه، وقت بیشتری به درس‌های ضعیف‌تر می‌دهد.</p>
+    ${setup.sel.map((n,i)=>{const o=S.subjects.find(x=>x.n===n);return`<label>${esc(n)}</label><input type="number" min="0" max="20" step="0.25" data-s="${i}" value="${o&&o.scores.length?o.scores[o.scores.length-1]:''}">`}).join('')}
+    <div class="row"><button class="btn g" onclick="setup.step=1;setupView()">بازگشت</button><button class="btn" onclick="finish()">ساخت برنامه</button></div></div>`;
+  }
+}
+function tg(e){e.classList.toggle('on');setup.sel=[...document.querySelectorAll('#ch .chip.on')].map(x=>x.textContent)}
+function addCu(){const v=$('#cu').value.trim();if(!v)return;setup.sel=[...document.querySelectorAll('#ch .chip.on')].map(x=>x.textContent);if(!setup.sel.includes(v))setup.sel.push(v);S.hours=+$('#hr').value||3;setupView()}
+function toStep2(){
+  setup.sel=[...document.querySelectorAll('#ch .chip.on')].map(x=>x.textContent);
+  if(!setup.sel.length)return toast('حداقل یک درس انتخاب کن');
+  S.grade=+$('#gr').value;S.hours=Math.min(12,Math.max(1,+$('#hr').value||3));setup.step=2;setupView();
+}
+function finish(){
+  const old=S.subjects,ns=[];
+  setup.sel.forEach((n,i)=>{const v=parseFloat(document.querySelector(`[data-s="${i}"]`).value),o=old.find(x=>x.n===n)||{n,scores:[]};
+    if(!isNaN(v)&&v>=0&&v<=20){if(!o.scores.length||o.scores[o.scores.length-1]!==v)o.scores.push(v)}ns.push(o)});
+  S.subjects=ns;gen();setup=null;tab='dash';sv();render();toast('برنامه ساخته شد');
+}
+
+/* ---------- planner ---------- */
+const avgOf=o=>o.scores.length?o.scores.reduce((a,b)=>a+b,0)/o.scores.length:null;
+const last=o=>o.scores.length?o.scores[o.scores.length-1]:12;
+function gen(){
+  const total=Math.round(S.hours*60*6/45),w=S.subjects.map(o=>Math.max(2,22-last(o))),W=w.reduce((a,b)=>a+b,0)||1;
+  let cnt=w.map(x=>Math.max(1,Math.round(total*x/W)));
+  const q=[];let more=true;
+  while(more){more=false;S.subjects.forEach((o,i)=>{if(cnt[i]>0){q.push(o.n);cnt[i]--;more=true}})}
+  const plan=DAYS.map(()=>[]);
+  q.forEach((n,i)=>{let d=i%7;for(let k=0;k<7;k++){const dd=(d+k)%7;if(!plan[dd].some(x=>x.sub===n)){d=dd;break}}plan[d].push({sub:n,min:45})});
+  plan[6]=plan[6].slice(0,2);
+  S.plan=plan;S.done={};
+}
+function setDone(k,d,i){
+  const sub=S.plan[d][i].sub,key='pl'+k;
+  if(S.done[k]){delete S.done[k];S.log=S.log.filter(x=>x.k!==key)}
+  else{S.done[k]=1;S.log.push({k:key,d:today(),sub,min:S.plan[d][i].min})}
+  sv();render();
+}
+function streak(){
+  const ds=new Set(S.log.map(x=>x.d));let n=0,d=new Date();
+  if(!ds.has(today()))d.setDate(d.getDate()-1);
+  for(;;){const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(ds.has(k)){n++;d.setDate(d.getDate()-1)}else break}
+  return n;
+}
+function weekMin(){const c=new Date();c.setDate(c.getDate()-6);const s=c.getFullYear()+'-'+String(c.getMonth()+1).padStart(2,'0')+'-'+String(c.getDate()).padStart(2,'0');return S.log.filter(x=>x.d>=s).reduce((a,b)=>a+b.min,0)}
+function gpa(){const a=S.subjects.map(avgOf).filter(x=>x!==null);return a.length?a.reduce((x,y)=>x+y,0)/a.length:null}
+
+/* ---------- views ---------- */
+function render(){
+  clearInterval(tm.id);tm.id=null;tm.run=false;
+  if(!U)return authView(false);
+  if(setup)return setupView();
+  const T=[['dash','داشبورد'],['plan','برنامه هفتگی'],['grades','نمرات'],['timer','تایمر تمرکز'],['todo','تکالیف و امتحان'],['set','تنظیمات و پشتیبان']];
+  $('#app').innerHTML=`<div class="row" style="margin-bottom:10px"><span class="mu">کاربر: ${esc(U)} — پایه ${fa(S.grade)}</span><button class="btn g s" style="flex:0" onclick="logout()">خروج</button></div>
+  <nav class="tabs">${T.map(t=>`<button class="${tab===t[0]?'on':''}" onclick="tab='${t[0]}';render()">${t[1]}</button>`).join('')}</nav><section id="v"></section>`;
+  ({dash,plan,grades,timer,todo,set})[tab]();
+}
+function dash(){
+  const g=gpa(),sw=[...S.subjects].sort((a,b)=>last(a)-last(b))[0],t=tIdx(),pl=S.plan[t]||[],dn=pl.filter((_,i)=>S.done[t+'_'+i]).length;
+  const ex=S.exams.filter(e=>e.d>=today()).sort((a,b)=>a.d<b.d?-1:1)[0];
+  const dl=ex?Math.ceil((new Date(ex.d+'T00:00')-new Date(today()+'T00:00'))/864e5):null;
+  $('#v').innerHTML=`<div class="grid">
+  <div class="card kpi"><b>${g===null?'—':fa(g)}</b><span>معدل کل از ۲۰</span></div>
+  <div class="card kpi"><b>${fa(streak())}</b><span>روز پشت‌سرهم مطالعه</span></div>
+  <div class="card kpi"><b>${fa(Math.round(weekMin()/60*10)/10)}</b><span>ساعت مطالعه در ۷ روز اخیر</span></div>
+  <div class="card kpi"><b>${dl===null?'—':fa(dl)}</b><span>${ex?'روز تا '+esc(ex.n):'امتحانی ثبت نشده'}</span></div></div>
+  <div class="grid"><div class="card"><h3>برنامه‌ی امروز (${DAYS[t]})</h3>
+  ${pl.length?pl.map((p,i)=>`<div class="it ${S.done[t+'_'+i]?'dn':''}"><input type="checkbox" ${S.done[t+'_'+i]?'checked':''} onchange="setDone('${t}_${i}',${t},${i})"><span class="g1">${esc(p.sub)}</span><span class="mu">${fa(p.min)} دقیقه</span></div>`).join(''):'<p class="mu">برای امروز چیزی نیست.</p>'}
+  <p class="mu">${fa(dn)} از ${fa(pl.length)} انجام شد</p></div>
+  <div class="card"><h3>میانگین هر درس</h3>${S.subjects.map(o=>{const a=avgOf(o);return`<div class="bar"><span>${esc(o.n)}</span><div><i style="width:${a===null?0:a*5}%"></i></div><span>${a===null?'—':fa(a)}</span></div>`}).join('')}
+  ${sw&&S.subjects.some(o=>o.scores.length)?`<p class="mu">بیشترین وقت برنامه برای «${esc(sw.n)}» است چون نمره‌اش پایین‌تر است.</p>`:''}</div></div>
+  <p class="mu" style="text-align:center">${Q[new Date().getDate()%Q.length]}</p>`;
+}
+function plan(){
+  const t=tIdx();
+  $('#v').innerHTML=`<div class="row" style="margin-bottom:10px"><span class="mu">هر جلسه ۴۵ دقیقه. درس‌های ضعیف‌تر جلسه‌ی بیشتری دارند.</span><button class="btn g" onclick="if(confirm('برنامه‌ی جدید جایگزین فعلی می‌شود. ادامه؟')){gen();sv();render()}">ساخت دوباره</button></div>
+  <div class="grid">${S.plan.map((d,di)=>`<div class="day ${di===t?'today':''}"><b>${DAYS[di]}</b>${d.length?d.map((p,i)=>`<div class="it ${S.done[di+'_'+i]?'dn':''}"><input type="checkbox" ${S.done[di+'_'+i]?'checked':''} onchange="setDone('${di}_${i}',${di},${i})"><span class="g1">${esc(p.sub)}</span></div>`).join(''):'<p class="mu">استراحت</p>'}</div>`).join('')}</div>`;
+}
+function grades(){
+  $('#v').innerHTML=`<div class="card"><h3>ثبت نمره‌ی جدید</h3><div class="row"><select id="gs">${S.subjects.map((o,i)=>`<option value="${i}">${esc(o.n)}</option>`).join('')}</select><input id="gv" type="number" min="0" max="20" step="0.25" placeholder="نمره از ۲۰"><button class="btn" onclick="addG()">ثبت</button></div></div>
+  ${S.subjects.map((o,i)=>`<div class="card"><div class="row"><b>${esc(o.n)}</b><span class="mu">میانگین: ${avgOf(o)===null?'—':fa(avgOf(o))}</span></div>
+  <div class="chips" style="margin-top:6px">${o.scores.map((s,j)=>`<span class="chip" title="حذف" onclick="delG(${i},${j})">${fa(s)} ✕</span>`).join('')||'<span class="mu">نمره‌ای نیست</span>'}</div></div>`).join('')}`;
+}
+function addG(){const v=parseFloat($('#gv').value);if(isNaN(v)||v<0||v>20)return toast('نمره باید بین ۰ تا ۲۰ باشد');S.subjects[+$('#gs').value].scores.push(v);sv();render();toast('ثبت شد')}
+function delG(i,j){S.subjects[i].scores.splice(j,1);sv();render()}
+function timer(){
+  const m=Math.floor(tm.left/60),s=tm.left%60;
+  $('#v').innerHTML=`<div class="card" style="text-align:center"><h3>${tm.mode==='work'?'زمان تمرکز':'زمان استراحت'}</h3>
+  <div class="big" id="tt">${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}</div>
+  <select id="ts" style="max-width:260px">${S.subjects.map(o=>`<option ${o.n===tm.sub?'selected':''}>${esc(o.n)}</option>`).join('')}</select>
+  <div class="row" style="justify-content:center"><button class="btn" onclick="tgT()">شروع / توقف</button><button class="btn g" onclick="rsT()">بازنشانی</button></div>
+  <p class="mu">۲۵ دقیقه مطالعه، ۵ دقیقه استراحت. هر دوره‌ی کامل در گزارش مطالعه ثبت می‌شود.</p></div>`;
+}
+function tgT(){
+  if(tm.run){clearInterval(tm.id);tm.run=false;return}
+  tm.sub=$('#ts').value;tm.run=true;
+  tm.id=setInterval(()=>{tm.left--;
+    if(tm.left<=0){
+      if(tm.mode==='work'){S.log.push({k:'t'+Date.now(),d:today(),sub:tm.sub,min:25});sv();tm.mode='rest';tm.left=300;toast('آفرین! یک دوره ثبت شد')}
+      else{tm.mode='work';tm.left=1500}
+      clearInterval(tm.id);tm.run=false;timer();return}
+    const e=$('#tt');if(e)e.textContent=String(Math.floor(tm.left/60)).padStart(2,'0')+':'+String(tm.left%60).padStart(2,'0')},1000);
+}
+function rsT(){clearInterval(tm.id);tm.run=false;tm.mode='work';tm.left=1500;timer()}
+function todo(){
+  const ex=[...S.exams].sort((a,b)=>a.d<b.d?-1:1);
+  $('#v').innerHTML=`<div class="grid"><div class="card"><h3>تکالیف</h3>
+  <div class="row"><input id="tn" placeholder="تکلیف چیست؟"><input id="td" type="date"></div><button class="btn" onclick="addT()">افزودن</button>
+  ${S.tasks.map((t,i)=>`<div class="it ${t.x?'dn':''}"><input type="checkbox" ${t.x?'checked':''} onchange="S.tasks[${i}].x=!S.tasks[${i}].x;sv();render()"><span class="g1">${esc(t.n)}</span><span class="mu">${t.d?new Date(t.d+'T00:00').toLocaleDateString('fa-IR'):''}</span><button class="btn r s" onclick="S.tasks.splice(${i},1);sv();render()">حذف</button></div>`).join('')}</div>
+  <div class="card"><h3>امتحان‌ها</h3><div class="row"><input id="en" placeholder="نام امتحان"><input id="ed" type="date"></div><button class="btn" onclick="addE()">افزودن</button>
+  ${ex.map(e=>{const d=Math.ceil((new Date(e.d+'T00:00')-new Date(today()+'T00:00'))/864e5);return`<div class="it"><span class="g1">${esc(e.n)}</span><span class="${d<0?'mu':d<=3?'bad':'ok'}">${d<0?'گذشته':fa(d)+' روز'}</span><button class="btn r s" onclick="S.exams.splice(S.exams.indexOf(S.exams.find(z=>z.n==='${esc(e.n).replace(/'/g,'')}'&&z.d==='${e.d}')),1);sv();render()">حذف</button></div>`}).join('')}</div></div>`;
+}
+function addT(){const n=$('#tn').value.trim();if(!n)return;S.tasks.push({n,d:$('#td').value,x:false});sv();render()}
+function addE(){const n=$('#en').value.trim(),d=$('#ed').value;if(!n||!d)return toast('نام و تاریخ لازم است');S.exams.push({n,d});sv();render()}
+function set(){
+  $('#v').innerHTML=`<div class="grid"><div class="card"><h3>ویرایش پایه و درس‌ها</h3><p class="mu">پایه، درس‌ها و ساعت مطالعه را عوض کن و برنامه از نو ساخته می‌شود.</p><button class="btn" onclick="setup={step:1};render()">ویرایش</button></div>
+  <div class="card"><h3>پشتیبان (گوگل)</h3><p class="mu">کد زیر را کپی کن و در Google Keep یا Google Docs یا ایمیل خودت ذخیره کن. هر زمان خواستی همین‌جا بچسبان تا اطلاعات برگردد.</p>
+  <textarea id="bk" rows="5" placeholder="کد پشتیبان"></textarea>
+  <div class="row"><button class="btn" onclick="exp()">کپی کد پشتیبان</button><button class="btn g" onclick="imp()">بازگردانی</button></div></div>
+  <div class="card"><h3>حذف همه‌ی داده‌ها</h3><button class="btn r" onclick="if(confirm('همه‌ی نمره‌ها و برنامه‌ها پاک می‌شود. مطمئنی؟')){S={grade:0,subjects:[],hours:3,plan:[],done:{},log:[],tasks:[],exams:[]};sv();setup={step:1};render()}">پاک‌سازی</button></div></div>`;
+}
+function exp(){const t=btoa(unescape(encodeURIComponent(JSON.stringify(S))));$('#bk').value=t;$('#bk').select();try{navigator.clipboard.writeText(t).then(()=>toast('کپی شد'),()=>toast('کد را دستی کپی کن'))}catch(e){toast('کد را دستی کپی کن')}}
+function imp(){try{const o=JSON.parse(decodeURIComponent(escape(atob($('#bk').value.trim()))));if(!o.subjects||!o.plan)throw 0;S=o;sv();toast('بازگردانی شد');render()}catch(e){toast('کد پشتیبان معتبر نیست')}}
+
+/* ---------- visuals ---------- */
 (function(){
-'use strict';
-
-/* ============================================================
-   WORDS DATABASE — en|fa|example_en|example_fa|level
-   ============================================================ */
-const WORDS_RAW = `
-apple|سیب|I eat an apple every day.|من هر روز یک سیب می‌خورم.|A1
-book|کتاب|This book is interesting.|این کتاب جالبه.|A1
-cat|گربه|The cat sleeps on the sofa.|گربه روی مبل می‌خوابد.|A1
-dog|سگ|My dog plays in the park.|سگ من در پارک بازی می‌کند.|A1
-house|خانه|We live in a small house.|ما در یک خانه کوچک زندگی می‌کنیم.|A1
-car|ماشین|He drives a red car.|او یک ماشین قرمز می‌راند.|A1
-water|آب|Please give me water.|لطفاً آب به من بده.|A1
-food|غذا|Italian food is delicious.|غذای ایتالیایی خوشمزه است.|A1
-friend|دوست|She is my best friend.|او بهترین دوست من است.|A1
-family|خانواده|I love my family.|من خانواده‌ام را دوست دارم.|A1
-school|مدرسه|Children go to school.|بچه‌ها به مدرسه می‌روند.|A1
-teacher|معلم|Our teacher is kind.|معلم ما مهربان است.|A1
-student|دانش‌آموز|He is a good student.|او دانش‌آموز خوبی است.|A1
-city|شهر|Tehran is a big city.|تهران شهر بزرگی است.|A1
-country|کشور|Iran is beautiful.|ایران زیباست.|A1
-time|زمان|Time goes fast.|زمان سریع می‌گذرد.|A1
-day|روز|I work every day.|من هر روز کار می‌کنم.|A1
-night|شب|Stars shine at night.|ستاره‌ها شب می‌درخشند.|A1
-sun|خورشید|The sun is bright.|خورشید درخشان است.|A1
-moon|ماه|The moon is full tonight.|ماه امشب کامل است.|A1
-red|قرمز|She wore a red dress.|او لباس قرمز پوشید.|A1
-blue|آبی|The sky is blue.|آسمان آبی است.|A1
-green|سبز|The grass is green.|چمن سبز است.|A1
-big|بزرگ|This is a big house.|این خانه بزرگی است.|A1
-small|کوچک|She has a small dog.|او سگ کوچکی دارد.|A1
-good|خوب|This is a good idea.|این ایده خوبی است.|A1
-bad|بد|Smoking is bad.|سیگار بد است.|A1
-happy|خوشحال|I am happy today.|من امروز خوشحالم.|A1
-sad|غمگین|She looks sad.|او غمگین به نظر می‌رسد.|A1
-fast|سریع|He runs fast.|او سریع می‌دود.|A1
-hot|گرم|Summer is hot.|تابستان گرم است.|A1
-cold|سرد|Winter is cold.|زمستان سرد است.|A1
-mother|مادر|My mother cooks well.|مادرم خوب آشپزی می‌کند.|A1
-father|پدر|My father works hard.|پدرم سخت کار می‌کند.|A1
-brother|برادر|I have a brother.|من یک برادر دارم.|A1
-sister|خواهر|She is my sister.|او خواهر من است.|A1
-bread|نان|We buy fresh bread.|ما نان تازه می‌خریم.|A1
-milk|شیر|I drink milk.|من شیر می‌نوشم.|A1
-rice|برنج|We eat rice daily.|ما روزانه برنج می‌خوریم.|A1
-egg|تخم مرغ|I ate two eggs.|دو تخم مرغ خوردم.|A1
-table|میز|Food is on the table.|غذا روی میز است.|A1
-chair|صندلی|Sit on the chair.|روی صندلی بنشین.|A1
-door|در|Close the door.|در را ببند.|A1
-morning|صبح|Good morning!|صبح بخیر!|A1
-flower|گل|Flowers smell good.|گل‌ها بوی خوبی دارند.|A1
-tree|درخت|The tree is tall.|درخت بلند است.|A1
-bird|پرنده|The bird sings.|پرنده آواز می‌خواند.|A1
-fish|ماهی|Fish swim in water.|ماهی‌ها در آب شنا می‌کنند.|A1
-star|ستاره|Stars shine bright.|ستاره‌ها درخشانند.|A1
-rain|باران|It will rain.|باران خواهد بارید.|A1
-walk|راه رفتن|We walk in the park.|ما در پارک قدم می‌زنیم.|A1
-run|دویدن|She runs daily.|او روزانه می‌دود.|A1
-eat|خوردن|Let's eat dinner.|بیا شام بخوریم.|A1
-drink|نوشیدن|Drink more water.|آب بیشتر بنوش.|A1
-sleep|خوابیدن|Babies sleep a lot.|نوزادان زیاد می‌خوابند.|A1
-read|خواندن|She reads books.|او کتاب می‌خواند.|A1
-write|نوشتن|I write letters.|من نامه می‌نویسم.|A1
-speak|صحبت کردن|He speaks English.|او انگلیسی صحبت می‌کند.|A1
-work|کار کردن|I work from home.|من از خانه کار می‌کنم.|A1
-money|پول|I need money.|من پول لازم دارم.|A2
-job|شغل|What's your job?|شغلت چیه؟|A2
-doctor|دکتر|The doctor helps.|دکتر کمک می‌کند.|A2
-nurse|پرستار|The nurse is kind.|پرستار مهربان است.|A2
-police|پلیس|Call the police!|پلیس را خبر کن!|A2
-village|روستا|We live in a village.|ما در روستا زندگی می‌کنیم.|A2
-park|پارک|The park is green.|پارک سبز است.|A2
-street|خیابان|The street is quiet.|خیابان ساکت است.|A2
-shop|مغازه|The shop is open.|مغازه باز است.|A2
-market|بازار|We go to market.|ما به بازار می‌رویم.|A2
-restaurant|رستوران|The restaurant is nice.|رستوران خوبی است.|A2
-hotel|هتل|We stayed in a hotel.|ما در هتلی اقامت کردیم.|A2
-hospital|بیمارستان|She works in a hospital.|او در بیمارستان کار می‌کند.|A2
-library|کتابخانه|I study in the library.|من در کتابخانه درس می‌خوانم.|A2
-bridge|پل|The bridge is old.|پل قدیمی است.|A2
-road|جاده|The road is long.|جاده طولانی است.|A2
-train|قطار|The train is fast.|قطار سریع است.|A2
-plane|هواپیما|The plane flies.|هواپیما پرواز می‌کند.|A2
-ship|کشتی|The ship sails.|کشتی حرکت می‌کند.|A2
-bicycle|دوچرخه|I ride a bicycle.|من دوچرخه سوار می‌شوم.|A2
-letter|نامه|I wrote a letter.|من نامه نوشتم.|A2
-email|ایمیل|Send me an email.|ایمیل بفرست.|A2
-beautiful|زیبا|What a beautiful flower!|چه گل زیبایی!|A2
-important|مهم|This is important.|این مهم است.|A2
-difficult|سخت|It's difficult.|سخت است.|A2
-easy|آسان|The test was easy.|امتحان آسان بود.|A2
-weather|آب و هوا|The weather is nice.|هوا خوب است.|A2
-river|رودخانه|The river flows.|رودخانه جاری است.|A2
-mountain|کوه|We climbed a mountain.|ما کوهی را فتح کردیم.|A2
-animal|حیوان|Lions are animals.|شیرها حیوانند.|A2
-computer|کامپیوتر|I use a computer.|من از کامپیوتر استفاده می‌کنم.|A2
-phone|تلفن|My phone is new.|گوشی من جدید است.|A2
-music|موسیقی|I love music.|من موسیقی دوست دارم.|A2
-movie|فیلم|Let's watch a movie.|بیا فیلم ببینیم.|A2
-question|سؤال|I have a question.|من یک سؤال دارم.|A2
-answer|پاسخ|Your answer is right.|پاسخ تو درست است.|A2
-understand|فهمیدن|I understand you.|من تو را می‌فهمم.|A2
-help|کمک کردن|Can you help me?|می‌تونی کمکم کنی؟|A2
-remember|به یاد آوردن|I remember your name.|اسمت یادمه.|A2
-forget|فراموش کردن|Don't forget your keys.|کلیدها را فراموش نکن.|A2
-travel|سفر کردن|We travel every year.|ما هر سال سفر می‌کنیم.|A2
-arrive|رسیدن|We arrived late.|دیر رسیدیم.|A2
-choose|انتخاب کردن|Choose one.|یکی را انتخاب کن.|A2
-try|تلاش کردن|Try again.|دوباره تلاش کن.|A2
-begin|شروع کردن|Let's begin now.|حالا شروع کنیم.|A2
-finish|تمام کردن|I finished the work.|کار را تمام کردم.|A2
-journey|سفر|Our journey was long.|سفرمان طولانی بود.|B1
-adventure|ماجراجویی|It was a great adventure.|ماجراجویی بزرگی بود.|B1
-experience|تجربه|I have experience.|من تجربه دارم.|B1
-knowledge|دانش|Knowledge is power.|دانش قدرت است.|B1
-opinion|نظر|What's your opinion?|نظرت چیه؟|B1
-decision|تصمیم|It was a hard decision.|تصمیم سختی بود.|B1
-environment|محیط زیست|We protect the environment.|ما از محیط زیست محافظت می‌کنیم.|B1
-society|جامعه|Society is changing.|جامعه در حال تغییر است.|B1
-government|دولت|The government decided.|دولت تصمیم گرفت.|B1
-education|آموزش|Education is important.|آموزش مهم است.|B1
-information|اطلاعات|I need more information.|من اطلاعات بیشتری لازم دارم.|B1
-communication|ارتباط|Communication is key.|ارتباط کلید است.|B1
-technology|فناوری|Technology changes fast.|فناوری سریع تغییر می‌کند.|B1
-development|توسعه|Economic development matters.|توسعه اقتصادی مهم است.|B1
-opportunity|فرصت|This is a great opportunity.|فرصت خوبیه.|B1
-challenge|چالش|It's a difficult challenge.|چالش سختیه.|B1
-success|موفقیت|Success comes with work.|موفقیت با تلاش میاد.|B1
-failure|شکست|Failure teaches lessons.|شکست درس می‌ده.|B1
-effort|تلاش|Make an effort.|تلاش کن.|B1
-progress|پیشرفت|Good progress!|پیشرفت خوبی!|B1
-improve|بهبود دادن|I want to improve.|می‌خوام بهتر شم.|B1
-achieve|به دست آوردن|I achieved my goal.|به هدفم رسیدم.|B1
-consider|در نظر گرفتن|Consider the options.|گزینه‌ها را در نظر بگیر.|B1
-suggest|پیشنهاد کردن|I suggest waiting.|پیشنهاد می‌کنم صبر کنیم.|B1
-recommend|توصیه کردن|I recommend this book.|این کتاب را توصیه می‌کنم.|B1
-situation|موقعیت|The situation is complex.|موقعیت پیچیده است.|B1
-position|موقعیت|Hold your position.|موقعیتت را حفظ کن.|B1
-purpose|هدف|What's the purpose?|هدف چیه؟|B1
-reason|دلیل|Give me a reason.|یک دلیل بیار.|B1
-result|نتیجه|The result was good.|نتیجه خوب بود.|B1
-effect|اثر|The effect was huge.|اثرش بزرگ بود.|B1
-solution|راه حل|Find a solution.|یه راه حل پیدا کن.|B1
-significant|قابل توجه|A significant change.|تغییر قابل توجهی.|B2
-establish|تأسیس کردن|They established a company.|آن‌ها یک شرکت تأسیس کردند.|B2
-demonstrate|نشان دادن|Let me demonstrate.|بذار نشونت بدم.|B2
-emphasize|تأکید کردن|I emphasize this point.|من روی این نکته تأکید می‌کنم.|B2
-acknowledge|اذعان کردن|I acknowledge my mistake.|اشتباهم را می‌پذیرم.|B2
-appreciate|قدردانی کردن|I appreciate your help.|از کمکت قدردانی می‌کنم.|B2
-contribute|مشارکت کردن|Everyone contributed.|همه مشارکت کردند.|B2
-encourage|تشویق کردن|Encourage your friends.|دوستانت را تشویق کن.|B2
-maintain|حفظ کردن|Maintain the balance.|تعادل را حفظ کن.|B2
-participate|شرکت کردن|I want to participate.|می‌خواهم شرکت کنم.|B2
-recognize|تشخیص دادن|I recognize her voice.|صدایش را تشخیص می‌دهم.|B2
-represent|نمایندگی کردن|She represents the team.|او نماینده تیم است.|B2
-require|نیاز داشتن|This requires practice.|این نیاز به تمرین دارد.|B2
-analyze|تحلیل کردن|Analyze the data.|داده‌ها را تحلیل کن.|B2
-approach|رویکرد|A new approach.|رویکرد جدید.|B2
-assume|فرض کردن|Let's assume it's true.|فرض کن درسته.|B2
-benefit|مزیت|Health benefits.|مزایای سلامت.|B2
-complex|پیچیده|It's a complex issue.|موضوع پیچیده‌ای است.|B2
-concept|مفهوم|A difficult concept.|مفهوم سختی است.|B2
-conclude|نتیجه‌گیری کردن|I conclude that it's true.|نتیجه می‌گیرم که درسته.|B2
-conduct|انجام دادن|They conducted research.|آن‌ها تحقیق کردند.|B2
-confirm|تأیید کردن|Please confirm.|لطفاً تأیید کن.|B2
-consistent|سازگار|Be consistent.|سازگار باش.|B2
-context|زمینه|In this context it's fine.|در این زمینه اشکالی نداره.|B2
-crucial|حیاتی|Time is crucial.|زمان حیاتیه.|B2
-distinguish|تمایز قائل شدن|Distinguish right from wrong.|درست را از غلط تشخیص بده.|B2
-dominant|مسلط|The dominant group.|گروه مسلط.|B2
-economy|اقتصاد|The economy is growing.|اقتصاد در حال رشد است.|B2
-eliminate|حذف کردن|Eliminate the problem.|مشکل را حذف کن.|B2
-enhance|بهبود بخشیدن|Enhance the quality.|کیفیت را بهبود ببخش.|B2
-sophisticated|پیشرفته|A sophisticated system.|یک سیستم پیشرفته.|C1
-ambiguous|مبهم|The answer was ambiguous.|پاسخ مبهم بود.|C1
-comprehensive|جامع|A comprehensive guide.|راهنمای جامع.|C1
-controversial|جنجالی|A controversial topic.|موضوع جنجالی.|C1
-inevitable|اجتناب‌ناپذیر|Change is inevitable.|تغییر اجتناب‌ناپذیره.|C1
-phenomenon|پدیده|A strange phenomenon.|پدیده عجیبی.|C1
-arbitrary|دلبخواهی|An arbitrary decision.|تصمیم دلبخواهی.|C1
-coherent|منسجم|A coherent argument.|استدلال منسجم.|C1
-dilemma|دوراهی|I'm in a dilemma.|در دوراهی هستم.|C1
-elaborate|مفصل|An elaborate plan.|نقشه مفصل.|C1
-fundamental|بنیادی|A fundamental question.|یک سؤال بنیادی.|C1
-hypothesis|فرضیه|Test the hypothesis.|فرضیه را آزمایش کن.|C1
-implication|پیامد|Serious implications.|پیامدهای جدی.|C1
-inherent|ذاتی|An inherent risk.|یک ریسک ذاتی.|C1
-integrate|ادغام کردن|Integrate the systems.|سیستم‌ها را ادغام کن.|C1
-intrinsic|درونی|Intrinsic motivation.|انگیزه درونی.|C1
-legitimate|مشروع|A legitimate concern.|نگرانی مشروع.|C1
-manipulate|دستکاری کردن|Don't manipulate data.|داده‌ها را دستکاری نکن.|C1
-mutual|متقابل|Mutual respect.|احترام متقابل.|C1
-notion|تصور|A strange notion.|تصور عجیبی.|C1
-paradigm|پارادایم|A new paradigm.|پارادایم جدید.|C1
-perceive|درک کردن|How do you perceive it?|چطور درکش می‌کنی؟|C1
-perspective|دیدگاه|From my perspective.|از دیدگاه من.|C1
-plausible|محتمل|A plausible explanation.|توضیح محتمل.|C1
-preliminary|مقدماتی|Preliminary results.|نتایج مقدماتی.|C1
-profound|عمیق|A profound impact.|تأثیر عمیق.|C1
-prominent|برجسته|A prominent figure.|چهره برجسته.|C1
-rationale|منطق|What's the rationale?|منطقش چیه؟|C1
-reciprocal|دوطرفه|Reciprocal agreement.|توافق دوطرفه.|C1
-scrutiny|بررسی دقیق|Under scrutiny.|تحت بررسی دقیق.|C1
-ubiquitous|همه‌جا حاضر|Smartphones are ubiquitous.|گوشی‌های هوشمند همه‌جا هستن.|C2
-ephemeral|زودگذر|Fame is ephemeral.|شهرت زودگذره.|C2
-quintessential|نمونه کامل|The quintessential example.|نمونه کامل مثال.|C2
-juxtaposition|هم‌نشینی|A clever juxtaposition.|هم‌نشینی هوشمندانه‌ای.|C2
-proliferation|تکثیر|The proliferation of data.|تکثیر داده.|C2
-discrepancy|تناقض|A discrepancy in numbers.|تناقض در اعداد.|C2
-exacerbate|بدتر کردن|Don't exacerbate the issue.|مسئله را بدتر نکن.|C2
-ameliorate|بهبود دادن|Ameliorate the conditions.|شرایط را بهبود ببخش.|C2
-obsolete|منسوخ|The tech is obsolete.|فناوری منسوخ شده.|C2
-deteriorate|بدتر شدن|Health deteriorated.|سلامت بدتر شد.|C2
-mitigate|کاهش دادن|Mitigate the risks.|ریسک‌ها را کاهش بده.|C2
-circumvent|دور زدن|Circumvent the rules.|قوانین را دور بزن.|C2
-disseminate|پراکندن|Disseminate information.|اطلاعات را پراکنده کن.|C2
-engender|به وجود آوردن|Trust engenders loyalty.|اعتماد وفاداری به وجود میاره.|C2
-formidable|مهیب|A formidable opponent.|حریف مهیبی.|C2
-gregarious|اجتماعی|He's gregarious.|او خوش‌مشربه.|C2
-hyperbole|اغراق|That's hyperbole.|این اغراقه.|C2
-impeccable|بی‌نقص|Impeccable manners.|رفتار بی‌نقص.|C2
-ineffable|توصیف‌ناپذیر|Ineffable joy.|شادی توصیف‌ناپذیر.|C2
-juxtapose|کنار هم گذاشتن|Juxtapose the ideas.|ایده‌ها را کنار هم بذار.|C2
-magnanimous|بزرگوار|A magnanimous gesture.|حرکت بزرگوارانه.|C2
-ostensible|ظاهری|His ostensible reason.|دلیل ظاهری‌اش.|C2
-paradoxical|متناقض|A paradoxical result.|نتیجه متناقض.|C2
-reiterate|تکرار کردن|Let me reiterate.|بذار تکرار کنم.|C2
-tenacious|سرسخت|A tenacious fighter.|مبارز سرسختی.|C2
-vociferous|پرسروصدا|Vociferous complaints.|شکایت‌های پرسروصدا.|C2
-zealous|پرشور|A zealous supporter.|حامی پرشور.|C2
-vicissitudes|تحولات|The vicissitudes of life.|تحولات زندگی.|C2
-yearn|مشتاق بودن|I yearn for peace.|مشتاق آرامشم.|C2
-`;
-
-/* ============================================================
-   GRAMMAR LESSONS — 25 درس
-   ============================================================ */
-const LESSONS = [
-  {level:'A1', title:'حروف تعریف a / an / the', sections:[
-    {h:'a و an',b:'<code>a</code> قبل از صامت، <code>an</code> قبل از صدادار (a,e,i,o,u)<span class="ex"><span class="en">I have a car. / She ate an apple.</span><span class="fa">من یک ماشین دارم. / او یک سیب خورد.</span></span>'},
-    {h:'the',b:'برای چیز مشخص یا منحصر به فرد<span class="ex"><span class="en">The sun is bright.</span><span class="fa">خورشید درخشانه.</span></span>'},
-    {h:'بدون حرف تعریف',b:'اسامی جمع و غیرقابل شمارش<span class="ex"><span class="en">I love music.</span><span class="fa">من موسیقی دوست دارم.</span></span>'}
-  ], exercises:[
-    {q:'I ate ___ orange.',correct:'an',wrongs:['a','the','—']},
-    {q:'She has ___ dog.',correct:'a',wrongs:['an','the','—']},
-    {q:'___ sun is bright.',correct:'The',wrongs:['A','An','—']}
-  ]},
-  {level:'A1', title:'فعل to be (am / is / are)', sections:[
-    {h:'سه شکل',b:'<ul><li><code>am</code> با I</li><li><code>is</code> با he/she/it</li><li><code>are</code> با you/we/they</li></ul>'},
-    {h:'مثال',b:'<span class="ex"><span class="en">I am a student. / He is a doctor.</span><span class="fa">من دانش‌آموزم. / او دکتره.</span></span>'},
-    {h:'منفی',b:'<code>isn\'t</code> = is not / <code>aren\'t</code> = are not'}
-  ], exercises:[
-    {q:'I ___ happy.',correct:'am',wrongs:['is','are','be']},
-    {q:'She ___ a teacher.',correct:'is',wrongs:['am','are','be']},
-    {q:'They ___ my friends.',correct:'are',wrongs:['am','is','be']}
-  ]},
-  {level:'A1', title:'ضمایر فاعلی', sections:[
-    {h:'۷ ضمیر',b:'<ul><li><code>I</code>=من / <code>you</code>=تو / <code>he</code>=او (مرد)</li><li><code>she</code>=او (زن) / <code>it</code>=آن</li><li><code>we</code>=ما / <code>they</code>=آن‌ها</li></ul>'}
-  ], exercises:[
-    {q:'___ is my brother.',correct:'He',wrongs:['She','It','They']},
-    {q:'___ are students.',correct:'They',wrongs:['He','She','It']},
-    {q:'___ am a teacher.',correct:'I',wrongs:['He','She','We']}
-  ]},
-  {level:'A1', title:'جمع اسم‌ها', sections:[
-    {h:'قاعده',b:'<code>-s</code> <span class="ex"><span class="en">book → books</span></span>'},
-    {h:'حالات خاص',b:'<ul><li>s,sh,ch,x → <code>-es</code></li><li>صامت+y → <code>-ies</code></li></ul>'}
-  ], exercises:[
-    {q:'جمع city:',correct:'cities',wrongs:['citys','cityes','city']},
-    {q:'جمع box:',correct:'boxes',wrongs:['boxs','boxies','box']},
-    {q:'جمع man:',correct:'men',wrongs:['mans','manes','man']}
-  ]},
-  {level:'A2', title:'حال ساده', sections:[
-    {h:'فرمول',b:'<ul><li>I/You/We/They + فعل ساده</li><li>He/She/It + فعل + <code>-s</code></li></ul>'},
-    {h:'منفی و سؤال',b:'<code>don\'t / doesn\'t</code> — <code>Do / Does</code>'}
-  ], exercises:[
-    {q:'She ___ tennis daily.',correct:'plays',wrongs:['play','playing','played']},
-    {q:'I ___ coffee.',correct:"don't like",wrongs:["doesn't like",'not like','no like']},
-    {q:'___ he speak English?',correct:'Does',wrongs:['Do','Is','Are']}
-  ]},
-  {level:'A2', title:'حال استمراری', sections:[
-    {h:'فرمول',b:'<code>am/is/are</code> + فعل + <code>-ing</code>'}
-  ], exercises:[
-    {q:'I ___ a book now.',correct:'am reading',wrongs:['read','reads','reading']},
-    {q:'They ___ football.',correct:'are playing',wrongs:['play','plays','played']},
-    {q:'She ___ TV now.',correct:'is watching',wrongs:['watch','watches','watched']}
-  ]},
-  {level:'A2', title:'گذشته ساده', sections:[
-    {h:'باقاعده',b:'<code>-ed</code>'},
-    {h:'بی‌قاعده',b:'go → went / see → saw / eat → ate'}
-  ], exercises:[
-    {q:'Yesterday I ___ to school.',correct:'went',wrongs:['go','goed','going']},
-    {q:'She ___ a movie.',correct:'saw',wrongs:['see','seed','seeing']},
-    {q:'We ___ dinner.',correct:'ate',wrongs:['eat','eated','eating']}
-  ]},
-  {level:'B1', title:'آینده ساده (will)', sections:[
-    {h:'فرمول',b:'<code>will</code> + فعل ساده'}
-  ], exercises:[
-    {q:'I ___ call you tomorrow.',correct:'will',wrongs:['am','do','did']},
-    {q:'It ___ rain tonight.',correct:'will',wrongs:['is','was','did']},
-    {q:'She ___ come.',correct:"won't",wrongs:["don't",'isn\'t','doesn\'t']}
-  ]},
-  {level:'B1', title:'going to', sections:[
-    {h:'فرمول',b:'<code>am/is/are going to</code> + فعل ساده'}
-  ], exercises:[
-    {q:'I ___ travel next month.',correct:'am going to',wrongs:['will','going to','go to']},
-    {q:'They ___ buy a house.',correct:'are going to',wrongs:['is going to','will','go to']},
-    {q:'She ___ start a job.',correct:'is going to',wrongs:['are going to','am going to','go to']}
-  ]},
-  {level:'B1', title:'مقایسه‌ای', sections:[
-    {h:'قاعده',b:'صفت کوتاه + <code>-er</code> + than'},
-    {h:'بلندها',b:'<code>more</code> + صفت'},
-    {h:'بی‌قاعده',b:'good → better / bad → worse'}
-  ], exercises:[
-    {q:'He is ___ than me.',correct:'taller',wrongs:['tall','tallest','more tall']},
-    {q:'This is ___ than that.',correct:'more expensive',wrongs:['expensive','expensiver','most expensive']},
-    {q:'English is ___ now.',correct:'better',wrongs:['good','gooder','best']}
-  ]},
-  {level:'B1', title:'حال کامل', sections:[
-    {h:'ساختار',b:'<code>have/has</code> + past participle'},
-    {h:'قیدها',b:'ever / never / already / yet / just'}
-  ], exercises:[
-    {q:'I ___ my homework.',correct:'have finished',wrongs:['finish','finished','finishing']},
-    {q:'She ___ to London.',correct:'has gone',wrongs:['go','went','going']},
-    {q:'Have you ___ been?',correct:'ever',wrongs:['never','yet','already']}
-  ]},
-  {level:'B1', title:'can / could / should / must', sections:[
-    {h:'can',b:'توانستن (حال)'},
-    {h:'could',b:'توانستن (گذشته)'},
-    {h:'should',b:'توصیه'},
-    {h:'must',b:'اجبار'}
-  ], exercises:[
-    {q:'I ___ swim when I was 5.',correct:'could',wrongs:['can','should','must']},
-    {q:'You ___ see a doctor.',correct:'should',wrongs:['can','could','mustn\'t']},
-    {q:'Students ___ wear uniforms.',correct:'must',wrongs:['can','could','shouldn\'t']}
-  ]},
-  {level:'B2', title:'گذشته استمراری', sections:[
-    {h:'ساختار',b:'<code>was/were</code> + فعل + <code>-ing</code>'}
-  ], exercises:[
-    {q:'I ___ TV when you called.',correct:'was watching',wrongs:['watched','watch','were watching']},
-    {q:'They ___ football at 5 PM.',correct:'were playing',wrongs:['was playing','played','play']},
-    {q:'She ___ when I saw her.',correct:'was crying',wrongs:['cried','were crying','cry']}
-  ]},
-  {level:'B2', title:'مجهول (Passive)', sections:[
-    {h:'ساختار',b:'<code>be</code> + past participle'}
-  ], exercises:[
-    {q:'The letter ___ yesterday.',correct:'was written',wrongs:['wrote','is written','written']},
-    {q:'This book ___ by many.',correct:'is read',wrongs:['reads','is reading','read']},
-    {q:'The house ___ next year.',correct:'will be built',wrongs:['will build','is building','built']}
-  ]},
-  {level:'B2', title:'شرطی نوع اول', sections:[
-    {h:'ساختار',b:'<code>If</code> + حال ساده , <code>will</code> + فعل ساده'},
-    {h:'نکته',b:'بعد از if هرگز will نمیاد'}
-  ], exercises:[
-    {q:'If it ___, I will stay home.',correct:'rains',wrongs:['will rain','rained','raining']},
-    {q:'If you ___, you will pass.',correct:'study',wrongs:['will study','studied','studying']},
-    {q:'I will call if I ___ time.',correct:'have',wrongs:['will have','had','having']}
-  ]},
-  {level:'C1', title:'حال کامل استمراری', sections:[
-    {h:'ساختار',b:'<code>have/has been</code> + فعل + <code>-ing</code>'}
-  ], exercises:[
-    {q:'I ___ English for 3 years.',correct:'have been learning',wrongs:['learn','learned','am learning']},
-    {q:'She ___ since morning.',correct:'has been working',wrongs:['works','worked','is working']},
-    {q:'They ___ for hours.',correct:'have been waiting',wrongs:['wait','waited','are waiting']}
-  ]},
-  {level:'C1', title:'شرطی نوع دوم', sections:[
-    {h:'ساختار',b:'<code>If</code> + گذشته ساده , <code>would</code> + فعل ساده'}
-  ], exercises:[
-    {q:'If I ___ rich, I would travel.',correct:'were',wrongs:['am','will be','be']},
-    {q:'If she ___ more, she would pass.',correct:'studied',wrongs:['studies','will study','study']},
-    {q:'I would buy it if I ___ money.',correct:'had',wrongs:['have','will have','has']}
-  ]},
-  {level:'C1', title:'شرطی نوع سوم', sections:[
-    {h:'ساختار',b:'<code>If</code> + had + p.p. , <code>would have</code> + p.p.'}
-  ], exercises:[
-    {q:'If I ___ harder, I would have passed.',correct:'had studied',wrongs:['studied','study','have studied']},
-    {q:'She ___ if she had known.',correct:'would have come',wrongs:['would come','came','will come']},
-    {q:'If they ___ earlier, they wouldn\'t have missed.',correct:'had left',wrongs:['left','leave','have left']}
-  ]},
-  {level:'C2', title:'Inversion', sections:[
-    {h:'ساختار',b:'قید منفی در ابتدای جمله → جابه‌جایی فعل و فاعل'},
-    {h:'قیدها',b:'never, rarely, hardly, not only'}
-  ], exercises:[
-    {q:'Never ___ such a thing.',correct:'have I seen',wrongs:['I have seen','I saw','did I saw']},
-    {q:'Rarely ___ she late.',correct:'is',wrongs:['she is','does','was']},
-    {q:'Not only ___ he late.',correct:'was',wrongs:['he was','did','is']}
-  ]},
-  {level:'C2', title:'Subjunctive', sections:[
-    {h:'ساختار',b:'بعد از suggest, insist, recommend فعل ساده (بدون s)'}
-  ], exercises:[
-    {q:'I suggest that he ___ careful.',correct:'be',wrongs:['is','was','being']},
-    {q:'She insisted that he ___.',correct:'leave',wrongs:['leaves','left','leaving']},
-    {q:'It\'s important that she ___ present.',correct:'be',wrongs:['is','was','be being']}
-  ]}
-];
-
-/* ============================================================
-   PARSE + SETUP
-   ============================================================ */
-function parseWords(raw){
-  const seen = new Set();
-  return raw.trim().split('\n').map(line => {
-    const p = line.split('|').map(s => s.trim());
-    if (p.length < 5) return null;
-    const [en, fa, exEn, exFa, level] = p;
-    if (!en || !fa) return null;
-    const key = en.toLowerCase();
-    if (seen.has(key)) return null;
-    seen.add(key);
-    return { en, fa, exEn, exFa, level: level.toUpperCase() };
-  }).filter(Boolean);
-}
-const WORDS = parseWords(WORDS_RAW);
-const LEVEL_ORDER = ['A1','A2','B1','B2','C1','C2'];
-const LEVEL_INFO = {
-  'A1':{name:'مبتدی',icon:'🟢',cls:'lb-a1'},
-  'A2':{name:'پایه',icon:'🔵',cls:'lb-a2'},
-  'B1':{name:'متوسط',icon:'🟠',cls:'lb-b1'},
-  'B2':{name:'بالاتر',icon:'🔴',cls:'lb-b2'},
-  'C1':{name:'پیشرفته',icon:'🟣',cls:'lb-c1'},
-  'C2':{name:'حرفه‌ای',icon:'⚫',cls:'lb-c2'}
-};
-WORDS.sort((a,b) => LEVEL_ORDER.indexOf(a.level) - LEVEL_ORDER.indexOf(b.level));
-const WORDS_PER_STAGE = 10;
-const TOTAL_STAGES = Math.ceil(WORDS.length / WORDS_PER_STAGE);
-const STORAGE_KEY = 'englishMasterV9_users';
-
-function getStageWords(i){ return WORDS.slice(i*WORDS_PER_STAGE, i*WORDS_PER_STAGE + WORDS_PER_STAGE); }
-function getLessonForStage(idx){
-  const sw = getStageWords(idx);
-  const lvl = sw[0]?.level || 'A1';
-  const ll = LESSONS.filter(l => l.level === lvl);
-  return ll[Math.floor(idx / 1) % ll.length] || LESSONS[0];
-}
-function getCurrentLevel(){
-  const w = getStageWords(state.data.currentStage);
-  return w[0]?.level || 'A1';
-}
-function todayKey(){ return new Date().toISOString().slice(0,10); }
-function calcStreak(){
-  const days = state.data?.activeDays || [];
-  if (!days.length) return 0;
-  let streak = 0;
-  const d = new Date();
-  for (let i=0; i<365; i++){
-    const k = d.toISOString().slice(0,10);
-    if (days.includes(k)) streak++;
-    else if (i > 0) break;
-    d.setDate(d.getDate() - 1);
-  }
-  return streak;
-}
-
-/* ============================================================
-   STATE
-   ============================================================ */
-const state = {
-  user:null, data:null,
-  stageWords:[], cardIdx:0, cardFlipped:false,
-  quiz:[], qIdx:0, qCorrect:0, qActive:false, qLocked:false
-};
-
-/* ============================================================
-   DOM
-   ============================================================ */
-const $ = id => document.getElementById(id);
-const D = {
-  loginScreen:$('loginScreen'), app:$('app'),
-  uname:$('uname'), loginBtn:$('loginBtn'),
-  recentUsers:$('recentUsers'), ruList:$('ruList'),
-  topAv:$('topAv'), topName:$('topName'), topSub:$('topSub'),
-  themeBtn:$('themeBtn'),
-  helloText:$('helloText'), helloSub:$('helloSub'),
-  continueTitle:$('continueTitle'), continueDesc:$('continueDesc'),
-  statXP:$('statXP'), statStreak:$('statStreak'), statWords:$('statWords'),
-  progPct:$('progPct'), progFill:$('progFill'),
-  lessonLvlBadge:$('lessonLvlBadge'), lessonTitle:$('lessonTitle'),
-  lessonStage:$('lessonStage'), lessonTotal:$('lessonTotal'),
-  grammarTitle:$('grammarTitle'), grammarBody:$('grammarBody'),
-  flashcard:$('flashcard'), fcCounter:$('fcCounter'), fcStar:$('fcStar'),
-  fcFront:$('fcFront'), fcBack:$('fcBack'),
-  fcWord:$('fcWord'), fcWordSub:$('fcWordSub'),
-  fcMeaning:$('fcMeaning'), fcExEn:$('fcExEn'), fcExFa:$('fcExFa'),
-  fcHint:$('fcHint'), fcSpeak:$('fcSpeak'),
-  fcPrev:$('fcPrev'), fcNext:$('fcNext'), fcLearned:$('fcLearned'),
-  quizProgressFill:$('quizProgressFill'), quizCounter:$('quizCounter'),
-  quizQuestion:$('quizQuestion'), quizOptions:$('quizOptions'),
-  quizFeedback:$('quizFeedback'), startQuizBtn:$('startQuizBtn'),
-  levelsList:$('levelsList'), weekBars:$('weekBars'),
-  achievementsList:$('achievementsList'),
-  profileAv:$('profileAv'), profileName:$('profileName'), profileMeta:$('profileMeta'),
-  profStages:$('profStages'), profWords:$('profWords'), profAcc:$('profAcc'),
-  themeSwitch:$('themeSwitch'), autoSpeakSwitch:$('autoSpeakSwitch'),
-  toast:$('toast'), modalOverlay:$('modalOverlay'),
-  modalIcon:$('modalIcon'), modalTitle:$('modalTitle'), modalText:$('modalText'),
-  modalCancel:$('modalCancel'), modalConfirm:$('modalConfirm')
-};
-
-/* ============================================================
-   UTILS
-   ============================================================ */
-function toast(msg, icon='✨', dur=2200){
-  D.toast.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
-  D.toast.classList.add('show');
-  clearTimeout(toast._t);
-  toast._t = setTimeout(() => D.toast.classList.remove('show'), dur);
-}
-function showModal({icon='⚠️', title, text, ok='تأیید', cancel='لغو', onOk}){
-  D.modalIcon.textContent = icon;
-  D.modalTitle.textContent = title;
-  D.modalText.textContent = text;
-  D.modalOverlay.classList.add('show');
-  const nc = D.modalConfirm.cloneNode(true);
-  const ncan = D.modalCancel.cloneNode(true);
-  nc.textContent = ok; ncan.textContent = cancel;
-  D.modalConfirm.replaceWith(nc); D.modalCancel.replaceWith(ncan);
-  D.modalConfirm = nc; D.modalCancel = ncan;
-  nc.onclick = () => { D.modalOverlay.classList.remove('show'); onOk && onOk(); };
-  ncan.onclick = () => D.modalOverlay.classList.remove('show');
-}
-function esc(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
-function getProgress(){ return Math.min(100, Math.round((state.data.currentStage / TOTAL_STAGES) * 100)); }
-function getAccuracy(){
-  const d = state.data; if (!d || !d.totalAnswers) return 0;
-  return Math.round((d.correctAnswers / d.totalAnswers) * 100);
-}
-
-/* ============================================================
-   STORAGE
-   ============================================================ */
-function getAllUsers(){
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
-  catch { return {}; }
-}
-function saveAllUsers(u){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(u)); } catch(e){} }
-function createUser(name){
-  return {
-    name, currentStage:0, learnedWords:[], favorites:[],
-    score:0, completedStages:0, totalAnswers:0, correctAnswers:0,
-    theme:'dark', activeDays:[todayKey()], createdAt:Date.now(),
-    autoSpeak:false
-  };
-}
-function loadUser(name){
-  const users = getAllUsers();
-  if (!users[name]) { users[name] = createUser(name); saveAllUsers(users); }
-  const u = users[name];
-  if (!u.favorites) u.favorites = [];
-  if (!u.totalAnswers) u.totalAnswers = 0;
-  if (!u.correctAnswers) u.correctAnswers = 0;
-  if (!u.theme) u.theme = 'dark';
-  if (!u.activeDays) u.activeDays = [todayKey()];
-  if (!u.createdAt) u.createdAt = Date.now();
-  if (u.autoSpeak === undefined) u.autoSpeak = false;
-  return u;
-}
-function saveUser(){
-  if (!state.user || !state.data) return;
-  const users = getAllUsers();
-  users[state.user] = state.data;
-  saveAllUsers(users);
-}
-function deleteUser(name){
-  const users = getAllUsers();
-  delete users[name];
-  saveAllUsers(users);
-}
-function markActiveToday(){
-  const k = todayKey();
-  if (!state.data.activeDays.includes(k)){
-    state.data.activeDays.push(k);
-    saveUser();
-  }
-}
-
-/* ============================================================
-   SPEECH
-   ============================================================ */
-const synth = window.speechSynthesis;
-function speak(text, btn){
-  if (!synth) { toast('مرورگر تلفظ پشتیبانی نمی‌کنه', '🔇'); return; }
-  synth.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'en-US'; u.rate = 0.85;
-  if (btn){
-    btn.classList.add('playing');
-    u.onend = () => btn.classList.remove('playing');
-    u.onerror = () => btn.classList.remove('playing');
-  }
-  synth.speak(u);
-}
-
-/* ============================================================
-   THEME
-   ============================================================ */
-function applyTheme(){
-  const th = state.data?.theme || 'dark';
-  document.documentElement.setAttribute('data-theme', th);
-  D.themeBtn.textContent = th === 'dark' ? '🌙' : '☀️';
-  D.themeSwitch.classList.toggle('on', th === 'dark');
-}
-D.themeBtn.onclick = () => {
-  if (!state.data) return;
-  state.data.theme = state.data.theme === 'dark' ? 'light' : 'dark';
-  saveUser(); applyTheme();
-};
-D.themeSwitch.onclick = () => {
-  if (!state.data) return;
-  state.data.theme = state.data.theme === 'dark' ? 'light' : 'dark';
-  saveUser(); applyTheme();
-};
-
-/* ============================================================
-   NAVIGATION
-   ============================================================ */
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.onclick = () => goPage(item.dataset.page);
-});
-function goPage(page){
-  document.querySelectorAll('.nav-item').forEach(x => x.classList.toggle('active', x.dataset.page === page));
-  document.querySelectorAll('.page').forEach(x => x.classList.toggle('active', x.id === 'page-'+page));
-  window.scrollTo({top:0, behavior:'smooth'});
-  if (page === 'home') renderHome();
-  if (page === 'lesson') renderLesson();
-  if (page === 'progress') renderProgress();
-  if (page === 'profile') renderProfile();
-}
-
-/* ============================================================
-   HOME
-   ============================================================ */
-function updateTop(){
-  const d = state.data; if (!d) return;
-  D.topAv.textContent = d.name.charAt(0).toUpperCase();
-  D.topName.textContent = d.name;
-  const lvl = getCurrentLevel();
-  D.topSub.textContent = `سطح ${lvl} — ${LEVEL_INFO[lvl].name}`;
-}
-function renderHome(){
-  const d = state.data;
-  updateTop();
-  const hour = new Date().getHours();
-  D.helloText.textContent = `سلام ${d.name}! 👋`;
-  D.helloSub.textContent = hour < 12 ? 'صبح بخیر! آماده شروع؟' : hour < 18 ? 'روز خوبی داشته باشی!' : 'شب بخیر! وقت تمرینه.';
-
-  if (d.currentStage >= TOTAL_STAGES){
-    D.continueTitle.textContent = '🎉 تبریک!';
-    D.continueDesc.textContent = 'همه ۳۰ مرحله رو کامل کردی!';
-  } else {
-    D.continueTitle.textContent = `مرحله ${d.currentStage + 1}`;
-    const lesson = getLessonForStage(d.currentStage);
-    D.continueDesc.textContent = lesson.title;
-  }
-
-  D.statXP.textContent = d.score;
-  D.statStreak.textContent = calcStreak();
-  D.statWords.textContent = d.learnedWords.length;
-  const p = getProgress();
-  D.progPct.textContent = p;
-  D.progFill.style.width = p + '%';
-}
-
-/* ============================================================
-   LESSON
-   ============================================================ */
-function renderLesson(){
-  const d = state.data;
-  if (d.currentStage >= TOTAL_STAGES){
-    D.grammarBody.innerHTML = '<div class="empty"><div class="ic">🏆</div><p>همه مراحل کامل شد!</p></div>';
-    return;
-  }
-  state.stageWords = getStageWords(d.currentStage);
-  state.cardIdx = 0;
-  state.cardFlipped = false;
-  const n = d.currentStage + 1;
-  const lesson = getLessonForStage(d.currentStage);
-  const lvl = state.stageWords[0]?.level || 'A1';
-  const info = LEVEL_INFO[lvl];
-
-  D.lessonLvlBadge.textContent = `${info.icon} ${lvl} — ${info.name}`;
-  D.lessonLvlBadge.className = 'lvl-badge';
-  D.lessonTitle.textContent = lesson.title;
-  D.lessonStage.textContent = n;
-  D.lessonTotal.textContent = TOTAL_STAGES;
-
-  renderGrammar(lesson);
-  renderCard();
-  resetQuiz();
-  updateTop();
-}
-
-function renderGrammar(lesson){
-  D.grammarTitle.textContent = lesson.title;
-  D.grammarBody.innerHTML = lesson.sections.map(s => `<h4>${esc(s.h)}</h4><p>${s.b}</p>`).join('');
-}
-
-function renderCard(){
-  const w = state.stageWords[state.cardIdx]; if (!w) return;
-  const key = w.en.toLowerCase();
-  const isFav = state.data.favorites.includes(key);
-
-  D.fcCounter.textContent = `${state.cardIdx + 1} / ${state.stageWords.length}`;
-  D.fcWord.textContent = w.en;
-  D.fcStar.textContent = isFav ? '★' : '☆';
-  D.fcStar.classList.toggle('on', isFav);
-
-  if (state.cardFlipped){
-    D.fcFront.classList.add('hidden');
-    D.fcBack.classList.remove('hidden');
-    D.fcMeaning.textContent = w.fa;
-    D.fcExEn.textContent = w.exEn;
-    D.fcExFa.textContent = w.exFa;
-  } else {
-    D.fcFront.classList.remove('hidden');
-    D.fcBack.classList.add('hidden');
-    D.fcHint.textContent = 'برای دیدن معنی کلیک کن';
-  }
-
-  const learned = state.data.learnedWords.includes(key);
-  D.fcLearned.textContent = learned ? '✓ یاد گرفته‌ام' : 'یاد گرفتم';
-  D.fcLearned.style.opacity = learned ? '.6' : '1';
-}
-
-function flipCard(){
-  state.cardFlipped = !state.cardFlipped;
-  renderCard();
-  if (state.cardFlipped && state.data.autoSpeak){
-    const w = state.stageWords[state.cardIdx];
-    if (w) speak(w.en);
-  }
-}
-function nextCard(){
-  if (state.cardIdx < state.stageWords.length - 1){
-    state.cardIdx++; state.cardFlipped = false; renderCard();
-  } else toast('آخرین کلمه', '📖');
-}
-function prevCard(){
-  if (state.cardIdx > 0){
-    state.cardIdx--; state.cardFlipped = false; renderCard();
-  } else toast('اولین کلمه', '📖');
-}
-function learnWord(){
-  const w = state.stageWords[state.cardIdx]; if (!w) return;
-  const key = w.en.toLowerCase();
-  markActiveToday();
-  if (!state.data.learnedWords.includes(key)){
-    state.data.learnedWords.push(key);
-    state.data.score += 2;
-    saveUser();
-    toast('یاد گرفته شد! +۲ امتیاز', '✅');
-  }
-  renderCard();
-  updateTop();
-}
-function toggleFav(){
-  const w = state.stageWords[state.cardIdx]; if (!w) return;
-  const key = w.en.toLowerCase();
-  const idx = state.data.favorites.indexOf(key);
-  if (idx === -1){ state.data.favorites.push(key); toast('ستاره شد', '⭐'); }
-  else { state.data.favorites.splice(idx, 1); toast('حذف شد', '☆'); }
-  saveUser(); renderCard();
-}
-
-/* ============================================================
-   QUIZ
-   ============================================================ */
-function resetQuiz(){
-  state.qActive = false; state.qLocked = false;
-  state.qIdx = 0; state.qCorrect = 0;
-  D.quizProgressFill.style.width = '0%';
-  D.quizCounter.textContent = 'آماده';
-  D.quizQuestion.innerHTML = `<div class="lbl">آزمون مرحله</div><div class="q-text">وقتی آماده بودی شروع کن</div>`;
-  D.quizOptions.innerHTML = '';
-  D.quizFeedback.classList.add('hidden');
-  D.startQuizBtn.classList.remove('hidden');
-  D.startQuizBtn.textContent = `شروع آزمون مرحله ${state.data.currentStage + 1}`;
-  D.startQuizBtn.onclick = startQuiz;
-}
-
-function buildQuiz(){
-  const qs = [];
-  const words = state.stageWords;
-  const lesson = getLessonForStage(state.data.currentStage);
-
-  // Word meaning
-  [...words].sort(() => Math.random() - 0.5).slice(0, 5).forEach(w => {
-    const wrongs = [];
-    const pool = WORDS.filter(x => x.fa !== w.fa);
-    while (wrongs.length < 3){
-      const r = pool[Math.floor(Math.random() * pool.length)];
-      if (!wrongs.includes(r.fa) && r.fa !== w.fa) wrongs.push(r.fa);
-    }
-    qs.push({type:'word', prompt:w.en, correct:w.fa, options:[w.fa, ...wrongs].sort(() => Math.random() - 0.5)});
-  });
-
-  // Grammar
-  lesson.exercises.slice(0, 3).forEach(ex => {
-    qs.push({type:'grammar', prompt: ex.q, correct: ex.correct, options: [ex.correct, ...ex.wrongs].sort(() => Math.random() - 0.5)});
-  });
-
-  // Listening
-  [...words].sort(() => Math.random() - 0.5).slice(0, 2).forEach(w => {
-    const wrongs = [];
-    const pool = WORDS.filter(x => x.en !== w.en);
-    while (wrongs.length < 3){
-      const r = pool[Math.floor(Math.random() * pool.length)];
-      if (!wrongs.includes(r.en)) wrongs.push(r.en);
-    }
-    qs.push({type:'listening', prompt:w.en, correct:w.en, options:[w.en, ...wrongs].sort(() => Math.random() - 0.5), audio:w.en});
-  });
-
-  return qs.sort(() => Math.random() - 0.5);
-}
-
-function startQuiz(){
-  if (!state.stageWords.length) return;
-  state.qActive = true; state.qIdx = 0; state.qCorrect = 0; state.qLocked = false;
-  state.quiz = buildQuiz();
-  D.startQuizBtn.classList.add('hidden');
-  showQuestion();
-}
-
-function showQuestion(){
-  if (state.qIdx >= state.quiz.length) return finishQuiz();
-  const q = state.quiz[state.qIdx];
-  const total = state.quiz.length;
-  const n = state.qIdx + 1;
-
-  D.quizProgressFill.style.width = ((n-1)/total*100) + '%';
-  D.quizCounter.textContent = `${n} / ${total}`;
-  D.quizFeedback.classList.add('hidden');
-  D.quizOptions.innerHTML = '';
-
-  if (q.type === 'listening'){
-    D.quizQuestion.innerHTML = `<div class="lbl">گوش بده</div><div class="q-text" style="color:var(--text-3);">🔊 به صدا گوش کن...</div>`;
-    setTimeout(() => speak(q.audio), 300);
-  } else if (q.type === 'grammar'){
-    D.quizQuestion.innerHTML = `<div class="lbl">گرامر</div><div class="q-text">${q.prompt.replace(/___/g, '<code>___</code>')}</div>`;
-  } else {
-    D.quizQuestion.innerHTML = `<div class="lbl">معنی چیه؟</div><div class="q-word">"${esc(q.prompt)}"</div>`;
-  }
-
-  const letters = ['A','B','C','D'];
-  q.options.forEach((opt, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'option';
-    btn.innerHTML = `<span class="bullet">${letters[i]}</span><span>${opt}</span>`;
-    btn.onclick = () => answerQuiz(btn, opt, q);
-    D.quizOptions.appendChild(btn);
-  });
-  state.qLocked = false;
-}
-
-function answerQuiz(btn, selected, q){
-  if (!state.qActive || state.qLocked) return;
-  state.qLocked = true;
-  const all = D.quizOptions.querySelectorAll('.option');
-  all.forEach(b => b.disabled = true);
-  state.data.totalAnswers++;
-
-  if (selected === q.correct){
-    btn.classList.add('correct');
-    state.qCorrect++;
-    state.data.correctAnswers++;
-    state.data.score += 10;
-    markActiveToday();
-    D.quizFeedback.className = 'quiz-feedback ok';
-    D.quizFeedback.innerHTML = '✓ درست بود! +۱۰ امتیاز';
-    D.quizFeedback.classList.remove('hidden');
-    saveUser(); updateTop();
-    setTimeout(() => { state.qIdx++; showQuestion(); }, 900);
-  } else {
-    btn.classList.add('wrong');
-    all.forEach(b => {
-      const txt = b.textContent.slice(1).trim();
-      if (txt === q.correct) b.classList.add('correct');
-    });
-    D.quizFeedback.className = 'quiz-feedback err';
-    D.quizFeedback.innerHTML = '✗ اشتباه!';
-    D.quizFeedback.classList.remove('hidden');
-    saveUser();
-    setTimeout(() => {
-      showModal({
-        icon:'💔', title:'رد شدی',
-        text:'مرحله فعلی ریست می‌شه اما مراحل قبلی حفظ می‌شن.',
-        ok:'تلاش دوباره',
-        onOk: () => resetStage()
-      });
-    }, 1200);
-  }
-}
-
-function finishQuiz(){
-  state.qActive = false;
-  const total = state.quiz.length;
-  const c = state.qCorrect;
-  if (c === total){
-    const d = state.data;
-    d.currentStage++; d.completedStages++; d.score += 50;
-    saveUser();
-    D.quizProgressFill.style.width = '100%';
-    D.quizCounter.textContent = 'تمام';
-    D.quizQuestion.innerHTML = `<div class="lbl">نتیجه</div><div class="q-text" style="color:var(--success);">🎉 عالی! ${c}/${total}</div>`;
-    D.quizOptions.innerHTML = '';
-    D.quizFeedback.className = 'quiz-feedback ok';
-    D.quizFeedback.innerHTML = '✓ قبول شدی! +۵۰ امتیاز';
-    D.quizFeedback.classList.remove('hidden');
-    D.startQuizBtn.classList.remove('hidden');
-    D.startQuizBtn.textContent = `مرحله بعدی`;
-    D.startQuizBtn.onclick = () => { renderLesson(); toast('مرحله جدید', '🚀'); };
-    updateTop();
-  } else {
-    resetStage();
-  }
-}
-
-/* ============================================================
-   PROGRESS
-   ============================================================ */
-function renderProgress(){
-  // Levels
-  const cur = getCurrentLevel();
-  const curIdx = LEVEL_ORDER.indexOf(cur);
-  D.levelsList.innerHTML = LEVEL_ORDER.map((lvl, i) => {
-    const info = LEVEL_INFO[lvl];
-    const isCurrent = lvl === cur;
-    const isLocked = i > curIdx;
-    const cls = isCurrent ? 'active' : (isLocked ? 'locked' : '');
-    const stageCount = WORDS.filter(w => w.level === lvl).length / WORDS_PER_STAGE;
-    return `<div class="level-card ${cls}">
-      <div class="level-badge ${info.cls}">${lvl}</div>
-      <div class="level-info">
-        <div class="t">${info.icon} ${info.name}</div>
-        <div class="s">${Math.round(stageCount)} مرحله</div>
-      </div>
-      ${isCurrent ? '<span style="color:var(--accent);font-size:.85rem;font-weight:700;">فعال</span>' : (isLocked ? '<span class="level-arrow">🔒</span>' : '<span class="level-arrow">✓</span>')}
-    </div>`;
-  }).join('');
-
-  // Week bars
-  const days = ['ش','ی','د','س','چ','پ','ج'];
-  let html = '';
-  for (let i=6; i>=0; i--){
-    const dd = new Date();
-    dd.setDate(dd.getDate() - i);
-    const k = dd.toISOString().slice(0,10);
-    const active = state.data.activeDays.includes(k);
-    const isToday = i === 0;
-    const h = active ? 80 : 12;
-    html += `<div class="wb">
-      <div class="bar ${active?'active':''} ${isToday?'today':''}" style="height:${h}%;"></div>
-      <div class="day">${days[dd.getDay()]}</div>
-    </div>`;
-  }
-  D.weekBars.innerHTML = html;
-
-  // Achievements
-  const d = state.data;
-  const lvlIdx = LEVEL_ORDER.indexOf(cur);
-  const achs = [
-    {ic:'🚀', nm:'شروع', done: d.learnedWords.length >= 1},
-    {ic:'📚', nm:'۱۰ کلمه', done: d.learnedWords.length >= 10},
-    {ic:'📖', nm:'۵۰ کلمه', done: d.learnedWords.length >= 50},
-    {ic:'📕', nm:'۱۰۰ کلمه', done: d.learnedWords.length >= 100},
-    {ic:'⭐', nm:'۵ مرحله', done: d.completedStages >= 5},
-    {ic:'🏅', nm:'۱۰ مرحله', done: d.completedStages >= 10},
-    {ic:'🏆', nm:'۲۰ مرحله', done: d.completedStages >= 20},
-    {ic:'💯', nm:'۵۰ پاسخ', done: d.correctAnswers >= 50},
-    {ic:'🎯', nm:'۱۰۰ پاسخ', done: d.correctAnswers >= 100},
-    {ic:'⭐', nm:'ستاره‌دار', done: d.favorites.length >= 1},
-    {ic:'🔥', nm:'۳ روز پیاپی', done: calcStreak() >= 3},
-    {ic:'🔥', nm:'۷ روز پیاپی', done: calcStreak() >= 7},
-    {ic:'🔵', nm:'A2', done: lvlIdx >= 1},
-    {ic:'🟠', nm:'B1', done: lvlIdx >= 2},
-    {ic:'🔴', nm:'B2', done: lvlIdx >= 3},
-    {ic:'🟣', nm:'C1', done: lvlIdx >= 4},
-    {ic:'⚫', nm:'C2', done: lvlIdx >= 5},
-    {ic:'💰', nm:'۱۰۰ XP', done: d.score >= 100},
-    {ic:'💎', nm:'۵۰۰ XP', done: d.score >= 500},
-    {ic:'👑', nm:'۱۰۰۰ XP', done: d.score >= 1000}
-  ];
-  D.achievementsList.innerHTML = achs.map(a =>
-    `<div class="ach ${a.done?'unlocked':'locked'}">
-      <span class="ic">${a.ic}</span>
-      <div class="nm">${a.nm}</div>
-    </div>`
-  ).join('');
-}
-
-/* ============================================================
-   PROFILE
-   ============================================================ */
-function renderProfile(){
-  const d = state.data;
-  D.profileAv.textContent = d.name.charAt(0).toUpperCase();
-  D.profileName.textContent = d.name;
-  const date = new Date(d.createdAt);
-  D.profileMeta.textContent = `عضو از ${date.toLocaleDateString('fa-IR')}`;
-  D.profStages.textContent = d.completedStages;
-  D.profWords.textContent = d.learnedWords.length;
-  D.profAcc.textContent = getAccuracy() + '%';
-  D.themeSwitch.classList.toggle('on', d.theme === 'dark');
-  D.autoSpeakSwitch.classList.toggle('on', d.autoSpeak);
-}
-
-D.autoSpeakSwitch.onclick = () => {
-  if (!state.data) return;
-  state.data.autoSpeak = !state.data.autoSpeak;
-  saveUser();
-  D.autoSpeakSwitch.classList.toggle('on', state.data.autoSpeak);
-  toast(state.data.autoSpeak ? 'پخش خودکار روشن شد' : 'پخش خودکار خاموش شد', '🔊');
-};
-
-/* ============================================================
-   RESET
-   ============================================================ */
-function resetStage(){
-  const d = state.data;
-  const keys = state.stageWords.map(w => w.en.toLowerCase());
-  d.learnedWords = d.learnedWords.filter(k => !keys.includes(k));
-  saveUser();
-  renderLesson();
-  toast('مرحله ریست شد', '🔄');
-}
-function resetAll(){
-  showModal({
-    icon:'⚠️', title:'ریست کامل',
-    text:'تمام پیشرفتت پاک می‌شه. مطمئنی؟',
-    ok:'بله، ریست کن',
-    onOk: () => {
-      const name = state.user;
-      const theme = state.data.theme;
-      const autoSpeak = state.data.autoSpeak;
-      state.data = createUser(name);
-      state.data.theme = theme;
-      state.data.autoSpeak = autoSpeak;
-      saveUser();
-      renderHome(); renderLesson(); renderProfile();
-      toast('همه چیز ریست شد', '💣');
-    }
-  });
-}
-function logout(){
-  showModal({
-    icon:'🚪', title:'خروج',
-    text:'از حسابت خارج می‌شی. پیشرفتت ذخیره می‌مونه.',
-    ok:'خروج',
-    onOk: () => {
-      saveUser();
-      state.user = null; state.data = null;
-      D.app.classList.add('hidden');
-      D.loginScreen.classList.remove('hidden');
-      D.uname.value = '';
-      renderRecentUsers();
-    }
-  });
-}
-
-/* ============================================================
-   LOGIN
-   ============================================================ */
-function renderRecentUsers(){
-  const users = getAllUsers();
-  const names = Object.keys(users);
-  if (!names.length){ D.recentUsers.classList.add('hidden'); return; }
-  D.recentUsers.classList.remove('hidden');
-  D.ruList.innerHTML = names.map(n =>
-    `<div class="ru-chip" data-name="${esc(n)}">
-      <span class="dot"></span>
-      <span>${esc(n)}</span>
-      <span class="x" data-del="${esc(n)}">✕</span>
-    </div>`
-  ).join('');
-  D.ruList.querySelectorAll('.ru-chip').forEach(chip => {
-    chip.onclick = (e) => {
-      if (e.target.dataset.del){
-        e.stopPropagation();
-        const name = e.target.dataset.del;
-        showModal({
-          icon:'🗑️', title:'حذف کاربر',
-          text:`کاربر «${name}» کاملاً حذف بشه؟`,
-          ok:'حذف', onOk: () => { deleteUser(name); renderRecentUsers(); }
-        });
-        return;
-      }
-      D.uname.value = chip.dataset.name;
-      login();
-    };
-  });
-}
-
-function login(){
-  const name = D.uname.value.trim();
-  if (!name){
-    D.uname.focus();
-    D.uname.style.borderColor = 'var(--danger)';
-    setTimeout(() => D.uname.style.borderColor = '', 1400);
-    return;
-  }
-  state.user = name;
-  state.data = loadUser(name);
-  markActiveToday();
-
-  D.loginScreen.classList.add('hidden');
-  D.app.classList.remove('hidden');
-  applyTheme();
-  setTimeout(() => {
-    renderHome(); renderLesson(); renderProgress(); renderProfile();
-    goPage('home');
-    toast(`سلام ${name}!`, '👋');
-  }, 200);
-}
-
-D.loginBtn.onclick = login;
-D.uname.onkeydown = e => { if (e.key === 'Enter') login(); };
-
-/* ============================================================
-   EVENTS
-   ============================================================ */
-D.flashcard.onclick = e => {
-  if (e.target.closest('.fc-star') || e.target.closest('.speak-btn')) return;
-  flipCard();
-};
-D.fcNext.onclick = nextCard;
-D.fcPrev.onclick = prevCard;
-D.fcLearned.onclick = learnWord;
-D.fcStar.onclick = e => { e.stopPropagation(); toggleFav(); };
-D.fcSpeak.onclick = e => {
-  e.stopPropagation();
-  const w = state.stageWords[state.cardIdx];
-  if (w) speak(w.en, D.fcSpeak);
-};
-
-window.addEventListener('beforeunload', () => { if (state.user && state.data) saveUser(); });
-
-/* ============================================================
-   EXPOSE
-   ============================================================ */
-window.goPage = goPage;
-window.resetStage = resetStage;
-window.resetAll = resetAll;
-window.logout = logout;
-
-/* ============================================================
-   INIT
-   ============================================================ */
+  const L=['> initializing secure session...','> loading study engine...','> access granted'],e=$('#term');let i=0,j=0;
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches){e.textContent=L[2];return}
+  (function t(){if(i>=L.length)return;e.textContent=L[i].slice(0,++j);if(j>=L[i].length){i++;j=0;setTimeout(t,i<L.length?500:0)}else setTimeout(t,28)})();
+})();
 (function(){
-  renderRecentUsers();
-  D.uname.focus();
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const c=$('#rain'),x=c.getContext('2d');let cols,ys;
+  function rs(){c.width=innerWidth;c.height=innerHeight;cols=Math.floor(c.width/18);ys=Array.from({length:cols},()=>Math.random()*c.height/16)}
+  rs();addEventListener('resize',rs);
+  setInterval(()=>{x.fillStyle='rgba(6,8,12,.12)';x.fillRect(0,0,c.width,c.height);x.font='14px monospace';
+    for(let i=0;i<cols;i++){x.fillStyle=i%5?'#d8b45f':'#5fd6a0';x.fillText(Math.random()<.5?'0':'1',i*18,ys[i]*16);ys[i]=ys[i]*16>c.height&&Math.random()>.975?0:ys[i]+1}},70);
 })();
 
-console.log(`⚡ English Master Pro v9 | ${WORDS.length} کلمه | ${TOTAL_STAGES} مرحله | ${LESSONS.length} درس`);
-
-})();
+/* ---------- boot ---------- */
+(function(){let n=null;try{n=sessionStorage.getItem('ev_cur')}catch(e){}if(n&&(ST.get('ev_users')||{})[n])enter(n);else authView(false)})();
+</script>
+<script>
+/* ---------- v2: theme, chart, targets, persistent timer ---------- */
+(function(){const t=ST.get('ev_th');if(t==='light'||t==='dark')document.documentElement.dataset.th=t;$('#thb').textContent=t==='light'?'☾':'☀'})();
+function thm(){const l=document.documentElement.dataset.th==='light'?'dark':'light';document.documentElement.dataset.th=l;ST.set('ev_th',l);$('#thb').textContent=l==='light'?'☾':'☀'}
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+const key=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+tm.w=tm.w||1500;
+function render(){
+  if(!U)return authView(false);
+  if(setup)return setupView();
+  const T=[['dash','داشبورد'],['plan','برنامه هفتگی'],['grades','نمرات'],['timer','تایمر تمرکز'],['todo','تکالیف و امتحان'],['set','تنظیمات و پشتیبان']];
+  $('#app').innerHTML=`<div class="row" style="margin-bottom:10px"><span class="mu">کاربر: ${esc(U)} — پایه ${fa(S.grade)}</span><button class="btn g s" style="flex:0" onclick="logout()">خروج</button></div><nav class="tabs">${T.map(t=>`<button class="${tab===t[0]?'on':''}" onclick="tab='${t[0]}';render()">${t[1]}</button>`).join('')}</nav><section id="v"></section>`;
+  ({dash,plan,grades,timer,todo,set})[tab]();
+}
+function days7(){const r=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=key(d);r.push({l:DAYS[(d.getDay()+1)%7],m:S.log.filter(x=>x.d===k).reduce((a,b)=>a+b.min,0)})}return r}
+function tip(){
+  if(!S.subjects.length)return'';
+  const c=new Date();c.setDate(c.getDate()-6);const s=key(c),st={};S.log.filter(x=>x.d>=s).forEach(x=>st[x.sub]=(st[x.sub]||0)+x.min);
+  const b=[...S.subjects].sort((a,b)=>((22-last(b))*10-(st[b.n]||0))-((22-last(a))*10-(st[a.n]||0)))[0];
+  return`<p class="tip">پیشنهاد امروز: روی «${esc(b.n)}» کار کن. در ۷ روز اخیر ${fa(st[b.n]||0)} دقیقه رویش وقت گذاشته‌ای.</p>`;
+}
+function dash(){
+  const g=gpa(),t=tIdx(),pl=S.plan[t]||[],dn=pl.filter((_,i)=>S.done[t+'_'+i]).length,D=days7(),mx=Math.max(S.hours*60,...D.map(x=>x.m),1),tm0=D[6].m;
+  const ex=S.exams.filter(e=>e.d>=today()).sort((a,b)=>a.d<b.d?-1:1)[0];
+  const dl=ex?Math.ceil((new Date(ex.d+'T00:00')-new Date(today()+'T00:00'))/864e5):null;
+  $('#v').innerHTML=`${tip()}<div class="grid">
+  <div class="card kpi"><b>${g===null?'—':fa(g)}</b><span>معدل کل از ۲۰</span></div>
+  <div class="card kpi"><b>${fa(streak())}</b><span>روز پشت‌سرهم مطالعه</span></div>
+  <div class="card kpi"><b>${fa(tm0)}</b><span>دقیقه امروز از هدف ${fa(Math.round(S.hours*60))}</span></div>
+  <div class="card kpi"><b>${dl===null?'—':fa(dl)}</b><span>${ex?'روز تا '+esc(ex.n):'امتحانی ثبت نشده'}</span></div></div>
+  <div class="grid"><div class="card"><h3>برنامه‌ی امروز (${DAYS[t]})</h3>
+  ${pl.length?pl.map((p,i)=>`<div class="it ${S.done[t+'_'+i]?'dn':''}"><input type="checkbox" ${S.done[t+'_'+i]?'checked':''} onchange="setDone('${t}_${i}',${t},${i})"><span class="g1">${esc(p.sub)}</span><span class="mu">${fa(p.min)} دقیقه</span></div>`).join(''):'<p class="mu">برای امروز چیزی نیست.</p>'}
+  <p class="mu">${fa(dn)} از ${fa(pl.length)} انجام شد</p></div>
+  <div class="card"><h3>مطالعه‌ی ۷ روز اخیر (دقیقه)</h3><div class="cht">${D.map(x=>`<div title="${fa(x.m)} دقیقه"><i style="height:${Math.round(x.m/mx*90)}px"></i><span class="mu">${x.l.slice(0,2)}</span></div>`).join('')}</div></div></div>`;
+}
+function spark(a){if(a.length<2)return'';const w=160,h=36,p=a.map((v,i)=>(i*(w/(a.length-1))).toFixed(1)+','+(h-v/20*h).toFixed(1)).join(' ');return`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><polyline points="${p}" fill="none" stroke="var(--gold)" stroke-width="2"/></svg>`}
+function grades(){
+  $('#v').innerHTML=`<div class="card"><h3>ثبت نمره‌ی جدید</h3><div class="row"><select id="gs">${S.subjects.map((o,i)=>`<option value="${i}">${esc(o.n)}</option>`).join('')}</select><input id="gv" type="number" min="0" max="20" step="0.25" placeholder="نمره از ۲۰"><button class="btn" onclick="addG()">ثبت</button></div></div>
+  <div class="grid">${S.subjects.map((o,i)=>{const a=avgOf(o),tg=o.target||18;return`<div class="card"><div class="row"><b>${esc(o.n)}</b><span class="mu">میانگین ${a===null?'—':fa(a)}</span></div>
+  <div class="bar"><div><i style="width:${a===null?0:Math.min(100,a/tg*100)}%"></i></div><span class="mu">هدف ${fa(tg)}</span></div>${spark(o.scores)}
+  <div class="chips" style="margin:6px 0">${o.scores.map((s,j)=>`<span class="chip" title="حذف" onclick="delG(${i},${j})">${fa(s)} ✕</span>`).join('')||'<span class="mu">نمره‌ای نیست</span>'}</div>
+  <label>نمره‌ی هدف</label><input type="number" min="1" max="20" value="${tg}" onchange="setTg(${i},this.value)"></div>`}).join('')}</div>`;
+}
+function setTg(i,v){S.subjects[i].target=Math.min(20,Math.max(1,+v||18));sv();render()}
+function timer(){
+  $('#v').innerHTML=`<div class="card" style="text-align:center"><h3>${tm.mode==='work'?'زمان تمرکز':'زمان استراحت'}</h3><div class="big" id="tt">${fmt(tm.left)}</div>
+  <div class="row" style="max-width:420px;margin:0 auto"><select id="ts">${S.subjects.map(o=>`<option ${o.n===tm.sub?'selected':''}>${esc(o.n)}</option>`).join('')}</select>
+  <select id="td" onchange="setW(+this.value)">${[[1500,'۲۵ دقیقه'],[2700,'۴۵ دقیقه'],[3600,'۶۰ دقیقه']].map(x=>`<option value="${x[0]}" ${x[0]===tm.w?'selected':''}>${x[1]}</option>`).join('')}</select></div>
+  <div class="row" style="justify-content:center"><button class="btn" onclick="tgT()">${tm.run?'توقف':'شروع'}</button><button class="btn g" onclick="rsT()">بازنشانی</button></div>
+  <p class="mu">تایمر با عوض‌کردن تب ادامه می‌دهد. هر دوره‌ی کامل در گزارش مطالعه ثبت می‌شود.</p></div>`;
+}
+function setW(v){tm.w=v;if(!tm.run&&tm.mode==='work'){tm.left=v;timer()}}
+function beep(){try{const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator();o.connect(a.destination);o.frequency.value=660;o.start();o.stop(a.currentTime+.4)}catch(e){}}
+function tick(){
+  tm.left--;
+  if(tm.left<=0){clearInterval(tm.id);tm.run=false;
+    if(tm.mode==='work'){S.log.push({k:'t'+Date.now(),d:today(),sub:tm.sub||(S.subjects[0]||{}).n||'—',min:Math.round(tm.w/60)});sv();tm.mode='rest';tm.left=tm.w>=2700?600:300;toast('آفرین! یک دوره ثبت شد')}
+    else{tm.mode='work';tm.left=tm.w}
+    beep();if(tab==='timer')timer();return}
+  const e=$('#tt');if(e)e.textContent=fmt(tm.left)
+}
+function tgT(){
+  if(tm.run){clearInterval(tm.id);tm.run=false;timer();return}
+  const s=$('#ts');if(s)tm.sub=s.value;
+  tm.run=true;tm.id=setInterval(tick,1000);timer();
+}
+function rsT(){clearInterval(tm.id);tm.run=false;tm.mode='work';tm.left=tm.w;timer()}
+function todo(){
+  const ex=S.exams.map((e,i)=>({...e,i})).sort((a,b)=>a.d<b.d?-1:1),tk=S.tasks.map((t,i)=>({...t,i})).sort((a,b)=>a.x-b.x);
+  $('#v').innerHTML=`<div class="grid"><div class="card"><h3>تکالیف</h3>
+  <div class="row"><input id="tn" placeholder="تکلیف چیست؟"><input id="td2" type="date"></div><button class="btn" onclick="addT()">افزودن</button>
+  ${tk.map(t=>`<div class="it ${t.x?'dn':''}"><input type="checkbox" ${t.x?'checked':''} onchange="S.tasks[${t.i}].x=!S.tasks[${t.i}].x;sv();render()"><span class="g1">${esc(t.n)}</span><span class="mu">${t.d?new Date(t.d+'T00:00').toLocaleDateString('fa-IR'):''}</span><button class="btn r s" onclick="S.tasks.splice(${t.i},1);sv();render()">حذف</button></div>`).join('')}</div>
+  <div class="card"><h3>امتحان‌ها</h3><div class="row"><input id="en" placeholder="نام امتحان"><input id="ed" type="date"></div><button class="btn" onclick="addE()">افزودن</button>
+  ${ex.map(e=>{const d=Math.ceil((new Date(e.d+'T00:00')-new Date(today()+'T00:00'))/864e5);return`<div class="it"><span class="g1">${esc(e.n)}</span><span class="${d<0?'mu':d<=3?'bad':'ok'}">${d<0?'گذشته':fa(d)+' روز'}</span><button class="btn r s" onclick="S.exams.splice(${e.i},1);sv();render()">حذف</button></div>`}).join('')}</div></div>`;
+}
+function addT(){const n=$('#tn').value.trim();if(!n)return;S.tasks.push({n,d:$('#td2').value,x:false});sv();render()}
+if(U)render();
 </script>
 </body>
 </html>
